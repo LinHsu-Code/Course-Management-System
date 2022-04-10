@@ -2,17 +2,17 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import CustomLayout, { siteTitle } from '../components/customLayout'
-import styles from '../styles/home.module.css'
+//import styles from '../styles/Home.module.css'
 
-const Home: NextPage = () => {
+const Register: NextPage = () => {
   return (
     <CustomLayout>
       <Head>
-        <title>{siteTitle}</title>
+        <title>{'Register'}</title>
       </Head>
-      <section>main section</section>
+      <section>register</section>
     </CustomLayout>
   )
 }
 
-export default Home
+export default Register
