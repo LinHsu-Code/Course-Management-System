@@ -1,6 +1,5 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import CustomLayout from '../components/customLayout'
 import { Row, Col, Form, Input, Button, Checkbox, Radio } from 'antd'
 import styles from '../styles/auth.module.scss'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
@@ -11,7 +10,7 @@ const Login: NextPage = () => {
   }
 
   return (
-    <CustomLayout>
+    <>
       <Head>
         <title>{'Sign In'}</title>
       </Head>
@@ -100,7 +99,7 @@ const Login: NextPage = () => {
           </div>
         </Col>
       </Row>
-    </CustomLayout>
+    </>
   )
 }
 

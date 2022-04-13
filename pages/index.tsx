@@ -1,17 +1,14 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import Image from 'next/image'
-import CustomLayout, { siteTitle } from '../components/customLayout'
-import styles from '../styles/home.module.css'
 
 const Home: NextPage = () => {
   return (
-    <CustomLayout>
+    <>
       <Head>
-        <title>{siteTitle}</title>
+        <title>{'Next.js Sample Website'}</title>
       </Head>
       <section>main section</section>
-    </CustomLayout>
+    </>
   )
 }
 
