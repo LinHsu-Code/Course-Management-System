@@ -1,24 +1,13 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import Image from 'next/image'
-import CustomLayout, { siteTitle } from '../components/customLayout'
-//import styles from '../styles/Home.module.css'
+import CustomLayout from '../components/customLayout'
 import { Row, Col, Form, Input, Button, Checkbox, Radio } from 'antd'
 import styles from '../styles/auth.module.scss'
-import {
-  UserOutlined,
-  LockOutlined,
-  RotateLeftOutlined,
-} from '@ant-design/icons'
-import React, { useState } from 'react'
+import { UserOutlined, LockOutlined } from '@ant-design/icons'
 
 const Login: NextPage = () => {
-  const [role, setRole] = useState('student')
-  // const onFinish = (values) => {
-  //   console.log('Received values of form: ', values)
-  // }
-  const onRoleChange = ({ roleValue }: { roleValue: string }) => {
-    setRole(roleValue)
+  const onFinish = (values: any) => {
+    console.log('Received values of form: ', values)
   }
 
   return (
@@ -26,28 +15,27 @@ const Login: NextPage = () => {
       <Head>
         <title>{'Sign In'}</title>
       </Head>
+
       <Row justify="center">
         <Col md={8}>
           <div className={styles.FormHeading}>
             <h1>Sign In</h1>
           </div>
+
           <div className={styles.FormBody}>
             <Form
               name="normal_login"
               className="login-form"
               initialValues={{
                 remember: true,
-                roleValue: role,
+                role: 'student',
               }}
-              // onFinish={onFinish}
-              onValuesChange={onRoleChange}
+              onFinish={onFinish}
             >
               <Form.Item
-                name="roleValue"
-                // label="Role: "
+                name="role"
                 rules={[
                   {
-                    //required: true,
                     message: 'Please pick an item!',
                   },
                 ]}
@@ -58,52 +46,52 @@ const Login: NextPage = () => {
                   <Radio.Button value="manager">Manager</Radio.Button>
                 </Radio.Group>
               </Form.Item>
+
               <Form.Item
-                name="username"
+                name="email"
                 rules={[
                   {
                     required: true,
-                    message: 'Please input your Username!',
+                  },
+                  {
+                    type: 'email',
                   },
                 ]}
               >
                 <Input
                   prefix={<UserOutlined className="site-form-item-icon" />}
-                  placeholder="Username"
+                  type="email"
+                  placeholder="Please input email"
                 />
               </Form.Item>
+
               <Form.Item
                 name="password"
                 rules={[
                   {
                     required: true,
-                    message: 'Please input your Password!',
+                  },
+                  {
+                    min: 4,
+                    max: 16,
                   },
                 ]}
               >
                 <Input
                   prefix={<LockOutlined className="site-form-item-icon" />}
                   type="password"
-                  placeholder="Password"
+                  placeholder="Please input password"
                 />
               </Form.Item>
+
               <Form.Item>
                 <Form.Item name="remember" valuePropName="checked" noStyle>
                   <Checkbox>Remember me</Checkbox>
                 </Form.Item>
-
-                <a className="login-form-forgot" href="">
-                  Forgot password
-                </a>
               </Form.Item>
 
               <Form.Item>
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  block
-                  //className={styles.FormButton}
-                >
+                <Button type="primary" htmlType="submit" block>
                   Log in
                 </Button>
                 No account? <a href="">register now!</a>
