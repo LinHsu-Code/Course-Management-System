@@ -3,25 +3,24 @@ import Head from 'next/head'
 import { Row, Col, Form, Input, Button, Checkbox, Radio } from 'antd'
 import styles from '../styles/auth.module.scss'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
+import { login } from '../lib/httpRequest'
 
 const Login: NextPage = () => {
   const onFinish = (values: any) => {
-    console.log('Received values of form: ', values)
+    //console.log('Received values of form: ', values)
+    login(values)
   }
 
   return (
     <>
       <Head>
-        <title>{'Sign In'}</title>
+        <title>{'Course Management Assistant: Sign In'}</title>
       </Head>
 
-      <Row justify="center">
-        <Col md={8}>
-          <div className={styles.FormHeading}>
-            <h1>Sign In</h1>
-          </div>
-
-          <div className={styles.FormBody}>
+      <div>
+        <h1 className={styles.FormHeading}>COURSE MANAGEMENT ASSISTANT</h1>
+        <Row justify="center">
+          <Col md={8}>
             <Form
               name="normal_login"
               className="login-form"
@@ -96,9 +95,9 @@ const Login: NextPage = () => {
                 No account? <a href="">register now!</a>
               </Form.Item>
             </Form>
-          </div>
-        </Col>
-      </Row>
+          </Col>
+        </Row>
+      </div>
     </>
   )
 }
