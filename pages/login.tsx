@@ -4,12 +4,23 @@ import { Row, Col, Form, Input, Button, Checkbox, Radio } from 'antd'
 import styles from '../styles/auth.module.scss'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { login } from '../lib/httpRequest'
+import { useRouter } from 'next/router'
+import { useEffect } from 'react'
 
 const Login: NextPage = () => {
-  const onFinish = (values: any) => {
-    //console.log('Received values of form: ', values)
-    login(values)
+  const router = useRouter()
+
+  const onFinish = async (values: any) => {
+    const loginResult = await login(values)
+    localStorage.setItem('user', JSON.stringify(loginResult))
+    router.push('dashboard')
   }
+
+  useEffect(() => {
+    if (localStorage.getItem('user')) {
+      router.push('dashboard')
+    }
+  }, [])
 
   return (
     <>
@@ -30,14 +41,7 @@ const Login: NextPage = () => {
               }}
               onFinish={onFinish}
             >
-              <Form.Item
-                name="role"
-                rules={[
-                  {
-                    message: 'Please pick an item!',
-                  },
-                ]}
-              >
+              <Form.Item name="role">
                 <Radio.Group>
                   <Radio.Button value="student">Student</Radio.Button>
                   <Radio.Button value="teacher">Teacher</Radio.Button>
@@ -72,6 +76,7 @@ const Login: NextPage = () => {
                   {
                     min: 4,
                     max: 16,
+                    message: `'password' must be 4-16 characters long`,
                   },
                 ]}
               >

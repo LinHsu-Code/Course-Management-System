@@ -1,6 +1,15 @@
 import { baseURL } from './urlConfig'
 import axios from 'axios'
-import { AES } from 'crypto-js'
+import AES from 'crypto-js/aes'
+import { message } from 'antd'
+
+const showMessage = (code: Number, msg: String) => {
+  if (code >= 400 && code < 600) {
+    message.error(msg)
+  } else {
+    message.success(msg)
+  }
+}
 
 const axiosInstance = axios.create({
   baseURL,
@@ -8,7 +17,7 @@ const axiosInstance = axios.create({
   responseType: 'json',
 })
 
-const login = async (formValues) => {
+const login = async (formValues: any) => {
   const { role, email, password } = formValues
   const hashedPassword = AES.encrypt(password, 'cms').toString()
 
@@ -20,15 +29,15 @@ const login = async (formValues) => {
 
   try {
     const { data } = await axiosInstance.post('/login', loginObject)
-    //console.log(data)
+    showMessage(data.code, data.msg)
+    return data.data
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      //handleAxiosError(error)
-      //console.log(error)
-      console.log(error.response.data)
+      if (error.response) {
+        showMessage(error.response.data.code, error.response.data.msg)
+      }
     } else {
-      console.log(123, error)
-      //handleUnexpectedError(error)
+      console.log(error)
     }
   }
 }
