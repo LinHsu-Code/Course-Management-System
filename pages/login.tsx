@@ -40,6 +40,7 @@ const Login: NextPage = () => {
                 role: 'student',
               }}
               onFinish={onFinish}
+              validateTrigger="onBlur"
             >
               <Form.Item name="role">
                 <Radio.Group>
@@ -76,7 +77,7 @@ const Login: NextPage = () => {
                   {
                     min: 4,
                     max: 16,
-                    message: `'password' must be 4-16 characters long`,
+                    message: `'password' must be 4-16 characters`,
                   },
                 ]}
               >
