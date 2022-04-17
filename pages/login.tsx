@@ -13,7 +13,9 @@ export default function Login() {
 
   const onFinish = async (values: any) => {
     const loginResult = await login(values)
-    localStorage.setItem('user', JSON.stringify(loginResult))
+    localStorage.setItem('role', loginResult.role)
+    localStorage.setItem('token', loginResult.token)
+    localStorage.setItem('userId', loginResult.userId)
     router.push('dashboard')
   }
 

@@ -17,6 +17,24 @@ const axiosInstance = axios.create({
   responseType: 'json',
 })
 
+axiosInstance.interceptors.request.use((config) => {
+  if (
+    config.url &&
+    (config.url.includes('dashboard') || config.url.includes('logout'))
+  ) {
+    return {
+      ...config,
+      headers: {
+        ...config.headers,
+        Authorization: localStorage.getItem('token')
+          ? `Bearer ${localStorage.getItem('token')}`
+          : '',
+      },
+    }
+  }
+  return config
+})
+
 const login = async (formValues: any) => {
   const { role, email, password } = formValues
   const hashedPassword = AES.encrypt(password, 'cms').toString()
@@ -42,4 +60,13 @@ const login = async (formValues: any) => {
   }
 }
 
-export { login }
+const logout = async () => {
+  try {
+    await axiosInstance.post('/logout')
+    localStorage.clear()
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export { login, logout }
