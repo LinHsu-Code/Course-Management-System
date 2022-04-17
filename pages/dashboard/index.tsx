@@ -1,15 +1,19 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
+import type { ReactElement } from 'react'
+import DashboardLayout from '../../components/dashboardLayout'
 
-const Dashboard: NextPage = () => {
+export default function Dashboard() {
   return (
     <>
       <Head>
-        <title>{'Dashboard'}</title>
+        <title>{'Course Management Assistant: Sign In'}</title>
       </Head>
-      <section>Dashboard</section>
+      <div>content</div>
     </>
   )
 }
 
-export default Dashboard
+Dashboard.getLayout = function getLayout(data: any, component: ReactElement) {
+  return <DashboardLayout>{component}</DashboardLayout>
+}
