@@ -1,15 +1,19 @@
-import type { NextPage } from 'next'
 import Head from 'next/head'
+import type { ReactElement } from 'react'
+import HomeLayout from '../components/homeLayout'
 
-const Home: NextPage = () => {
+export default function Home() {
   return (
     <>
       <Head>
-        <title>{'Next.js Sample Website'}</title>
+        <title>{'Course Management Assistant: Home'}</title>
       </Head>
-      <section>main section</section>
+
+      <div>Home Page</div>
     </>
   )
 }
 
-export default Home
+Home.getLayout = function getLayout(data: any, component: ReactElement) {
+  return <HomeLayout>{component}</HomeLayout>
+}

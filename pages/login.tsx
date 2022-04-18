@@ -16,12 +16,13 @@ export default function Login() {
     localStorage.setItem('role', loginResult.role)
     localStorage.setItem('token', loginResult.token)
     localStorage.setItem('userId', loginResult.userId)
-    router.push('dashboard')
+    router.push(`dashboard/${loginResult.role}`)
   }
 
   useEffect(() => {
-    if (localStorage.getItem('user')) {
-      router.push('dashboard')
+    if (localStorage.getItem('token')) {
+      const role = localStorage.getItem('role')
+      router.push(`dashboard/${role}`)
     }
   }, [])
 
@@ -114,5 +115,3 @@ export default function Login() {
 Login.getLayout = function getLayout(data: any, component: ReactElement) {
   return <AuthLayout>{component}</AuthLayout>
 }
-
-//export default Login

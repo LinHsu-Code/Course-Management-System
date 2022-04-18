@@ -1,4 +1,3 @@
-import type { NextPage } from 'next'
 import Head from 'next/head'
 import type { ReactElement } from 'react'
 import DashboardLayout from '../../components/dashboardLayout'
@@ -9,7 +8,7 @@ export default function Dashboard() {
       <Head>
         <title>{'Course Management Assistant: Sign In'}</title>
       </Head>
-      <div>content</div>
+      <div>Manager Overview</div>
     </>
   )
 }

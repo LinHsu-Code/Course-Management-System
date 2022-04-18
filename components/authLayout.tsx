@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
-import styles from '../styles/custom-layout.module.scss'
+import styles from './auth-layout.module.scss'
 import { Layout } from 'antd'
 const { Header, Footer, Content } = Layout
 

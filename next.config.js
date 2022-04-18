@@ -3,6 +3,7 @@ const withAntdLess = require('next-plugin-antd-less')
 
 const nextConfig = {
   reactStrictMode: true,
+  locale: '/',
 }
 
 const lessConfig = withAntdLess({
