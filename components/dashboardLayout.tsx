@@ -82,7 +82,7 @@ export default function DashboardLayout({
           theme="dark"
           mode="inline"
           defaultSelectedKeys={['0']}
-          style={{ height: '100%', borderRight: 0 }}
+          style={{ borderRight: 0 }}
         >
           <Menu.Item key="0" icon={<DashboardOutlined />}>
             Overview
