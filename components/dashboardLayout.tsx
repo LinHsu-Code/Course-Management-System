@@ -103,26 +103,34 @@ export default function DashboardLayout({
       </Sider>
       <Layout>
         <Header className="site-layout-background" style={{ padding: 0 }}>
-          <Row style={{ justifyContent: 'space-between' }}>
-            <Col className={styles.trigger} onClick={toggle}>
+          <Row>
+            <Col
+              className={styles.trigger}
+              onClick={toggle}
+              style={{ marginRight: 'auto' }}
+            >
               {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             </Col>
             <Col>
               <Avatar icon={<BellOutlined />} style={{ marginRight: 24 }} />
-              <span onMouseEnter={showLogoutMenu} onMouseLeave={showLogoutMenu}>
-                <Avatar icon={<UserOutlined />} style={{ marginRight: 24 }} />
-              </span>
+            </Col>
+            <Col
+              onMouseEnter={() => setLogoutMenu(true)}
+              onMouseLeave={() => setLogoutMenu(false)}
+            >
+              <Avatar icon={<UserOutlined />} style={{ marginRight: 24 }} />
+              {logoutMenu && (
+                <Menu className={styles.logoutMenu} theme="dark">
+                  <Menu.Item key="55" onClick={userLogout}>
+                    <LogoutOutlined />
+                    <span>Logout</span>
+                  </Menu.Item>
+                </Menu>
+              )}
             </Col>
           </Row>
         </Header>
-        {logoutMenu && (
-          <Menu className={styles.logoutMenu} theme="dark">
-            <Menu.Item key="55" onClick={userLogout}>
-              <LogoutOutlined />
-              <span>Logout</span>
-            </Menu.Item>
-          </Menu>
-        )}
+
         <PageHeader className="site-page-header" breadcrumb={{ routes }} />
         <Content
           className="site-layout-background"
