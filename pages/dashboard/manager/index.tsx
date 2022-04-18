@@ -1,12 +1,12 @@
 import Head from 'next/head'
 import type { ReactElement } from 'react'
-import DashboardLayout from '../../components/dashboardLayout'
+import DashboardLayout from '../../../components/dashboardLayout'
 
 export default function Dashboard() {
   return (
     <>
       <Head>
-        <title>{'Course Management Assistant: Sign In'}</title>
+        <title>{'CMS DashBoard: Manager'}</title>
       </Head>
       <div>Manager Overview</div>
     </>

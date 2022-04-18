@@ -50,14 +50,13 @@ export default function DashboardLayout({
 
   const userLogout = async () => {
     await logout()
-    router.replace('/dashboard/manager', '/login')
+    //router.replace(router.pathname, 'login')
+    router.replace('/dashboard', undefined, { shallow: true })
   }
 
   useEffect(() => {
     if (!localStorage.getItem('token')) {
-      //router.replace('login')
-      //router.push(`${router.locale}`)
-      router.push('/dashboard/manager', '/login')
+      router.replace('/dashboard', undefined, { shallow: true })
     }
   }, [])
 

@@ -13,7 +13,6 @@ const showMessage = (code: Number, msg: String) => {
 
 const axiosInstance = axios.create({
   baseURL,
-  timeout: 1000,
   responseType: 'json',
 })
 
@@ -44,7 +43,6 @@ const login = async (formValues: any) => {
     email,
     password: hashedPassword,
   }
-
   try {
     const { data } = await axiosInstance.post('/login', loginObject)
     showMessage(data.code, data.msg)
