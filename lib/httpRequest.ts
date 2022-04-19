@@ -3,14 +3,6 @@ import axios from 'axios'
 import AES from 'crypto-js/aes'
 import { message } from 'antd'
 
-const showMessage = (code: Number, msg: String) => {
-  if (code >= 400 && code < 600) {
-    message.error(msg)
-  } else {
-    message.success(msg)
-  }
-}
-
 const axiosInstance = axios.create({
   baseURL,
   responseType: 'json',
@@ -34,37 +26,74 @@ axiosInstance.interceptors.request.use((config) => {
   return config
 })
 
-const login = async (formValues: any) => {
-  const { role, email, password } = formValues
-  const hashedPassword = AES.encrypt(password, 'cms').toString()
+const getInstance = (url: string, params = {}) => {
+  url = !!params
+    ? `${url}?${Object.entries(params)
+        .map(([key, value]) => `${key}=${value}`)
+        .join('&')}`
+    : url
+  return axiosInstance
+    .post(url)
+    .then((res) => res.data)
+    .catch((err) => errorHandler(err))
+}
 
-  const loginObject = {
-    role,
-    email,
-    password: hashedPassword,
+const postInstance = (url: string, data = {}) => {
+  return axiosInstance
+    .post(url, data)
+    .then((res) => res.data)
+    .catch((err) => errorHandler(err))
+}
+
+const deleteInstance = (url: string) => {
+  return axiosInstance
+    .delete(url)
+    .then((res) => res.data)
+    .catch((err) => errorHandler(err))
+}
+
+const putInstance = (url: string, body: object) => {
+  return axiosInstance
+    .put(url, body)
+    .then((res) => res.data)
+    .catch((err) => errorHandler(err))
+}
+
+const showMessage = (res: any, needShowSuccess = true) => {
+  if (res.code >= 400 && res.code < 600) {
+    message.error(res.msg)
+  } else {
+    needShowSuccess && message.success(res.msg)
   }
-  try {
-    const { data } = await axiosInstance.post('/login', loginObject)
-    showMessage(data.code, data.msg)
-    return data.data
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      if (error.response) {
-        showMessage(error.response.data.code, error.response.data.msg)
-      }
+  return res
+}
+
+const errorHandler = (err: any) => {
+  if (err.isAxiosError) {
+    if (err.response) {
+      // Server was able to send us a response, so this is an API Error.
+      console.error('[API Error]:', err.response.data)
+      return { msg: err.response.data.msg, code: err.response.data.code }
     } else {
-      console.log(error)
+      // Axios was not able to get a response at all. This is a Network-Level Error.
+      console.error('[Network Error]: No Response Received At', err)
     }
+  } else {
+    // Standard JS Error (Syntax, etc...)
+    console.error('[Non-HTTP Error]:', err)
   }
 }
 
+const login = async (formValues: any) => {
+  let { role, email, password } = formValues
+  password = AES.encrypt(password, 'cms').toString()
+  return postInstance('/login', { role, email, password }).then((res) =>
+    showMessage(res)
+  )
+}
+
 const logout = async () => {
-  try {
-    await axiosInstance.post('/logout')
-    localStorage.clear()
-  } catch (error) {
-    console.log(error)
-  }
+  return postInstance('/logout').then((res) => showMessage(res, false))
 }
 
 export { login, logout }

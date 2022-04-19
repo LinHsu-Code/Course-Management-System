@@ -12,11 +12,16 @@ export default function Login() {
   const router = useRouter()
 
   const onFinish = async (values: any) => {
-    const loginResult = await login(values)
-    localStorage.setItem('role', loginResult.role)
-    localStorage.setItem('token', loginResult.token)
-    localStorage.setItem('userId', loginResult.userId)
-    router.push(`dashboard/${loginResult.role}`)
+    const res = await login(values)
+    if (res.data) {
+      const {
+        data: { token, role, userId },
+      } = res
+      localStorage.setItem('role', role)
+      localStorage.setItem('token', token)
+      localStorage.setItem('userId', userId)
+      router.push(`dashboard/${role}`)
+    }
   }
 
   useEffect(() => {

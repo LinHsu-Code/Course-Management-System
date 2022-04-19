@@ -20,7 +20,7 @@ import {
 import styles from './dashboard-layout.module.scss'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
-import { logout } from '../lib/httpRequest'
+import { logout } from '../../lib/httpRequest'
 
 const { SubMenu } = Menu
 const { Header, Content, Sider } = Layout
@@ -49,14 +49,16 @@ export default function DashboardLayout({
   }
 
   const userLogout = async () => {
-    await logout()
-    //router.replace(router.pathname, 'login')
-    router.replace('/dashboard', undefined, { shallow: true })
+    const res = await logout()
+    if (res.data) {
+      localStorage.clear()
+      router.replace('/login', undefined, { shallow: true })
+    }
   }
 
   useEffect(() => {
     if (!localStorage.getItem('token')) {
-      router.replace('/dashboard', undefined, { shallow: true })
+      router.replace('/login', undefined, { shallow: true })
     }
   }, [])
 
