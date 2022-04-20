@@ -159,6 +159,7 @@ export default function DashboardLayout({
             margin: 24,
             marginTop: 0,
             backgroundColor: 'white',
+            overflowX: 'auto',
           }}
         >
           {children}

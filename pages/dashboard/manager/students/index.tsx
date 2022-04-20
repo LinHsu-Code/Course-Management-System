@@ -1,108 +1,114 @@
 import Head from 'next/head'
+import Link from 'next/link'
 import type { ReactElement } from 'react'
 import { useState, useEffect } from 'react'
-import { Table, Tag, Radio, Space } from 'antd'
+import { Table, Space, Input, Button, Row, Col } from 'antd'
 import DashboardLayout from '../../../../components/dashboardLayout'
 import { getStudentList } from '../../../../lib/httpRequest'
+import { formatDistanceToNow } from 'date-fns'
+import { PlusOutlined } from '@ant-design/icons'
 
 export default function Dashboard() {
-  const [page, setPage] = useState(1)
-  const [limit, setLimit] = useState(20)
+  const [paginator, setPaginator] = useState({ page: 1, limit: 20 })
+  const [total, setTotal] = useState(0)
+  const [data, setData] = useState([])
 
   useEffect(() => {
-    getStudentList({ page, limit }).then((res) => {
+    getStudentList(paginator).then((res) => {
       if (res.data) {
-        console.log(res.data)
+        setTotal(res.data.total)
+        setData(res.data.students)
       }
     })
-  }, [])
+  }, [paginator])
 
   const columns = [
     {
+      title: 'No.',
+      key: 'index',
+      width: 60,
+      fixed: 'left',
+      render: (text, record, index) => index + 1,
+    },
+    {
       title: 'Name',
       dataIndex: 'name',
-      key: 'name',
-      render: (text) => <a>{text}</a>,
-    },
-    {
-      title: 'Age',
-      dataIndex: 'age',
-      key: 'age',
-    },
-    {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address',
-    },
-    {
-      title: 'Tags',
-      key: 'tags',
-      dataIndex: 'tags',
-      render: (tags) => (
-        <span>
-          {tags.map((tag) => {
-            let color = tag.length > 5 ? 'geekblue' : 'green'
-            if (tag === 'loser') {
-              color = 'volcano'
-            }
-            return (
-              <Tag color={color} key={tag}>
-                {tag.toUpperCase()}
-              </Tag>
-            )
-          })}
-        </span>
+      width: 150,
+      fixed: 'left',
+      render: (text, record) => (
+        <Link href={`/dashboard/manager/students/${record.id}`}>
+          {record.name}
+        </Link>
       ),
     },
     {
+      title: 'Area',
+      dataIndex: 'country',
+      width: 100,
+    },
+    {
+      title: 'Email',
+      dataIndex: 'email',
+      width: 220,
+    },
+    {
+      title: 'Selected Curriculum',
+      dataIndex: 'courses',
+      width: 200,
+      render: (courses: []) => courses?.map((course) => course.name).join(', '),
+    },
+    {
+      title: 'Student Type',
+      dataIndex: 'type',
+      width: 100,
+      render: (type) => type?.name,
+    },
+    {
+      title: 'Join Time',
+      dataIndex: 'createdAt',
+      width: 100,
+      render: (date) =>
+        formatDistanceToNow(new Date(date), { addSuffix: true }),
+    },
+    {
       title: 'Action',
-      key: 'action',
-      render: (text, record) => (
+      dataIndex: 'action',
+      width: 100,
+      render: (text, record: object) => (
         <Space size="middle">
-          <a>Invite {record.name}</a>
+          <a>Edit</a>
           <a>Delete</a>
         </Space>
       ),
     },
   ]
 
-  const data = [
-    {
-      key: '1',
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      key: '2',
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      key: '3',
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-  ]
-
-  const changePagination = (page, pageSize) => {
-    console.log(page, pageSize)
-  }
   return (
     <>
       <Head>
         <title>{'CMS DashBoard: Manager'}</title>
       </Head>
       <div>
+        <Row style={{ justifyContent: 'space-between', marginBottom: 16 }}>
+          <Col>
+            <Button type="primary" icon={<PlusOutlined />}>
+              Add
+            </Button>
+          </Col>
+          <Col>
+            <Input.Search placeholder="Search by name" />
+          </Col>
+        </Row>
         <Table
+          rowKey={(record) => record.id}
           columns={columns}
-          pagination={{ defaultPageSize: 20, onChange: changePagination }}
+          pagination={{
+            defaultPageSize: 20,
+            total,
+            onChange: (page, limit) => setPaginator({ page, limit }),
+          }}
           dataSource={data}
+          scroll={{ y: 300 }}
         />
       </div>
     </>
