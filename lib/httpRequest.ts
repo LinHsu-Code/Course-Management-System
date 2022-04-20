@@ -11,7 +11,8 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use((config) => {
   if (
     config.url &&
-    (config.url.includes('dashboard') || config.url.includes('logout'))
+    !config.url.includes('signup') &&
+    !config.url.includes('login')
   ) {
     return {
       ...config,
@@ -33,7 +34,7 @@ const getInstance = (url: string, params = {}) => {
         .join('&')}`
     : url
   return axiosInstance
-    .post(url)
+    .get(url)
     .then((res) => res.data)
     .catch((err) => errorHandler(err))
 }
@@ -84,7 +85,7 @@ const errorHandler = (err: any) => {
   }
 }
 
-const login = async (formValues: any) => {
+const login = (formValues: any) => {
   let { role, email, password } = formValues
   password = AES.encrypt(password, 'cms').toString()
   return postInstance('/login', { role, email, password }).then((res) =>
@@ -92,8 +93,12 @@ const login = async (formValues: any) => {
   )
 }
 
-const logout = async () => {
+const logout = () => {
   return postInstance('/logout').then((res) => showMessage(res, false))
 }
 
-export { login, logout }
+const getStudentList = (params: object) => {
+  return getInstance('/students', params).then((res) => showMessage(res, false))
+}
+
+export { login, logout, getStudentList }
