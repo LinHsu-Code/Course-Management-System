@@ -91,7 +91,9 @@ export default function DashboardLayout({
           </Menu.Item>
           <SubMenu key="sub1" icon={<SolutionOutlined />} title="Student">
             <Menu.Item key="1" icon={<TeamOutlined />}>
-              Student List
+              <Link href="/dashboard/manager/students">
+                <a>Student List</a>
+              </Link>
             </Menu.Item>
           </SubMenu>
           <SubMenu key="sub2" icon={<DeploymentUnitOutlined />} title="Teacher">
