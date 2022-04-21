@@ -1,9 +1,8 @@
 import Head from 'next/head'
 import Link from 'next/link'
-import type { ReactElement } from 'react'
 import { useState, useEffect } from 'react'
 import { Table, Space, Input, Button, Row, Col } from 'antd'
-import DashboardLayout from '../../../../components/dashboardLayout'
+import Layout from '../../../../components/layout'
 import { getStudentList } from '../../../../lib/httpRequest'
 import { formatDistanceToNow } from 'date-fns'
 import { PlusOutlined } from '@ant-design/icons'
@@ -86,7 +85,7 @@ export default function Dashboard() {
   ]
 
   return (
-    <>
+    <Layout>
       <Head>
         <title>{'CMS DashBoard: Manager'}</title>
       </Head>
@@ -120,10 +119,6 @@ export default function Dashboard() {
           scroll={{ y: 300 }}
         />
       </div>
-    </>
+    </Layout>
   )
-}
-
-Dashboard.getLayout = function getLayout(data: any, component: ReactElement) {
-  return <DashboardLayout>{component}</DashboardLayout>
 }

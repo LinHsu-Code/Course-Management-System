@@ -1,18 +1,13 @@
 import Head from 'next/head'
-import type { ReactElement } from 'react'
-import DashboardLayout from '../../../components/dashboardLayout'
+import Layout from '../../../components/layout'
 
 export default function Dashboard() {
   return (
-    <>
+    <Layout>
       <Head>
         <title>{'CMS DashBoard: Manager'}</title>
       </Head>
       <div>Manager Overview</div>
-    </>
+    </Layout>
   )
-}
-
-Dashboard.getLayout = function getLayout(data: any, component: ReactElement) {
-  return <DashboardLayout>{component}</DashboardLayout>
 }

@@ -1,5 +1,4 @@
-import type { ReactElement } from 'react'
-import AuthLayout from '../components/authLayout'
+import Layout from '../components/layout'
 import Head from 'next/head'
 import { Row, Col, Form, Input, Button, Checkbox, Radio } from 'antd'
 import styles from '../styles/auth.module.scss'
@@ -32,7 +31,7 @@ export default function Login() {
   }, [])
 
   return (
-    <>
+    <Layout layoutType="auth">
       <Head>
         <title>{'Course Management Assistant: Sign In'}</title>
       </Head>
@@ -113,10 +112,6 @@ export default function Login() {
           </Col>
         </Row>
       </div>
-    </>
+    </Layout>
   )
-}
-
-Login.getLayout = function getLayout(data: any, component: ReactElement) {
-  return <AuthLayout>{component}</AuthLayout>
 }

@@ -1,19 +1,15 @@
 import Head from 'next/head'
 import type { ReactElement } from 'react'
-import HomeLayout from '../components/homeLayout'
+import Layout from '../components/layout'
 
 export default function Home() {
   return (
-    <>
+    <Layout layoutType="home">
       <Head>
         <title>{'Course Management Assistant: Home'}</title>
       </Head>
 
       <div>Home Page</div>
-    </>
+    </Layout>
   )
-}
-
-Home.getLayout = function getLayout(data: any, component: ReactElement) {
-  return <HomeLayout>{component}</HomeLayout>
 }

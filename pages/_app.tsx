@@ -1,24 +1,9 @@
-import { NextPage } from 'next'
-import type { AppProps } from 'next/app'
-import { ReactElement, ReactNode } from 'react'
-
-type NextPageWithLayout = NextPage & {
-  getLayout?: (pageProps: AppProps, page: ReactElement) => ReactNode
-}
-type AppPropsWithLayout = AppProps & {
-  Component: NextPageWithLayout
-}
-
 import Head from 'next/head'
+import type { AppProps } from 'next/app'
+
 export const siteTitle = 'custom-title'
 
-function MyApp({ Component, pageProps }: AppPropsWithLayout) {
-  // if (Component.getLayout) {
-  //   return Component.getLayout(pageProps.data, <Component {...pageProps} />)
-  // } else {
-  //   return <Component {...pageProps} />
-  // }
-
+function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
@@ -36,11 +21,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         <meta name="og:title" content={siteTitle} />
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
-      {Component.getLayout ? (
-        Component.getLayout(pageProps.data, <Component {...pageProps} />)
-      ) : (
-        <Component {...pageProps} />
-      )}
+      <Component {...pageProps} />
     </>
   )
 }

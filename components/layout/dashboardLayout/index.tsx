@@ -20,7 +20,7 @@ import {
 import styles from './dashboard-layout.module.scss'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
-import { logout } from '../../lib/httpRequest'
+import { logout } from '../../../lib/httpRequest'
 
 const { SubMenu } = Menu
 const { Header, Content, Sider } = Layout
