@@ -7,20 +7,22 @@ import DashboardLayout from '../../../../components/dashboardLayout'
 import { getStudentList } from '../../../../lib/httpRequest'
 import { formatDistanceToNow } from 'date-fns'
 import { PlusOutlined } from '@ant-design/icons'
+import { debounce } from 'lodash'
 
 export default function Dashboard() {
   const [paginator, setPaginator] = useState({ page: 1, limit: 20 })
   const [total, setTotal] = useState(0)
   const [data, setData] = useState([])
+  const [queryName, setQueryName] = useState('')
 
   useEffect(() => {
-    getStudentList(paginator).then((res) => {
+    getStudentList({ ...paginator, query: queryName }).then((res) => {
       if (res.data) {
         setTotal(res.data.total)
         setData(res.data.students)
       }
     })
-  }, [paginator])
+  }, [paginator, queryName])
 
   const columns = [
     {
@@ -96,7 +98,14 @@ export default function Dashboard() {
             </Button>
           </Col>
           <Col>
-            <Input.Search placeholder="Search by name" />
+            <Input.Search
+              placeholder="Search by name"
+              onChange={debounce(
+                (e) => setQueryName(e.target.value),
+                1000,
+                2000
+              )}
+            />
           </Col>
         </Row>
         <Table
