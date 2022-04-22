@@ -7,6 +7,8 @@ import { getStudentList } from '../../../../lib/httpRequest'
 import { formatDistanceToNow } from 'date-fns'
 import { PlusOutlined } from '@ant-design/icons'
 import { debounce } from 'lodash'
+import { Student, CourseType, StudentType } from '../../../../lib/model'
+import { ColumnType } from 'antd/lib/table'
 
 export default function Dashboard() {
   const [paginator, setPaginator] = useState({ page: 1, limit: 20 })
@@ -23,20 +25,20 @@ export default function Dashboard() {
     })
   }, [paginator, queryName])
 
-  const columns = [
+  const columns: ColumnType<Student>[] = [
     {
       title: 'No.',
       key: 'index',
       width: 60,
       fixed: 'left',
-      render: (text, record, index) => index + 1,
+      render: (_value, _record, index) => index + 1,
     },
     {
       title: 'Name',
       dataIndex: 'name',
       width: 150,
       fixed: 'left',
-      render: (text, record) => (
+      render: (_value, record) => (
         <Link href={`/dashboard/manager/students/${record.id}`}>
           {record.name}
         </Link>
@@ -56,26 +58,27 @@ export default function Dashboard() {
       title: 'Selected Curriculum',
       dataIndex: 'courses',
       width: 200,
-      render: (courses: []) => courses?.map((course) => course.name).join(', '),
+      render: (courses: CourseType[]) =>
+        courses?.map((course) => course.name).join(', '),
     },
     {
       title: 'Student Type',
       dataIndex: 'type',
       width: 100,
-      render: (type) => type?.name,
+      render: (type: StudentType) => type.name,
     },
     {
       title: 'Join Time',
       dataIndex: 'createdAt',
       width: 100,
-      render: (date) =>
+      render: (date: Date) =>
         formatDistanceToNow(new Date(date), { addSuffix: true }),
     },
     {
       title: 'Action',
       dataIndex: 'action',
       width: 100,
-      render: (text, record: object) => (
+      render: () => (
         <Space size="middle">
           <a>Edit</a>
           <a>Delete</a>
@@ -99,16 +102,12 @@ export default function Dashboard() {
           <Col>
             <Input.Search
               placeholder="Search by name"
-              onChange={debounce(
-                (e) => setQueryName(e.target.value),
-                1000,
-                2000
-              )}
+              onChange={debounce((e) => setQueryName(e.target.value), 1000)}
             />
           </Col>
         </Row>
         <Table
-          rowKey={(record) => record.id}
+          rowKey={(record) => record.id.toString()}
           columns={columns}
           pagination={{
             defaultPageSize: 20,
@@ -116,7 +115,7 @@ export default function Dashboard() {
             onChange: (page, limit) => setPaginator({ page, limit }),
           }}
           dataSource={data}
-          scroll={{ y: 300 }}
+          scroll={{ y: 400 }}
         />
       </div>
     </Layout>
