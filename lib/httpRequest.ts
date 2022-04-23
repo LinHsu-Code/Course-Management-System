@@ -2,7 +2,7 @@ import { baseURL } from './urlConfig'
 import axios from 'axios'
 import AES from 'crypto-js/aes'
 import { message } from 'antd'
-import { AddStudent } from '../lib/model'
+import { AddStudentRequest } from '../lib/model'
 
 const axiosInstance = axios.create({
   baseURL,
@@ -28,7 +28,7 @@ axiosInstance.interceptors.request.use((config) => {
   return config
 })
 
-const getInstance = (url: string, params = {}) => {
+const getInstanceByObject = (url: string, params = {}) => {
   url = !!params
     ? `${url}?${Object.entries(params)
         .map(([key, value]) => `${key}=${value}`)
@@ -36,6 +36,13 @@ const getInstance = (url: string, params = {}) => {
     : url
   return axiosInstance
     .get(url)
+    .then((res) => res.data)
+    .catch((err) => errorHandler(err))
+}
+
+const getInstanceByID = (url: string, id: number) => {
+  return axiosInstance
+    .get(`${url}/${id}`)
     .then((res) => res.data)
     .catch((err) => errorHandler(err))
 }
@@ -99,10 +106,14 @@ const logout = () => {
 }
 
 const getStudentList = (params: object) => {
-  return getInstance('/students', params).then((res) => showMessage(res, false))
+  return getInstanceByObject('/students', params).then((res) =>
+    showMessage(res, false)
+  )
 }
-
-const addStudent = (formValues: AddStudent) => {
+const getStudent = (id: number) => {
+  return getInstanceByID('/students', id).then((res) => showMessage(res, false))
+}
+const addStudent = (formValues: AddStudentRequest) => {
   return postInstance('/students', formValues).then((res) => showMessage(res))
 }
 
@@ -110,4 +121,4 @@ const deleteStudent = (id: number) => {
   return deleteInstance('/students', id).then((res) => showMessage(res))
 }
 
-export { login, logout, getStudentList, addStudent, deleteStudent }
+export { login, logout, getStudentList, addStudent, deleteStudent, getStudent }

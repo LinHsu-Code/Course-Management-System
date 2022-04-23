@@ -7,7 +7,7 @@ import { getStudentList } from '../../../../lib/httpRequest'
 import { formatDistanceToNow } from 'date-fns'
 import { PlusOutlined } from '@ant-design/icons'
 import { debounce } from 'lodash'
-import { Student, CourseType, StudentType } from '../../../../lib/model'
+import { ListStudent, CourseType, StudentType } from '../../../../lib/model'
 import { ColumnType } from 'antd/lib/table'
 import StudentModal from '../../../../components/student/studentModal'
 import { deleteStudent } from '../../../../lib/httpRequest'
@@ -18,11 +18,20 @@ export default function Dashboard() {
   const [data, setData] = useState([])
   const [queryName, setQueryName] = useState('')
   const [isEdit, setIsEdit] = useState(false)
+  const [editContent, setEditContent] = useState({})
 
   const [isModalVisible, setIsModalVisible] = useState(false)
 
-  const handleEdit = async (id: number) => {
+  const handleEdit = async (record: ListStudent) => {
     setIsEdit(true)
+    //console.log(record)
+    setEditContent({
+      name: record.name,
+      email: record.email,
+      country: record.country,
+      type: record.type?.id,
+      id: record.id,
+    })
     setIsModalVisible(true)
   }
 
@@ -47,7 +56,7 @@ export default function Dashboard() {
     })
   }, [paginator, queryName])
 
-  const columns: ColumnType<Student>[] = [
+  const columns: ColumnType<ListStudent>[] = [
     {
       title: 'No.',
       key: 'index',
@@ -102,7 +111,7 @@ export default function Dashboard() {
       width: 100,
       render: (_value, record) => (
         <Space size="small">
-          <a onClick={() => handleEdit(record.id)}>Edit</a>
+          <a onClick={() => handleEdit(record)}>Edit</a>
           <Popconfirm
             title="Are you sure to delete?"
             onConfirm={() => handleDeleteConfirm(record.id)}
@@ -155,6 +164,8 @@ export default function Dashboard() {
           setIsModalVisible={setIsModalVisible}
           isEdit={isEdit}
           setIsEdit={setIsEdit}
+          editContent={editContent}
+          setEditContent={setEditContent}
         />
       </div>
     </Layout>

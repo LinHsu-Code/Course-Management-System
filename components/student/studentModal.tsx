@@ -1,12 +1,14 @@
 import { Modal, Select, Form, Input } from 'antd'
 import { CountryList } from '../../lib/constants'
-import { AddStudent } from '../../lib/model'
+import { AddStudentRequest } from '../../lib/model'
 import { addStudent } from '../../lib/httpRequest'
 
 export default function StudentModal(props: any) {
   const [form] = Form.useForm()
+  props.isEdit && form.setFieldsValue(props.editContent)
+
   const handleOk = async () => {
-    const formData: AddStudent = form.getFieldsValue(true)
+    const formData: AddStudentRequest = form.getFieldsValue(true)
     const res = await addStudent(formData)
     if (res.data) {
       form.resetFields()
@@ -19,12 +21,13 @@ export default function StudentModal(props: any) {
     props.isEdit && props.setIsEdit(false)
     props.setIsModalVisible(false)
   }
+
   return (
     <Modal
       title={props.isEdit ? 'Edit Student' : 'Add Student'}
       cancelText="Cancel"
       okText={props.isEdit ? 'Update' : 'Add'}
-      destroyOnClose={true}
+      destroyOnClose
       centered={true}
       visible={props.isModalVisible}
       onOk={() => handleOk()}
@@ -39,11 +42,6 @@ export default function StudentModal(props: any) {
         wrapperCol={{
           span: 18,
         }}
-        initialValues={
-          {
-            // remember: true,
-          }
-        }
         autoComplete="off"
       >
         <Form.Item
