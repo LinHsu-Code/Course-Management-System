@@ -9,12 +9,15 @@ import { PlusOutlined } from '@ant-design/icons'
 import { debounce } from 'lodash'
 import { Student, CourseType, StudentType } from '../../../../lib/model'
 import { ColumnType } from 'antd/lib/table'
+import StudentModal from '../../../../components/student/studentModal'
 
 export default function Dashboard() {
   const [paginator, setPaginator] = useState({ page: 1, limit: 20 })
   const [total, setTotal] = useState(0)
   const [data, setData] = useState([])
   const [queryName, setQueryName] = useState('')
+
+  const [isModalVisible, setIsModalVisible] = useState(false)
 
   useEffect(() => {
     getStudentList({ ...paginator, query: queryName }).then((res) => {
@@ -95,7 +98,11 @@ export default function Dashboard() {
       <div>
         <Row style={{ justifyContent: 'space-between', marginBottom: 16 }}>
           <Col>
-            <Button type="primary" icon={<PlusOutlined />}>
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() => setIsModalVisible(true)}
+            >
               Add
             </Button>
           </Col>
@@ -116,6 +123,10 @@ export default function Dashboard() {
           }}
           dataSource={data}
           scroll={{ y: 400 }}
+        />
+        <StudentModal
+          isModalVisible={isModalVisible}
+          setIsModalVisible={setIsModalVisible}
         />
       </div>
     </Layout>
