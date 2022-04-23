@@ -2,7 +2,7 @@ import { baseURL } from './urlConfig'
 import axios from 'axios'
 import AES from 'crypto-js/aes'
 import { message } from 'antd'
-import { AddStudentRequest } from '../lib/model'
+import { ListStudentRequest } from '../lib/model'
 
 const axiosInstance = axios.create({
   baseURL,
@@ -113,12 +113,24 @@ const getStudentList = (params: object) => {
 const getStudent = (id: number) => {
   return getInstanceByID('/students', id).then((res) => showMessage(res, false))
 }
-const addStudent = (formValues: AddStudentRequest) => {
+const addStudent = (formValues: ListStudentRequest) => {
   return postInstance('/students', formValues).then((res) => showMessage(res))
+}
+
+const editStudent = (formValues: ListStudentRequest) => {
+  return putInstance('/students', formValues).then((res) => showMessage(res))
 }
 
 const deleteStudent = (id: number) => {
   return deleteInstance('/students', id).then((res) => showMessage(res))
 }
 
-export { login, logout, getStudentList, addStudent, deleteStudent, getStudent }
+export {
+  login,
+  logout,
+  getStudentList,
+  addStudent,
+  deleteStudent,
+  getStudent,
+  editStudent,
+}

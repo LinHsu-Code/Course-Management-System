@@ -12,12 +12,14 @@ export interface ListStudent {
   courses?: CourseType[]
 }
 
-export interface AddStudentRequest {
+export interface ListStudentRequest {
+  id?: number
   email: string
   name: string
   type: 1 | 2
   country: string
 }
+
 export interface StudentType {
   id: 1 | 2
   name: 'Tester' | 'Developer'

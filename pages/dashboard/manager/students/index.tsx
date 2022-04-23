@@ -19,12 +19,12 @@ export default function Dashboard() {
   const [queryName, setQueryName] = useState('')
   const [isEdit, setIsEdit] = useState(false)
   const [editContent, setEditContent] = useState({})
+  const [isEditSuccess, setIsEditSuccess] = useState(false)
 
   const [isModalVisible, setIsModalVisible] = useState(false)
 
   const handleEdit = async (record: ListStudent) => {
     setIsEdit(true)
-    //console.log(record)
     setEditContent({
       name: record.name,
       email: record.email,
@@ -54,7 +54,8 @@ export default function Dashboard() {
         setData(res.data.students)
       }
     })
-  }, [paginator, queryName])
+    isEditSuccess && setIsEditSuccess(false)
+  }, [paginator, queryName, isEditSuccess])
 
   const columns: ColumnType<ListStudent>[] = [
     {
@@ -166,6 +167,7 @@ export default function Dashboard() {
           setIsEdit={setIsEdit}
           editContent={editContent}
           setEditContent={setEditContent}
+          setIsEditSuccess={setIsEditSuccess}
         />
       </div>
     </Layout>
