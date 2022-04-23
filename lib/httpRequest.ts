@@ -2,6 +2,7 @@ import { baseURL } from './urlConfig'
 import axios from 'axios'
 import AES from 'crypto-js/aes'
 import { message } from 'antd'
+import { AddStudent } from '../lib/model'
 
 const axiosInstance = axios.create({
   baseURL,
@@ -101,4 +102,8 @@ const getStudentList = (params: object) => {
   return getInstance('/students', params).then((res) => showMessage(res, false))
 }
 
-export { login, logout, getStudentList }
+const addStudent = (formValues: AddStudent) => {
+  return postInstance('/students', formValues).then((res) => showMessage(res))
+}
+
+export { login, logout, getStudentList, addStudent }
