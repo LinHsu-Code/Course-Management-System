@@ -17,8 +17,14 @@ export default function Dashboard() {
   const [total, setTotal] = useState(0)
   const [data, setData] = useState([])
   const [queryName, setQueryName] = useState('')
+  const [isEdit, setIsEdit] = useState(false)
 
   const [isModalVisible, setIsModalVisible] = useState(false)
+
+  const handleEdit = async (id: number) => {
+    setIsEdit(true)
+    setIsModalVisible(true)
+  }
 
   const handleDeleteConfirm = async (id: number) => {
     const res = await deleteStudent(id)
@@ -30,7 +36,6 @@ export default function Dashboard() {
         }
       })
     }
-    //console.log(id)
   }
 
   useEffect(() => {
@@ -97,14 +102,14 @@ export default function Dashboard() {
       width: 100,
       render: (_value, record) => (
         <Space size="small">
-          <a>Edit</a>
+          <a onClick={() => handleEdit(record.id)}>Edit</a>
           <Popconfirm
             title="Are you sure to delete?"
             onConfirm={() => handleDeleteConfirm(record.id)}
             okText="Confirm"
             cancelText="Cancel"
           >
-            <a href="#">Delete</a>
+            <a>Delete</a>
           </Popconfirm>
         </Space>
       ),
@@ -148,6 +153,8 @@ export default function Dashboard() {
         <StudentModal
           isModalVisible={isModalVisible}
           setIsModalVisible={setIsModalVisible}
+          isEdit={isEdit}
+          setIsEdit={setIsEdit}
         />
       </div>
     </Layout>

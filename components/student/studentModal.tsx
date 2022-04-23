@@ -16,13 +16,14 @@ export default function StudentModal(props: any) {
 
   const handleCancel = () => {
     form.resetFields()
+    props.isEdit && props.setIsEdit(false)
     props.setIsModalVisible(false)
   }
   return (
     <Modal
-      title="Add Student"
+      title={props.isEdit ? 'Edit Student' : 'Add Student'}
       cancelText="Cancel"
-      okText="Add"
+      okText={props.isEdit ? 'Update' : 'Add'}
       destroyOnClose={true}
       centered={true}
       visible={props.isModalVisible}
