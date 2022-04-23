@@ -6,7 +6,7 @@ export interface Student {
   id: number
   email: string
   name: string
-  type: StudentType
+  type?: StudentType
   country: string
   profileId?: number
   courses?: CourseType[]

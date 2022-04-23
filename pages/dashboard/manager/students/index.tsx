@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
-import { Table, Space, Input, Button, Row, Col } from 'antd'
+import { Table, Space, Input, Button, Row, Col, Popconfirm } from 'antd'
 import Layout from '../../../../components/layout'
 import { getStudentList } from '../../../../lib/httpRequest'
 import { formatDistanceToNow } from 'date-fns'
@@ -10,6 +10,7 @@ import { debounce } from 'lodash'
 import { Student, CourseType, StudentType } from '../../../../lib/model'
 import { ColumnType } from 'antd/lib/table'
 import StudentModal from '../../../../components/student/studentModal'
+import { deleteStudent } from '../../../../lib/httpRequest'
 
 export default function Dashboard() {
   const [paginator, setPaginator] = useState({ page: 1, limit: 20 })
@@ -18,6 +19,19 @@ export default function Dashboard() {
   const [queryName, setQueryName] = useState('')
 
   const [isModalVisible, setIsModalVisible] = useState(false)
+
+  const handleDeleteConfirm = async (id: number) => {
+    const res = await deleteStudent(id)
+    if (res.data) {
+      getStudentList({ ...paginator, query: queryName }).then((res) => {
+        if (res.data) {
+          setTotal(res.data.total)
+          setData(res.data.students)
+        }
+      })
+    }
+    //console.log(id)
+  }
 
   useEffect(() => {
     getStudentList({ ...paginator, query: queryName }).then((res) => {
@@ -68,7 +82,7 @@ export default function Dashboard() {
       title: 'Student Type',
       dataIndex: 'type',
       width: 100,
-      render: (type: StudentType) => type.name,
+      render: (type: StudentType) => type?.name,
     },
     {
       title: 'Join Time',
@@ -81,10 +95,17 @@ export default function Dashboard() {
       title: 'Action',
       dataIndex: 'action',
       width: 100,
-      render: () => (
-        <Space size="middle">
+      render: (_value, record) => (
+        <Space size="small">
           <a>Edit</a>
-          <a>Delete</a>
+          <Popconfirm
+            title="Are you sure to delete?"
+            onConfirm={() => handleDeleteConfirm(record.id)}
+            okText="Confirm"
+            cancelText="Cancel"
+          >
+            <a href="#">Delete</a>
+          </Popconfirm>
         </Space>
       ),
     },

@@ -47,9 +47,9 @@ const postInstance = (url: string, data = {}) => {
     .catch((err) => errorHandler(err))
 }
 
-const deleteInstance = (url: string) => {
+const deleteInstance = (url: string, id: number) => {
   return axiosInstance
-    .delete(url)
+    .delete(`${url}/${id}`)
     .then((res) => res.data)
     .catch((err) => errorHandler(err))
 }
@@ -106,4 +106,8 @@ const addStudent = (formValues: AddStudent) => {
   return postInstance('/students', formValues).then((res) => showMessage(res))
 }
 
-export { login, logout, getStudentList, addStudent }
+const deleteStudent = (id: number) => {
+  return deleteInstance('/students', id).then((res) => showMessage(res))
+}
+
+export { login, logout, getStudentList, addStudent, deleteStudent }
