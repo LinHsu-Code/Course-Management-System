@@ -11,6 +11,7 @@ import { ListStudent, CourseType, StudentType } from '../../../../lib/model'
 import { ColumnType } from 'antd/lib/table'
 import StudentModal from '../../../../components/student/studentModal'
 import { deleteStudent } from '../../../../lib/httpRequest'
+import { COUNTRY_LIST, STUDENT_TYPE } from '../../../../lib/constants'
 
 export default function Dashboard() {
   const [paginator, setPaginator] = useState({ page: 1, limit: 20 })
@@ -70,6 +71,8 @@ export default function Dashboard() {
       dataIndex: 'name',
       width: 150,
       fixed: 'left',
+      sorter: (a: ListStudent, b: ListStudent) =>
+        a.name.charCodeAt(0) - b.name.charCodeAt(0),
       render: (_value, record) => (
         <Link href={`/dashboard/manager/students/${record.id}`}>
           {record.name}
@@ -80,6 +83,8 @@ export default function Dashboard() {
       title: 'Area',
       dataIndex: 'country',
       width: 100,
+      filters: COUNTRY_LIST.map((item) => ({ text: item, value: item })),
+      onFilter: (value, record) => value === record.country,
     },
     {
       title: 'Email',
@@ -97,6 +102,11 @@ export default function Dashboard() {
       title: 'Student Type',
       dataIndex: 'type',
       width: 100,
+      filters: STUDENT_TYPE.map((item) => ({
+        text: item,
+        value: item.toLowerCase(),
+      })),
+      onFilter: (value, record) => value === record.type?.name,
       render: (type: StudentType) => type?.name,
     },
     {

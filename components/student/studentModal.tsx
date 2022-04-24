@@ -1,5 +1,5 @@
 import { Modal, Select, Form, Input } from 'antd'
-import { CountryList } from '../../lib/constants'
+import { COUNTRY_LIST } from '../../lib/constants'
 import { ListStudentRequest } from '../../lib/model'
 import { addStudent, editStudent } from '../../lib/httpRequest'
 
@@ -83,7 +83,7 @@ export default function StudentModal(props: any) {
           ]}
         >
           <Select>
-            {CountryList.map((item, index) => (
+            {COUNTRY_LIST.map((item, index) => (
               <Select.Option value={item} key={index}>
                 {item}
               </Select.Option>
