@@ -14,13 +14,12 @@ export default function StudentModal(props: any) {
       : await addStudent(formData)
 
     if (res.data) {
-      form.resetFields()
-      props.setIsModalVisible(false)
       props.isEdit && props.setIsEditSuccess(true)
+      handleClose()
     }
   }
 
-  const handleCancel = () => {
+  const handleClose = () => {
     form.resetFields()
     props.isEdit && props.setIsEdit(false)
     props.setIsModalVisible(false)
@@ -35,7 +34,7 @@ export default function StudentModal(props: any) {
       centered={true}
       visible={props.isModalVisible}
       onOk={() => handleOk()}
-      onCancel={() => handleCancel()}
+      onCancel={() => handleClose()}
     >
       <Form
         name="student_modal"

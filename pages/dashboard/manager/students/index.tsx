@@ -48,8 +48,16 @@ export default function Dashboard() {
     }
   }
 
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setQueryName(e.target.value)
+    setPaginator({ page: 1, limit: 20 })
+  }
+
   useEffect(() => {
-    getStudentList({ ...paginator, query: queryName }).then((res) => {
+    const params = queryName
+      ? { ...paginator, query: queryName }
+      : { ...paginator }
+    getStudentList(params).then((res) => {
       if (res.data) {
         setTotal(res.data.total)
         setData(res.data.students)
@@ -155,7 +163,9 @@ export default function Dashboard() {
           <Col>
             <Input.Search
               placeholder="Search by name"
-              onChange={debounce((e) => setQueryName(e.target.value), 1000)}
+              onChange={debounce((e) => {
+                handleSearch(e)
+              }, 1000)}
             />
           </Col>
         </Row>
@@ -164,6 +174,8 @@ export default function Dashboard() {
           columns={columns}
           pagination={{
             defaultPageSize: 20,
+            defaultCurrent: 1,
+            current: paginator.page,
             total,
             onChange: (page, limit) => setPaginator({ page, limit }),
           }}
