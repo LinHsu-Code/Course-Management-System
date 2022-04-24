@@ -21,8 +21,22 @@ export default function Dashboard() {
   const [isEdit, setIsEdit] = useState(false)
   const [editContent, setEditContent] = useState({})
   const [isEditSuccess, setIsEditSuccess] = useState(false)
-
   const [isModalVisible, setIsModalVisible] = useState(false)
+
+  const fetchStudentList = (
+    paginator: { page: number; limit: number },
+    queryName: string
+  ) => {
+    const params = queryName
+      ? { ...paginator, query: queryName }
+      : { ...paginator }
+    getStudentList(params).then((res) => {
+      if (res.data) {
+        setTotal(res.data.total)
+        setData(res.data.students)
+      }
+    })
+  }
 
   const handleEdit = async (record: ListStudent) => {
     setIsEdit(true)
@@ -39,12 +53,7 @@ export default function Dashboard() {
   const handleDeleteConfirm = async (id: number) => {
     const res = await deleteStudent(id)
     if (res.data) {
-      getStudentList({ ...paginator, query: queryName }).then((res) => {
-        if (res.data) {
-          setTotal(res.data.total)
-          setData(res.data.students)
-        }
-      })
+      fetchStudentList(paginator, queryName)
     }
   }
 
@@ -54,15 +63,7 @@ export default function Dashboard() {
   }
 
   useEffect(() => {
-    const params = queryName
-      ? { ...paginator, query: queryName }
-      : { ...paginator }
-    getStudentList(params).then((res) => {
-      if (res.data) {
-        setTotal(res.data.total)
-        setData(res.data.students)
-      }
-    })
+    fetchStudentList(paginator, queryName)
     isEditSuccess && setIsEditSuccess(false)
   }, [paginator, queryName, isEditSuccess])
 
@@ -182,15 +183,17 @@ export default function Dashboard() {
           dataSource={data}
           scroll={{ y: 400 }}
         />
-        <StudentModal
-          isModalVisible={isModalVisible}
-          setIsModalVisible={setIsModalVisible}
-          isEdit={isEdit}
-          setIsEdit={setIsEdit}
-          editContent={editContent}
-          setEditContent={setEditContent}
-          setIsEditSuccess={setIsEditSuccess}
-        />
+        {!isEditSuccess && (
+          <StudentModal
+            isModalVisible={isModalVisible}
+            setIsModalVisible={setIsModalVisible}
+            isEdit={isEdit}
+            setIsEdit={setIsEdit}
+            editContent={editContent}
+            setEditContent={setEditContent}
+            setIsEditSuccess={setIsEditSuccess}
+          />
+        )}
       </div>
     </Layout>
   )

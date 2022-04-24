@@ -21,7 +21,6 @@ export default function StudentModal(props: any) {
 
   const handleClose = () => {
     props.setIsModalVisible(false)
-    form.resetFields()
     props.isEdit && props.setIsEdit(false)
   }
 
@@ -29,6 +28,7 @@ export default function StudentModal(props: any) {
     <Form
       name="student_modal"
       form={form}
+      preserve={false}
       labelCol={{
         span: 6,
       }}
@@ -96,6 +96,7 @@ export default function StudentModal(props: any) {
       </Form.Item>
     </Form>
   )
+
   return (
     <Modal
       title={props.isEdit ? 'Edit Student' : 'Add Student'}
@@ -105,6 +106,7 @@ export default function StudentModal(props: any) {
       visible={props.isModalVisible}
       onOk={() => handleOk()}
       onCancel={() => handleClose()}
+      destroyOnClose={true}
     >
       {modalForm}
     </Modal>
