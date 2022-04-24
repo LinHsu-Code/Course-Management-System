@@ -20,9 +20,9 @@ export default function StudentModal(props: any) {
   }
 
   const handleClose = () => {
+    props.setIsModalVisible(false)
     form.resetFields()
     props.isEdit && props.setIsEdit(false)
-    props.setIsModalVisible(false)
   }
 
   const modalForm = (
@@ -101,7 +101,6 @@ export default function StudentModal(props: any) {
       title={props.isEdit ? 'Edit Student' : 'Add Student'}
       cancelText="Cancel"
       okText={props.isEdit ? 'Update' : 'Add'}
-      destroyOnClose={true}
       centered={true}
       visible={props.isModalVisible}
       onOk={() => handleOk()}
