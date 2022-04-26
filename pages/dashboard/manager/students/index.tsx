@@ -14,13 +14,14 @@ import { deleteStudent } from '../../../../lib/httpRequest'
 import { COUNTRY_LIST, STUDENT_TYPE } from '../../../../lib/constants'
 
 export default function Dashboard() {
-  const [paginator, setPaginator] = useState({ page: 1, limit: 20 })
+  const [query, setQuery] = useState({
+    paginator: { page: 1, limit: 20 },
+    queryName: '',
+  })
   const [total, setTotal] = useState(0)
   const [data, setData] = useState([])
-  const [queryName, setQueryName] = useState('')
-  const [isEdit, setIsEdit] = useState(false)
   const [editContent, setEditContent] = useState({})
-  const [isEditSuccess, setIsEditSuccess] = useState(false)
+  const [isModalSuccess, setIsModalSuccess] = useState(false)
   const [isModalVisible, setIsModalVisible] = useState(false)
 
   const fetchStudentList = (
@@ -38,8 +39,12 @@ export default function Dashboard() {
     })
   }
 
+  const handleAdd = () => {
+    setEditContent({})
+    setIsModalVisible(true)
+  }
+
   const handleEdit = async (record: ListStudent) => {
-    setIsEdit(true)
     setEditContent({
       name: record.name,
       email: record.email,
@@ -53,19 +58,19 @@ export default function Dashboard() {
   const handleDeleteConfirm = async (id: number) => {
     const res = await deleteStudent(id)
     if (res.data) {
-      fetchStudentList(paginator, queryName)
+      fetchStudentList(query.paginator, query.queryName)
     }
   }
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setQueryName(e.target.value)
-    setPaginator({ page: 1, limit: 20 })
+    setQuery({ paginator: { page: 1, limit: 20 }, queryName: e.target.value })
   }
 
   useEffect(() => {
-    fetchStudentList(paginator, queryName)
-    isEditSuccess && setIsEditSuccess(false)
-  }, [paginator, queryName, isEditSuccess])
+    console.log('useEffect')
+    fetchStudentList(query.paginator, query.queryName)
+    isModalSuccess && setIsModalSuccess(false)
+  }, [query, isModalSuccess])
 
   const columns: ColumnType<ListStudent>[] = [
     {
@@ -156,7 +161,7 @@ export default function Dashboard() {
             <Button
               type="primary"
               icon={<PlusOutlined />}
-              onClick={() => setIsModalVisible(true)}
+              onClick={() => handleAdd()}
             >
               Add
             </Button>
@@ -176,22 +181,24 @@ export default function Dashboard() {
           pagination={{
             defaultPageSize: 20,
             defaultCurrent: 1,
-            current: paginator.page,
+            current: query.paginator.page,
             total,
-            onChange: (page, limit) => setPaginator({ page, limit }),
+            onChange: (page, limit) =>
+              setQuery({
+                paginator: { page, limit },
+                queryName: query.queryName,
+              }),
           }}
           dataSource={data}
           scroll={{ y: 400 }}
         />
-        {!isEditSuccess && (
+        {!isModalSuccess && (
           <StudentModal
             isModalVisible={isModalVisible}
             setIsModalVisible={setIsModalVisible}
-            isEdit={isEdit}
-            setIsEdit={setIsEdit}
             editContent={editContent}
             setEditContent={setEditContent}
-            setIsEditSuccess={setIsEditSuccess}
+            setIsEditSuccess={setIsModalSuccess}
           />
         )}
       </div>

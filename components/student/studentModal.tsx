@@ -5,23 +5,23 @@ import { addStudent, editStudent } from '../../lib/httpRequest'
 
 export default function StudentModal(props: any) {
   const [form] = Form.useForm()
-  props.isEdit && form.setFieldsValue(props.editContent)
+  form.setFieldsValue(props.editContent)
 
   const handleOk = async () => {
     const formData: ListStudentRequest = form.getFieldsValue(true)
-    const res = props.isEdit
-      ? await editStudent(formData)
-      : await addStudent(formData)
+    const res =
+      Object.keys(props.editContent).length === 0
+        ? await addStudent(formData)
+        : await editStudent(formData)
 
     if (res.data) {
-      props.isEdit && props.setIsEditSuccess(true)
+      props.setIsEditSuccess(true)
       handleClose()
     }
   }
 
   const handleClose = () => {
     props.setIsModalVisible(false)
-    props.isEdit && props.setIsEdit(false)
   }
 
   const modalForm = (
@@ -99,9 +99,13 @@ export default function StudentModal(props: any) {
 
   return (
     <Modal
-      title={props.isEdit ? 'Edit Student' : 'Add Student'}
+      title={
+        Object.keys(props.editContent).length === 0
+          ? 'Add Student'
+          : 'Edit Student'
+      }
       cancelText="Cancel"
-      okText={props.isEdit ? 'Update' : 'Add'}
+      okText={Object.keys(props.editContent).length === 0 ? 'Add' : 'Update'}
       centered={true}
       visible={props.isModalVisible}
       onOk={() => handleOk()}
