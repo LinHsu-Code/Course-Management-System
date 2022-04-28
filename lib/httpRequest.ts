@@ -40,7 +40,7 @@ const getInstanceByObject = (url: string, params = {}) => {
     .catch((err) => errorHandler(err))
 }
 
-const getInstanceByID = (url: string, id: number) => {
+const getInstanceByID = (url: string, id: string | string[] | undefined) => {
   return axiosInstance
     .get(`${url}/${id}`)
     .then((res) => res.data)
@@ -110,9 +110,11 @@ const getStudentList = (params: object) => {
     showMessage(res, false)
   )
 }
-const getStudent = (id: number) => {
+
+const getStudent = (id: string | string[] | undefined) => {
   return getInstanceByID('/students', id).then((res) => showMessage(res, false))
 }
+
 const addStudent = (formValues: ListStudentRequest) => {
   return postInstance('/students', formValues).then((res) => showMessage(res))
 }
