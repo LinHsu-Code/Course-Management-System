@@ -34,4 +34,9 @@ const lessConfig = withAntdLess({
   },
 })
 
-module.exports = lessConfig
+module.exports = {
+  ...lessConfig,
+  env: {
+    BASE_URL: process.env.BASE_URL,
+  },
+}

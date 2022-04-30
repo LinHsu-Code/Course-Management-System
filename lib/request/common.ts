@@ -1,13 +1,13 @@
-import { baseURL } from '../urlConfig'
 import axios from 'axios'
 import { message } from 'antd'
 
 const axiosInstance = axios.create({
-  baseURL,
+  baseURL: process.env.BASE_URL,
   responseType: 'json',
 })
 
 axiosInstance.interceptors.request.use((config) => {
+  console.log(config.baseURL)
   if (
     config.url &&
     !config.url.includes('signup') &&
