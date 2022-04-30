@@ -5,26 +5,44 @@ import {
   deleteInstance,
   showMessage,
 } from './common'
-import { ListStudentRequest } from '../../lib/model'
+import {
+  GetStudentsRequest,
+  GetStudentsResponse,
+  AddStudentRequest,
+  AddStudentsResponse,
+  EditStudentRequest,
+  EditStudentsResponse,
+  DeleteStudentRequest,
+  DeleteStudentResponse,
+  GetStudentRequest,
+  GetStudentResponse,
+} from '../../lib/model'
 
-const getStudents = (params: object) => {
+const getStudents = (
+  params: GetStudentsRequest
+): Promise<GetStudentsResponse> => {
   return getInstance('/students', params).then((res) => showMessage(res, false))
 }
 
-const getStudent = (id: string | string[] | undefined) => {
-  return getInstance(`/students/${id}`).then((res) => showMessage(res, false))
-}
-
-const addStudent = (formValues: ListStudentRequest) => {
+const addStudent = (
+  formValues: AddStudentRequest
+): Promise<AddStudentsResponse> => {
   return postInstance('/students', formValues).then((res) => showMessage(res))
 }
 
-const editStudent = (formValues: ListStudentRequest) => {
+const editStudent = (
+  formValues: EditStudentRequest
+): Promise<EditStudentsResponse> => {
   return putInstance('/students', formValues).then((res) => showMessage(res))
 }
 
-const deleteStudent = (id: number) => {
+const deleteStudent = (
+  id: DeleteStudentRequest
+): Promise<DeleteStudentResponse> => {
   return deleteInstance('/students', id).then((res) => showMessage(res))
 }
 
-export { getStudents, addStudent, deleteStudent, getStudent, editStudent }
+const getStudent = (id: GetStudentRequest): Promise<GetStudentResponse> => {
+  return getInstance(`/students/${id}`).then((res) => showMessage(res, false))
+}
+export { getStudents, addStudent, deleteStudent, editStudent, getStudent }

@@ -7,7 +7,6 @@ const axiosInstance = axios.create({
 })
 
 axiosInstance.interceptors.request.use((config) => {
-  console.log(config.baseURL)
   if (
     config.url &&
     !config.url.includes('signup') &&

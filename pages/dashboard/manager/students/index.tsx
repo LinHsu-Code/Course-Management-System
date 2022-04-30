@@ -7,6 +7,7 @@ import { PlusOutlined } from '@ant-design/icons'
 import { debounce } from 'lodash'
 import StudentModal from '../../../../components/student/studentModal'
 import StudentTable from '../../../../components/student/studentTable'
+import { Student } from '../../../../lib/model'
 
 export default function Dashboard() {
   const [queryParams, setQueryParams] = useState({
@@ -14,7 +15,7 @@ export default function Dashboard() {
     queryName: '',
   })
   const [total, setTotal] = useState(0)
-  const [data, setData] = useState([])
+  const [data, setData] = useState<Student[]>([])
   const [editContent, setEditContent] = useState({})
   const [isModalVisible, setIsModalVisible] = useState(false)
 

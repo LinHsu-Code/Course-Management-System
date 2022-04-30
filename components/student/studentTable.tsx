@@ -1,13 +1,13 @@
 import Link from 'next/link'
 import { Table, Space, Popconfirm } from 'antd'
 import { formatDistanceToNow } from 'date-fns'
-import { ListStudent, CourseType, StudentType } from '../../lib/model'
+import { Student, CourseType, StudentType } from '../../lib/model'
 import { ColumnType } from 'antd/lib/table'
 import { deleteStudent } from '../../lib/request'
 import { COUNTRY_LIST, STUDENT_TYPE } from '../../lib/constants'
 
 export default function StudentTable(props: any) {
-  const handleEditClick = async (record: ListStudent) => {
+  const handleEditClick = async (record: Student) => {
     props.setEditContent({
       name: record.name,
       email: record.email,
@@ -25,7 +25,7 @@ export default function StudentTable(props: any) {
     }
   }
 
-  const columns: ColumnType<ListStudent>[] = [
+  const columns: ColumnType<Student>[] = [
     {
       title: 'No.',
       key: 'index',
@@ -38,7 +38,7 @@ export default function StudentTable(props: any) {
       dataIndex: 'name',
       width: 150,
       fixed: 'left',
-      sorter: (a: ListStudent, b: ListStudent) =>
+      sorter: (a: Student, b: Student) =>
         a.name.charCodeAt(0) - b.name.charCodeAt(0),
       render: (_value, record) => (
         <Link href={`/dashboard/manager/students/${record.id}`}>
