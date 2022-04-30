@@ -3,7 +3,7 @@ import Head from 'next/head'
 import { Row, Col, Form, Input, Button, Checkbox, Radio } from 'antd'
 import styles from '../styles/auth.module.scss'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
-import { login } from '../lib/httpRequest'
+import { login } from '../lib/request'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 

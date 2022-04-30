@@ -3,7 +3,7 @@ import { Table, Space, Popconfirm } from 'antd'
 import { formatDistanceToNow } from 'date-fns'
 import { ListStudent, CourseType, StudentType } from '../../lib/model'
 import { ColumnType } from 'antd/lib/table'
-import { deleteStudent } from '../../lib/httpRequest'
+import { deleteStudent } from '../../lib/request'
 import { COUNTRY_LIST, STUDENT_TYPE } from '../../lib/constants'
 
 export default function StudentList(props: any) {

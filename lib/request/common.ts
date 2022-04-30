@@ -1,8 +1,6 @@
-import { baseURL } from './urlConfig'
+import { baseURL } from '../urlConfig'
 import axios from 'axios'
-import AES from 'crypto-js/aes'
 import { message } from 'antd'
-import { ListStudentRequest } from '../lib/model'
 
 const axiosInstance = axios.create({
   baseURL,
@@ -28,21 +26,11 @@ axiosInstance.interceptors.request.use((config) => {
   return config
 })
 
-const getInstanceByObject = (url: string, params = {}) => {
-  url = !!params
-    ? `${url}?${Object.entries(params)
-        .map(([key, value]) => `${key}=${value}`)
-        .join('&')}`
-    : url
+const getInstance = (url: string, params = {}) => {
+  url = !!params ? `${url}?${new URLSearchParams(params).toString()}` : url
+
   return axiosInstance
     .get(url)
-    .then((res) => res.data)
-    .catch((err) => errorHandler(err))
-}
-
-const getInstanceByID = (url: string, id: string | string[] | undefined) => {
-  return axiosInstance
-    .get(`${url}/${id}`)
     .then((res) => res.data)
     .catch((err) => errorHandler(err))
 }
@@ -93,46 +81,4 @@ const errorHandler = (err: any) => {
   }
 }
 
-const login = (formValues: any) => {
-  let { role, email, password } = formValues
-  password = AES.encrypt(password, 'cms').toString()
-  return postInstance('/login', { role, email, password }).then((res) =>
-    showMessage(res)
-  )
-}
-
-const logout = () => {
-  return postInstance('/logout').then((res) => showMessage(res, false))
-}
-
-const getStudentList = (params: object) => {
-  return getInstanceByObject('/students', params).then((res) =>
-    showMessage(res, false)
-  )
-}
-
-const getStudent = (id: string | string[] | undefined) => {
-  return getInstanceByID('/students', id).then((res) => showMessage(res, false))
-}
-
-const addStudent = (formValues: ListStudentRequest) => {
-  return postInstance('/students', formValues).then((res) => showMessage(res))
-}
-
-const editStudent = (formValues: ListStudentRequest) => {
-  return putInstance('/students', formValues).then((res) => showMessage(res))
-}
-
-const deleteStudent = (id: number) => {
-  return deleteInstance('/students', id).then((res) => showMessage(res))
-}
-
-export {
-  login,
-  logout,
-  getStudentList,
-  addStudent,
-  deleteStudent,
-  getStudent,
-  editStudent,
-}
+export { getInstance, postInstance, putInstance, deleteInstance, showMessage }

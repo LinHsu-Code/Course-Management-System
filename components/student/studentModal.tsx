@@ -1,7 +1,7 @@
 import { Modal, Select, Form, Input } from 'antd'
 import { COUNTRY_LIST } from '../../lib/constants'
 import { ListStudentRequest } from '../../lib/model'
-import { addStudent, editStudent } from '../../lib/httpRequest'
+import { addStudent, editStudent } from '../../lib/request'
 
 export default function StudentModal(props: any) {
   const [form] = Form.useForm()

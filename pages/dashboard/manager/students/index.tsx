@@ -2,7 +2,7 @@ import Head from 'next/head'
 import { useState, useEffect } from 'react'
 import { Input, Button, Row, Col } from 'antd'
 import Layout from '../../../../components/layout'
-import { getStudentList } from '../../../../lib/httpRequest'
+import { getStudents } from '../../../../lib/request'
 import { PlusOutlined } from '@ant-design/icons'
 import { debounce } from 'lodash'
 import StudentModal from '../../../../components/student/studentModal'
@@ -29,7 +29,7 @@ export default function Dashboard() {
     const params = queryParams.queryName
       ? { ...queryParams.paginator, query: queryParams.queryName }
       : { ...queryParams.paginator }
-    getStudentList(params).then((res) => {
+    getStudents(params).then((res) => {
       if (res.data) {
         setTotal(res.data.total)
         setData(res.data.students)
