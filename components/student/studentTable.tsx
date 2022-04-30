@@ -6,7 +6,7 @@ import { ColumnType } from 'antd/lib/table'
 import { deleteStudent } from '../../lib/request'
 import { COUNTRY_LIST, STUDENT_TYPE } from '../../lib/constants'
 
-export default function StudentList(props: any) {
+export default function StudentTable(props: any) {
   const handleEditClick = async (record: ListStudent) => {
     props.setEditContent({
       name: record.name,
@@ -21,7 +21,7 @@ export default function StudentList(props: any) {
   const handleDelete = async (id: number) => {
     const res = await deleteStudent(id)
     if (res.data) {
-      props.fetchStudentList(props.queryParams)
+      props.fetchStudents(props.queryParams)
     }
   }
 

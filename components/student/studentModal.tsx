@@ -14,7 +14,7 @@ export default function StudentModal(props: any) {
         : await editStudent(formData)
 
     if (res.data) {
-      props.fetchStudentList(props.queryParams)
+      props.fetchStudents(props.queryParams)
       handleClose()
     }
   }

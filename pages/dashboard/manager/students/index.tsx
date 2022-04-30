@@ -6,7 +6,7 @@ import { getStudents } from '../../../../lib/request'
 import { PlusOutlined } from '@ant-design/icons'
 import { debounce } from 'lodash'
 import StudentModal from '../../../../components/student/studentModal'
-import StudentList from '../../../../components/student/studentList'
+import StudentTable from '../../../../components/student/studentTable'
 
 export default function Dashboard() {
   const [queryParams, setQueryParams] = useState({
@@ -19,10 +19,10 @@ export default function Dashboard() {
   const [isModalVisible, setIsModalVisible] = useState(false)
 
   useEffect(() => {
-    fetchStudentList(queryParams)
+    fetchStudents(queryParams)
   }, [queryParams])
 
-  const fetchStudentList = (queryParams: {
+  const fetchStudents = (queryParams: {
     paginator: { page: number; limit: number }
     queryName: string
   }) => {
@@ -76,14 +76,14 @@ export default function Dashboard() {
           </Col>
         </Row>
 
-        <StudentList
+        <StudentTable
           data={data}
           total={total}
           queryParams={queryParams}
           setQueryParams={setQueryParams}
           setEditContent={setEditContent}
           setIsModalVisible={setIsModalVisible}
-          fetchStudentList={fetchStudentList}
+          fetchStudents={fetchStudents}
         />
 
         {isModalVisible && (
@@ -91,7 +91,7 @@ export default function Dashboard() {
             setIsModalVisible={setIsModalVisible}
             editContent={editContent}
             queryParams={queryParams}
-            fetchStudentList={fetchStudentList}
+            fetchStudents={fetchStudents}
           />
         )}
       </div>
