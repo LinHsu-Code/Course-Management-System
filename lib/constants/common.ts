@@ -14,7 +14,7 @@ export const PROGRAM_LANGUAGE_COLORS: string[] = [
   'gold',
   'green',
   'cyan',
-  'geekblue',
+  'blue',
   'purple',
   'red',
   'lime',

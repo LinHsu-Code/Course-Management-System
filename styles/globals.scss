@@ -5,3 +5,7 @@
   margin: 20px 0px;
   font-size: 24px;
 }
+
+.ant-descriptions-item-label.ant-descriptions-item-no-colon::after {
+  content: none !important;
+}
