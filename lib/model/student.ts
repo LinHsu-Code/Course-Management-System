@@ -49,7 +49,7 @@ export type DeleteStudentRequest = number
 
 export type DeleteStudentResponse = Response<boolean>
 
-export type GetStudentRequest = string | string[] | undefined
+export type GetStudentRequest = string
 
 export interface GetStudentResponseData {
   createdAt: Date
@@ -59,7 +59,7 @@ export interface GetStudentResponseData {
   name: string
   country: string
   profileId: number
-  address: null
+  address: string | null
   age: number
   avatar: string
   description: string

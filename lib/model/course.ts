@@ -12,5 +12,5 @@ export interface StudentCourse {
   studentId: number
   name: string
   courseId: number
-  type: any[]
+  type: CourseType[]
 }

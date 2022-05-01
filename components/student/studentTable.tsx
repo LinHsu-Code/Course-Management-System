@@ -105,7 +105,7 @@ export default function StudentTable(props: any) {
 
   return (
     <Table
-      rowKey={(record) => record.id.toString()}
+      rowKey="id"
       columns={columns}
       pagination={{
         defaultPageSize: 20,
