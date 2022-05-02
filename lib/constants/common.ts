@@ -19,3 +19,22 @@ export const PROGRAM_LANGUAGE_COLORS: string[] = [
   'red',
   'lime',
 ]
+
+export const NAV_LABEL_TO_PATH = {
+  Overview: [''],
+  Teacher: ['teachers'],
+  Student: ['students'],
+  Course: ['courses'],
+  'Add Course': ['add-course'],
+  'Edit Course': ['edit-course'],
+  'Class Schedule': ['schedule'],
+  'My Course': ['own'],
+  Profile: ['profile'],
+  Message: ['message'],
+}
+
+export const ROLE = {
+  manager: 'manager',
+  teacher: 'teacher',
+  student: 'student',
+}

@@ -21,6 +21,7 @@ import styles from './dashboard-layout.module.scss'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { logout } from '../../../lib/request'
+import BreadCrumbs from '../../common/BreadCrumbs'
 
 const { SubMenu } = Menu
 const { Header, Content, Sider } = Layout
@@ -149,6 +150,8 @@ export default function DashboardLayout({
             </Col>
           </Row>
         </Header>
+
+        <BreadCrumbs />
 
         <PageHeader className="site-page-header" breadcrumb={{ routes }} />
 
