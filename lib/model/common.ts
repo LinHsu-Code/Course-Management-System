@@ -12,7 +12,7 @@ export interface Paginator {
 export interface DynamicNav {
   icon?: JSX.Element
   label: string
-  path: string[]
+  path: string
   isHideInBreadcrumb?: boolean
   isHideInSiderNav?: boolean
   //hide?: boolean;

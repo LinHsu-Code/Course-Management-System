@@ -7,23 +7,15 @@ import {
   MenuFoldOutlined,
   UserOutlined,
   BellOutlined,
-  DashboardOutlined,
-  SolutionOutlined,
-  TeamOutlined,
-  DeploymentUnitOutlined,
-  ReadOutlined,
-  ProjectOutlined,
-  FileAddOutlined,
-  EditOutlined,
-  MessageOutlined,
 } from '@ant-design/icons'
 import styles from './dashboard-layout.module.scss'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { logout } from '../../../lib/request'
-import BreadCrumbs from '../../common/BreadCrumbs'
+import { useUserRole } from '../../custom-hooks'
+import { ROUTES } from '../../../lib/constants'
+import { DynamicNav } from '../../../lib/model'
 
-const { SubMenu } = Menu
 const { Header, Content, Sider } = Layout
 const routes = [
   {
@@ -36,12 +28,40 @@ const routes = [
   },
 ]
 
+const renderMenuItems = (navData: DynamicNav[], parentPath = '') => {
+  return navData.map((item: DynamicNav) => {
+    const itemPath = parentPath + item.path
+    const subMenuKey = `subMenuKey:${itemPath}`
+    if (item.subNav && !!item.subNav.length) {
+      return (
+        <Menu.SubMenu key={subMenuKey} title={item.label} icon={item.icon}>
+          {renderMenuItems(item.subNav, itemPath)}
+        </Menu.SubMenu>
+      )
+    } else {
+      return item.isHideInSiderNav ? null : (
+        <Menu.Item key={itemPath} icon={item.icon}>
+          <Link href={itemPath} replace>
+            <a>{item.label}</a>
+          </Link>
+        </Menu.Item>
+      )
+    }
+  })
+}
+
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   const router = useRouter()
+  const selectedKeys = [router.pathname]
+  const openKeys = [
+    `subMenuKey:${router.pathname.split('/').slice(0, 4).join('/')}`,
+  ]
+  const userRole = useUserRole()
+  const userNav = ROUTES.get(userRole)
   const [collapsed, setCollapsed] = useState(false)
   const [logoutMenu, setLogoutMenu] = useState(false)
 
@@ -84,38 +104,11 @@ export default function DashboardLayout({
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={['0']}
+          defaultOpenKeys={openKeys}
+          defaultSelectedKeys={selectedKeys}
           style={{ borderRight: 0 }}
         >
-          <Menu.Item key="0" icon={<DashboardOutlined />}>
-            Overview
-          </Menu.Item>
-          <SubMenu key="sub1" icon={<SolutionOutlined />} title="Student">
-            <Menu.Item key="1" icon={<TeamOutlined />}>
-              <Link href="/dashboard/manager/students">
-                <a>Student List</a>
-              </Link>
-            </Menu.Item>
-          </SubMenu>
-          <SubMenu key="sub2" icon={<DeploymentUnitOutlined />} title="Teacher">
-            <Menu.Item key="5" icon={<TeamOutlined />}>
-              Teacher List
-            </Menu.Item>
-          </SubMenu>
-          <SubMenu key="sub3" icon={<ReadOutlined />} title="Course">
-            <Menu.Item key="9" icon={<ProjectOutlined />}>
-              All Course
-            </Menu.Item>
-            <Menu.Item key="10" icon={<FileAddOutlined />}>
-              Add Course
-            </Menu.Item>
-            <Menu.Item key="11" icon={<EditOutlined />}>
-              Edit Course
-            </Menu.Item>
-          </SubMenu>
-          <Menu.Item key="12" icon={<MessageOutlined />}>
-            Message
-          </Menu.Item>
+          {userNav && renderMenuItems(userNav, '/dashboard/manager')}
         </Menu>
       </Sider>
 
@@ -150,8 +143,6 @@ export default function DashboardLayout({
             </Col>
           </Row>
         </Header>
-
-        <BreadCrumbs />
 
         <PageHeader className="site-page-header" breadcrumb={{ routes }} />
 

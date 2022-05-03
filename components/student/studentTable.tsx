@@ -42,7 +42,7 @@ export default function StudentTable(props: any) {
         a.name.charCodeAt(0) - b.name.charCodeAt(0),
       render: (_value, record) => (
         <Link href={`/dashboard/manager/students/${record.id}`}>
-          {record.name}
+          <a>{record.name}</a>
         </Link>
       ),
     },

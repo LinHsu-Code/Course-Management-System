@@ -14,21 +14,21 @@ import {
   TeamOutlined,
 } from '@ant-design/icons'
 
-const students: DynamicNav = {
+const STUDENTS: DynamicNav = {
   path: NAV_LABEL_TO_PATH.Student,
   label: 'Student',
   icon: <SolutionOutlined />,
   isHideInBreadcrumb: true,
-  subNav: [{ path: [''], label: 'Student List', icon: <TeamOutlined /> }],
+  subNav: [{ path: '', label: 'Student List', icon: <TeamOutlined /> }],
 }
 
-const courses: DynamicNav = {
+const COURSES: DynamicNav = {
   path: NAV_LABEL_TO_PATH.Course,
   label: 'Course',
   icon: <ReadOutlined />,
   isHideInBreadcrumb: true,
   subNav: [
-    { path: [''], label: 'All Courses', icon: <ProjectOutlined /> },
+    { path: '', label: 'All Courses', icon: <ProjectOutlined /> },
     {
       path: NAV_LABEL_TO_PATH['Add Course'],
       label: 'Add Course',
@@ -42,33 +42,33 @@ const courses: DynamicNav = {
   ],
 }
 
-const teachers: DynamicNav = {
+const TEACHERS: DynamicNav = {
   path: NAV_LABEL_TO_PATH.Teacher,
   label: 'Teacher',
   icon: <DeploymentUnitOutlined />,
   isHideInBreadcrumb: true,
   subNav: [
     {
-      path: [''],
+      path: '',
       label: 'Teacher List',
       icon: <TeamOutlined />,
     },
   ],
 }
 
-const overview: DynamicNav = {
+const OVERVIEW: DynamicNav = {
   path: NAV_LABEL_TO_PATH.Overview,
   label: 'Overview',
   icon: <DashboardOutlined />,
 }
 
-const studentCourses: DynamicNav = {
+const STUDENT_COURSES: DynamicNav = {
   path: NAV_LABEL_TO_PATH.Course,
   label: 'Course',
   icon: <ReadOutlined />,
   isHideInBreadcrumb: true,
   subNav: [
-    { path: [''], label: 'All Courses', icon: <ProjectOutlined /> },
+    { path: '', label: 'All Courses', icon: <ProjectOutlined /> },
     {
       path: NAV_LABEL_TO_PATH['My Course'],
       label: 'My Courses',
@@ -77,29 +77,29 @@ const studentCourses: DynamicNav = {
   ],
 }
 
-const classSchedule: DynamicNav = {
+const CLASS_SCHEDULE: DynamicNav = {
   path: NAV_LABEL_TO_PATH['Class Schedule'],
   label: 'Class Schedule',
   icon: <CalendarOutlined />,
 }
 
-const profile: DynamicNav = {
+const PROFILE: DynamicNav = {
   path: NAV_LABEL_TO_PATH.Profile,
   label: 'Profile',
   isHideInSiderNav: true,
   icon: <ProfileOutlined />,
 }
 
-const messages: DynamicNav = {
+const MESSAGES: DynamicNav = {
   path: NAV_LABEL_TO_PATH.Message,
   label: 'Message',
   icon: <MessageOutlined />,
 }
 
-export const routes: Map<Role, DynamicNav[]> = new Map([
-  ['manager', [overview, students, teachers, courses, messages]],
-  ['teacher', [overview, classSchedule, students, courses, profile, messages]],
-  ['student', [overview, studentCourses, classSchedule, profile, messages]],
+export const ROUTES: Map<Role, DynamicNav[]> = new Map([
+  ['manager', [OVERVIEW, STUDENTS, TEACHERS, COURSES, MESSAGES]],
+  ['teacher', [OVERVIEW, CLASS_SCHEDULE, STUDENTS, COURSES, PROFILE, MESSAGES]],
+  ['student', [OVERVIEW, STUDENT_COURSES, CLASS_SCHEDULE, PROFILE, MESSAGES]],
 ])
 
 // const routes = [
