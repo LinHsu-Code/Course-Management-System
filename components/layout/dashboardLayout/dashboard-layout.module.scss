@@ -24,14 +24,14 @@
     cursor: pointer;
     transition: color 0.3s;
     color: white;
-    margin-right: 'auto';
+    margin-right: auto;
     &:hover {
       color: #1890ff;
     }
   }
 
   .avatar {
-    margin-right: 24;
+    margin-right: 24px;
   }
 
   .logoutMenu {
@@ -48,8 +48,8 @@
 }
 
 .content {
-  padding: 24;
-  margin: 24;
+  padding: 24px;
+  margin: 24px;
   margin-top: 0;
   background-color: white;
 }
