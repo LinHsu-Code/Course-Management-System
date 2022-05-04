@@ -15,6 +15,7 @@ import { logout } from '../../../lib/request'
 import { useUserRole } from '../../custom-hooks'
 import { ROUTES } from '../../../lib/constants'
 import { DynamicNav } from '../../../lib/model'
+import { generateBreadcrumbDate } from '../../../lib/util'
 
 const { Header, Content, Sider } = Layout
 
@@ -36,64 +37,6 @@ const renderSideMenuItems = (navData: DynamicNav[], parentPath = '') => {
           </Link>
         </Menu.Item>
       )
-    }
-  })
-}
-
-const getNameFromPath = (
-  path: string,
-  navData: DynamicNav[],
-  isLast: boolean
-): string | undefined => {
-  for (let i = 0; i < navData.length; i++) {
-    if (navData[i].subNav === undefined) {
-      if (navData[i].path === `/${path}`) {
-        return navData[i].label
-      }
-      continue
-    } else {
-      if (navData[i].path === `/${path}`) {
-        if (isLast) {
-          return navData[i].subNav?.[0].label
-        } else {
-          return navData[i].label
-        }
-      } else {
-        const result = getNameFromPath(
-          path,
-          navData[i].subNav as DynamicNav[],
-          isLast
-        )
-        if (result) {
-          return result
-        }
-        continue
-      }
-    }
-  }
-}
-
-const generateBreadcrumbDate = (
-  paths: string[],
-  navData: DynamicNav[],
-  id: string | string[] | undefined,
-  userRole: string
-): { href: string; label: string | undefined }[] => {
-  let menuPaths = paths
-  if (typeof id === 'string') {
-    menuPaths = [...menuPaths.slice(0, menuPaths.length - 1), id]
-  }
-  return menuPaths.map((item, index, arr) => {
-    const href = arr.slice(0, index + 1).join('/')
-    if (/\d+/g.test(item)) {
-      return { href, label: 'Detail' }
-    } else if (item.indexOf(userRole) !== -1) {
-      return { href, label: `CMS ${userRole.toUpperCase()} SYSTEM` }
-    } else {
-      return {
-        href,
-        label: getNameFromPath(item, navData, index === arr.length - 1),
-      }
     }
   })
 }
@@ -129,10 +72,6 @@ export default function DashboardLayout({
     }
   }
 
-  const handleSideMenuClick: MenuProps['onClick'] = (e) => {
-    console.log('click ', e)
-  }
-
   useEffect(() => {
     if (!localStorage.getItem('token')) {
       router.replace('/login', undefined, { shallow: true })
@@ -163,14 +102,13 @@ export default function DashboardLayout({
           defaultOpenKeys={openKeys}
           defaultSelectedKeys={selectedKeys}
           style={{ borderRight: 0 }}
-          onClick={handleSideMenuClick}
         >
           {userNav && renderSideMenuItems(userNav, rolePath)}
         </Menu>
       </Sider>
 
       <Layout>
-        <Header className="site-layout-background" style={{ padding: 0 }}>
+        <Header style={{ padding: 0 }}>
           <Row>
             <Col
               className={styles.trigger}
@@ -211,7 +149,6 @@ export default function DashboardLayout({
         </Breadcrumb>
 
         <Content
-          className="site-layout-background"
           style={{
             padding: 24,
             margin: 24,
