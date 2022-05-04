@@ -1,17 +1,4 @@
-.trigger {
-  padding: 0 24px;
-  font-size: 18px;
-  line-height: 64px;
-  cursor: pointer;
-  transition: color 0.3s;
-  color: white;
-}
-
-.trigger:hover {
-  color: #1890ff;
-}
-
-.logo {
+.logoContainer {
   height: 64px;
   display: inline-flex;
   width: 100%;
@@ -21,17 +8,48 @@
   color: #fff;
   text-shadow: 5px 1px 5px;
   transform: rotateX(45deg);
+  .logo {
+    color: #fff;
+    cursor: pointer;
+  }
 }
 
-// .site-layout .site-layout-background {
-//   background: #fff;
-//   padding: 0;
-// }
+//-----------antd Layout---------
+.header {
+  padding: 0;
+  .trigger {
+    padding: 0 24px;
+    font-size: 18px;
+    line-height: 64px;
+    cursor: pointer;
+    transition: color 0.3s;
+    color: white;
+    margin-right: 'auto';
+    &:hover {
+      color: #1890ff;
+    }
+  }
 
-.logoutMenu {
-  margin-left: auto;
-  position: absolute;
-  right: 0;
-  top: 64px;
-  z-index: 999;
+  .avatar {
+    margin-right: 24;
+  }
+
+  .logoutMenu {
+    margin-left: auto;
+    position: absolute;
+    right: 0;
+    top: 64px;
+    z-index: 999;
+  }
+}
+
+.breadcrumb {
+  padding: 16px 24px;
+}
+
+.content {
+  padding: 24;
+  margin: 24;
+  margin-top: 0;
+  background-color: white;
 }

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import Link from 'next/link'
-import { Layout, Menu, Breadcrumb, Row, Col, Avatar, MenuProps } from 'antd'
+import { Layout, Menu, Breadcrumb, Row, Col, Avatar } from 'antd'
 import {
   LogoutOutlined,
   MenuUnfoldOutlined,
@@ -14,32 +14,10 @@ import { useEffect } from 'react'
 import { logout } from '../../../lib/request'
 import { useUserRole } from '../../custom-hooks'
 import { ROUTES } from '../../../lib/constants'
-import { DynamicNav } from '../../../lib/model'
-import { generateBreadcrumbDate } from '../../../lib/util'
+import SideMenu from './sideMenu'
+import { generateBreadcrumbData } from '../../../lib/util'
 
 const { Header, Content, Sider } = Layout
-
-const renderSideMenuItems = (navData: DynamicNav[], parentPath = '') => {
-  return navData.map((item: DynamicNav) => {
-    const itemPath = parentPath + item.path
-    const subMenuKey = `subMenuKey:${itemPath}`
-    if (item.subNav && !!item.subNav.length) {
-      return (
-        <Menu.SubMenu key={subMenuKey} title={item.label} icon={item.icon}>
-          {renderSideMenuItems(item.subNav, itemPath)}
-        </Menu.SubMenu>
-      )
-    } else {
-      return item.isHideInSiderNav ? null : (
-        <Menu.Item key={itemPath} icon={item.icon}>
-          <Link href={itemPath} replace>
-            <a>{item.label}</a>
-          </Link>
-        </Menu.Item>
-      )
-    }
-  })
-}
 
 export default function DashboardLayout({
   children,
@@ -61,7 +39,7 @@ export default function DashboardLayout({
   const [logoutMenu, setLogoutMenu] = useState(false)
 
   const breadcrumbDate = userNav
-    ? generateBreadcrumbDate(menuPaths, userNav, id, userRole)
+    ? generateBreadcrumbData(menuPaths, userNav, id, userRole)
     : null
 
   const userLogout = async () => {
@@ -88,45 +66,43 @@ export default function DashboardLayout({
           minHeight: '100vh',
         }}
       >
-        <div className={styles.logo}>
+        <div className={styles.logoContainer}>
           <Link href={'/'}>
             <a>
-              <span style={{ color: '#fff', cursor: 'pointer' }}>CMS</span>
+              <span className={styles.logo}>CMS</span>
             </a>
           </Link>
         </div>
 
-        <Menu
-          theme="dark"
-          mode="inline"
-          defaultOpenKeys={openKeys}
-          defaultSelectedKeys={selectedKeys}
-          style={{ borderRight: 0 }}
-        >
-          {userNav && renderSideMenuItems(userNav, rolePath)}
-        </Menu>
+        {userNav && (
+          <SideMenu
+            userNav={userNav}
+            rolePath={rolePath}
+            openKeys={openKeys}
+            selectedKeys={selectedKeys}
+          />
+        )}
       </Sider>
 
       <Layout>
-        <Header style={{ padding: 0 }}>
+        <Header className={styles.header}>
           <Row>
             <Col
               className={styles.trigger}
               onClick={() => setCollapsed(!collapsed)}
-              style={{ marginRight: 'auto' }}
             >
               {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             </Col>
 
             <Col>
-              <Avatar icon={<BellOutlined />} style={{ marginRight: 24 }} />
+              <Avatar icon={<BellOutlined />} className={styles.avatar} />
             </Col>
 
             <Col
               onMouseEnter={() => setLogoutMenu(true)}
               onMouseLeave={() => setLogoutMenu(false)}
             >
-              <Avatar icon={<UserOutlined />} style={{ marginRight: 24 }} />
+              <Avatar icon={<UserOutlined />} className={styles.avatar} />
               {logoutMenu && (
                 <Menu className={styles.logoutMenu} theme="dark">
                   <Menu.Item key="55" onClick={userLogout}>
@@ -139,7 +115,7 @@ export default function DashboardLayout({
           </Row>
         </Header>
 
-        <Breadcrumb style={{ padding: '16px 24px' }}>
+        <Breadcrumb className={styles.breadcrumb}>
           {breadcrumbDate &&
             breadcrumbDate.map((item) => (
               <Breadcrumb.Item key={item.href}>
@@ -148,16 +124,7 @@ export default function DashboardLayout({
             ))}
         </Breadcrumb>
 
-        <Content
-          style={{
-            padding: 24,
-            margin: 24,
-            marginTop: 0,
-            backgroundColor: 'white',
-          }}
-        >
-          {children}
-        </Content>
+        <Content className={styles.content}>{children}</Content>
       </Layout>
     </Layout>
   )

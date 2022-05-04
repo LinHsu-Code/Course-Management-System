@@ -33,7 +33,7 @@ const getNameFromPath = (
   }
 }
 
-export const generateBreadcrumbDate = (
+export const generateBreadcrumbData = (
   paths: string[],
   navData: DynamicNav[],
   id: string | string[] | undefined,
