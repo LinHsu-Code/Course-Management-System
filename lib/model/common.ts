@@ -15,8 +15,7 @@ export interface DynamicNav {
   path: string
   isHideInBreadcrumb?: boolean
   isHideInSiderNav?: boolean
-  //hide?: boolean;
-  subNav?: DynamicNav[]
+  subNav?: [DynamicNav, ...DynamicNav[]]
 }
 
 export type Role = 'manager' | 'teacher' | 'student'
