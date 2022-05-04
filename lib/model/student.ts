@@ -1,4 +1,4 @@
-import { CourseType, StudentCourse } from './course'
+import { CourseType, StudentDetailCourse } from './course'
 import { Response, Paginator } from './common'
 
 export interface StudentType {
@@ -24,13 +24,13 @@ export interface GetStudentsRequest {
   limit: number
 }
 
-export interface GetStudentsResponseData {
+export interface Students {
   total: number
   students: Student[]
   paginator: Paginator
 }
 
-export type GetStudentsResponse = Response<GetStudentsResponseData>
+export type GetStudentsResponse = Response<Students>
 export interface AddStudentRequest {
   email: string
   name: string
@@ -51,14 +51,7 @@ export type DeleteStudentResponse = Response<boolean>
 
 export type GetStudentRequest = string
 
-export interface GetStudentResponseData {
-  createdAt: Date
-  updatedAt: Date
-  id: number
-  email: string
-  name: string
-  country: string
-  profileId: number
+export interface StudentDetail extends Student {
   address: string | null
   age: number
   avatar: string
@@ -69,7 +62,7 @@ export interface GetStudentResponseData {
   memberStartAt: Date
   phone: string
   type: StudentType
-  courses: StudentCourse[]
+  courses: StudentDetailCourse[]
   interest: string[]
 }
-export type GetStudentResponse = Response<GetStudentResponseData>
+export type GetStudentResponse = Response<StudentDetail>

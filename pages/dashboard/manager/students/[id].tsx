@@ -9,7 +9,7 @@ import { GetServerSideProps } from 'next/types'
 import {
   CourseType,
   GetStudentResponseData,
-  StudentCourse,
+  StudentDetailCourse,
 } from '../../../../lib/model'
 import DetailInfoCard from '../../../../components/common/detailInfoCard'
 import DetailAboutInfo from '../../../../components/common/detailAboutInfo'
@@ -33,7 +33,7 @@ export default function StudentDetail(props: { id: string }) {
   )
   const [student, setStudent] = useState<GetStudentResponseData | null>(null)
 
-  const columns: ColumnType<StudentCourse>[] = [
+  const columns: ColumnType<StudentDetailCourse>[] = [
     {
       title: 'No.',
       key: 'index',

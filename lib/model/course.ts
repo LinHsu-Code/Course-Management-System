@@ -4,7 +4,7 @@ export interface CourseType {
   courseId?: number
 }
 
-export interface StudentCourse {
+export interface StudentDetailCourse {
   createdAt: Date
   updatedAt: Date
   id: number
