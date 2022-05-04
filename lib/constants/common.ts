@@ -32,9 +32,3 @@ export const NAV_LABEL_TO_PATH = {
   Profile: '/profile',
   Message: '/message',
 }
-
-export enum ROLE {
-  manager = 'manager',
-  teacher = 'teacher',
-  student = 'student',
-}

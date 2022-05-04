@@ -1,15 +1,6 @@
 import { useState } from 'react'
 import Link from 'next/link'
-import {
-  Layout,
-  Menu,
-  Breadcrumb,
-  PageHeader,
-  Row,
-  Col,
-  Avatar,
-  MenuProps,
-} from 'antd'
+import { Layout, Menu, Breadcrumb, Row, Col, Avatar, MenuProps } from 'antd'
 import {
   LogoutOutlined,
   MenuUnfoldOutlined,
@@ -24,23 +15,8 @@ import { logout } from '../../../lib/request'
 import { useUserRole } from '../../custom-hooks'
 import { ROUTES } from '../../../lib/constants'
 import { DynamicNav } from '../../../lib/model'
-import path from 'path/posix'
-import Item from 'antd/lib/list/Item'
 
 const { Header, Content, Sider } = Layout
-
-{
-  /* <Breadcrumb>
-<Breadcrumb.Item>Home</Breadcrumb.Item>
-<Breadcrumb.Item>
-  <a href="">Application Center</a>
-</Breadcrumb.Item>
-<Breadcrumb.Item>
-  <a href="">Application List</a>
-</Breadcrumb.Item>
-<Breadcrumb.Item>An Application</Breadcrumb.Item>
-</Breadcrumb> */
-}
 
 const renderSideMenuItems = (navData: DynamicNav[], parentPath = '') => {
   return navData.map((item: DynamicNav) => {
@@ -64,34 +40,6 @@ const renderSideMenuItems = (navData: DynamicNav[], parentPath = '') => {
   })
 }
 
-// const getNameFromPath = (path: string, navData: DynamicNav[]) => {
-//   let result
-//   navData.forEach((item) => {
-//     if (!item.subNav) {
-//       if (item.path === `/${path}`) {
-//         result = (
-//           <Breadcrumb.Item key={item.label}>
-//             <a href={item.path}>{item.label}</a>
-//           </Breadcrumb.Item>
-//         )
-//         return
-//       }
-//     } else {
-//       if (item.path === `/${path}` && item.isHideInBreadcrumb) {
-//         result = (
-//           <Breadcrumb.Item key={item.label}>
-//             <a href={item.path}>{item.subNav[0].label}</a>
-//           </Breadcrumb.Item>
-//         )
-//         return
-//       } else {
-//         getNameFromPath(path, item.subNav)
-//       }
-//     }
-//   })
-//   return result
-// }
-
 const getNameFromPath = (
   path: string,
   navData: DynamicNav[],
@@ -110,9 +58,12 @@ const getNameFromPath = (
         } else {
           return navData[i].label
         }
-        continue
       } else {
-        const result = getNameFromPath(path, navData[i].subNav, isLast)
+        const result = getNameFromPath(
+          path,
+          navData[i].subNav as DynamicNav[],
+          isLast
+        )
         if (result) {
           return result
         }
@@ -128,13 +79,10 @@ const generateBreadcrumbDate = (
   id: string | string[] | undefined,
   userRole: string
 ): { href: string; label: string | undefined }[] => {
-  const overviewPath = paths.slice(0, 3).join('/')
-  let menuPaths = [overviewPath, ...paths.slice(3)]
+  let menuPaths = paths
   if (typeof id === 'string') {
     menuPaths = [...menuPaths.slice(0, menuPaths.length - 1), id]
   }
-  console.log('menuPaths', menuPaths)
-
   return menuPaths.map((item, index, arr) => {
     const href = arr.slice(0, index + 1).join('/')
     if (/\d+/g.test(item)) {
@@ -157,25 +105,21 @@ export default function DashboardLayout({
 }) {
   const router = useRouter()
   const paths = router.pathname.split('/')
+  const rolePath = paths.slice(0, 3).join('/')
+  const menuPaths = [rolePath, ...paths.slice(3)]
   const { id } = router.query
-
-  //console.log(paths)
   const selectedKeys = [router.pathname]
   const openKeys = [
     `subMenuKey:${router.pathname.split('/').slice(0, 4).join('/')}`,
   ]
   const userRole = useUserRole()
   const userNav = ROUTES.get(userRole)
-  //console.log(userNav)
   const [collapsed, setCollapsed] = useState(false)
   const [logoutMenu, setLogoutMenu] = useState(false)
 
-  const breadcrumbDate = generateBreadcrumbDate(paths, userNav, id, userRole)
-  console.log('breadcrumbDate=', breadcrumbDate)
-
-  const toggle = () => {
-    setCollapsed(!collapsed)
-  }
+  const breadcrumbDate = userNav
+    ? generateBreadcrumbDate(menuPaths, userNav, id, userRole)
+    : null
 
   const userLogout = async () => {
     const res = await logout()
@@ -221,7 +165,7 @@ export default function DashboardLayout({
           style={{ borderRight: 0 }}
           onClick={handleSideMenuClick}
         >
-          {userNav && renderSideMenuItems(userNav, '/dashboard/manager')}
+          {userNav && renderSideMenuItems(userNav, rolePath)}
         </Menu>
       </Sider>
 
@@ -230,7 +174,7 @@ export default function DashboardLayout({
           <Row>
             <Col
               className={styles.trigger}
-              onClick={toggle}
+              onClick={() => setCollapsed(!collapsed)}
               style={{ marginRight: 'auto' }}
             >
               {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
@@ -258,11 +202,12 @@ export default function DashboardLayout({
         </Header>
 
         <Breadcrumb style={{ padding: '16px 24px' }}>
-          {breadcrumbDate.map((item) => (
-            <Breadcrumb.Item key={item.href}>
-              <a href={item.href}>{item.label}</a>
-            </Breadcrumb.Item>
-          ))}
+          {breadcrumbDate &&
+            breadcrumbDate.map((item) => (
+              <Breadcrumb.Item key={item.href}>
+                <a href={item.href}>{item.label}</a>
+              </Breadcrumb.Item>
+            ))}
         </Breadcrumb>
 
         <Content

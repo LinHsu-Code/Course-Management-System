@@ -1,5 +1,6 @@
 import { NAV_LABEL_TO_PATH } from '../constants'
 import { DynamicNav, Role } from '../model'
+
 import {
   CalendarOutlined,
   DashboardOutlined,
@@ -97,22 +98,13 @@ const MESSAGES: DynamicNav = {
 }
 
 export const ROUTES: Map<Role, DynamicNav[]> = new Map([
-  ['manager', [OVERVIEW, STUDENTS, TEACHERS, COURSES, MESSAGES]],
-  ['teacher', [OVERVIEW, CLASS_SCHEDULE, STUDENTS, COURSES, PROFILE, MESSAGES]],
-  ['student', [OVERVIEW, STUDENT_COURSES, CLASS_SCHEDULE, PROFILE, MESSAGES]],
+  [Role.manager, [OVERVIEW, STUDENTS, TEACHERS, COURSES, MESSAGES]],
+  [
+    Role.teacher,
+    [OVERVIEW, CLASS_SCHEDULE, STUDENTS, COURSES, PROFILE, MESSAGES],
+  ],
+  [
+    Role.student,
+    [OVERVIEW, STUDENT_COURSES, CLASS_SCHEDULE, PROFILE, MESSAGES],
+  ],
 ])
-
-// const routes = [
-//   {
-//     path: 'index',
-//     breadcrumbName: 'First-level Menu',
-//   },
-//   {
-//     path: 'first',
-//     breadcrumbName: 'Second-level Menu',
-//   },
-//   {
-//     path: 'second',
-//     breadcrumbName: 'Third-level Menu',
-//   },
-// ]

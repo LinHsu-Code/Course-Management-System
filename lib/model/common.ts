@@ -18,4 +18,8 @@ export interface DynamicNav {
   subNav?: [DynamicNav, ...DynamicNav[]]
 }
 
-export type Role = 'manager' | 'teacher' | 'student'
+export enum Role {
+  manager = 'manager',
+  teacher = 'teacher',
+  student = 'student',
+}
