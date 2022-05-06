@@ -8,7 +8,7 @@ import { ColumnType } from 'antd/lib/table'
 import { GetServerSideProps } from 'next/types'
 import {
   CourseType,
-  GetStudentResponseData,
+  StudentDetail,
   StudentDetailCourse,
 } from '../../../../lib/model'
 import DetailInfoCard from '../../../../components/common/detailInfoCard'
@@ -24,14 +24,14 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 }
 
-export default function StudentDetail(props: { id: string }) {
+export default function Page(props: { id: string }) {
   const [info, setInfo] = useState<
     { label: string; value: string | number | null; span: number }[]
   >([])
   const [about, setAbout] = useState<{ label: string; value: string | Date }[]>(
     []
   )
-  const [student, setStudent] = useState<GetStudentResponseData | null>(null)
+  const [student, setStudent] = useState<StudentDetail | null>(null)
 
   const columns: ColumnType<StudentDetailCourse>[] = [
     {

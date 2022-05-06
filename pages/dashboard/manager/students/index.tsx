@@ -9,7 +9,7 @@ import StudentModal from '../../../../components/student/studentModal'
 import StudentTable from '../../../../components/student/studentTable'
 import { Student } from '../../../../lib/model'
 
-export default function Dashboard() {
+export default function Page() {
   const [queryParams, setQueryParams] = useState({
     paginator: { page: 1, limit: 20 },
     queryName: '',

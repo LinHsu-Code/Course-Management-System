@@ -119,7 +119,7 @@ export default function StudentTable(props: any) {
           }),
       }}
       dataSource={props.data}
-      scroll={{ y: 400 }}
+      // scroll={{ y: 400 }}
     />
   )
 }

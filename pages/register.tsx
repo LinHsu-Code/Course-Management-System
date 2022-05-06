@@ -2,7 +2,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import Layout from '../components/layout'
 
-const Register: NextPage = () => {
+const Page: NextPage = () => {
   return (
     <Layout layoutType="auth">
       <Head>
@@ -13,4 +13,4 @@ const Register: NextPage = () => {
   )
 }
 
-export default Register
+export default Page
