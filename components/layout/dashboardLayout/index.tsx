@@ -10,12 +10,11 @@ import {
 } from '@ant-design/icons'
 import styles from './dashboard-layout.module.scss'
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
 import { logout } from '../../../lib/request'
-import { useUserRole } from '../../custom-hooks'
 import { ROUTES } from '../../../lib/constants'
 import SideMenu from './sideMenu'
 import { generateBreadcrumbData } from '../../../lib/util'
+import { useAuth, useRole } from '../../../hooks'
 
 const { Header, Content, Sider } = Layout
 
@@ -24,6 +23,8 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode
 }) {
+  useAuth()
+  const role = useRole()
   const router = useRouter()
   const paths = router.pathname.split('/')
   const rolePath = paths.slice(0, 3).join('/')
@@ -33,13 +34,13 @@ export default function DashboardLayout({
   const openKeys = [
     `subMenuKey:${router.pathname.split('/').slice(0, 4).join('/')}`,
   ]
-  const userRole = useUserRole()
-  const userNav = ROUTES.get(userRole)
+
+  const userNav = role ? ROUTES.get(role) : null
   const [collapsed, setCollapsed] = useState(false)
   const [logoutMenu, setLogoutMenu] = useState(false)
 
   const breadcrumbDate = userNav
-    ? generateBreadcrumbData(menuPaths, userNav, id, userRole)
+    ? generateBreadcrumbData(menuPaths, userNav, id, role)
     : null
 
   const userLogout = async () => {
@@ -49,12 +50,6 @@ export default function DashboardLayout({
       router.replace('/login', undefined, { shallow: true })
     }
   }
-
-  useEffect(() => {
-    if (!localStorage.getItem('token')) {
-      router.replace('/login', undefined, { shallow: true })
-    }
-  }, [])
 
   return (
     <Layout>

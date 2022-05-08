@@ -1,18 +1,7 @@
-import { useEffect } from 'react'
-import { useRouter } from 'next/router'
+import { useAuth, useUser } from '../../hooks'
 
 export default function Page() {
-  const router = useRouter()
-  useEffect(() => {
-    if (!localStorage.getItem('token')) {
-      router.push('/login', undefined, { shallow: true })
-    }
-
-    if (localStorage.getItem('role')) {
-      router.push(`/dashboard/${localStorage.getItem('role')}`, undefined, {
-        shallow: true,
-      })
-    }
-  }, [])
+  useAuth()
+  useUser()
   return null
 }

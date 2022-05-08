@@ -5,9 +5,10 @@ import styles from '../styles/auth.module.scss'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { login } from '../lib/request'
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
+import { useUser } from '../hooks'
 
 export default function Page() {
+  useUser()
   const router = useRouter()
 
   const onFinish = async (values: any) => {
@@ -22,13 +23,6 @@ export default function Page() {
       router.push(`dashboard/${role}`)
     }
   }
-
-  useEffect(() => {
-    if (localStorage.getItem('token')) {
-      const role = localStorage.getItem('role')
-      router.push(`dashboard/${role}`)
-    }
-  }, [])
 
   return (
     <Layout layoutType="auth">
