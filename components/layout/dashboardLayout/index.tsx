@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import Link from 'next/link'
-import { Layout, Menu, Breadcrumb, Row, Col, Avatar } from 'antd'
+import { Layout, Menu, Row, Col, Avatar } from 'antd'
 import {
   LogoutOutlined,
   MenuUnfoldOutlined,
@@ -13,8 +13,9 @@ import { useRouter } from 'next/router'
 import { logout } from '../../../lib/request'
 import { ROUTES } from '../../../lib/constants'
 import SideMenu from './sideMenu'
-import { generateBreadcrumbData } from '../../../lib/util'
+import { bfsOne } from '../../../lib/util'
 import { useAuth, useRole } from '../../../hooks'
+import BreadCrumb from './breadCrumb'
 
 const { Header, Content, Sider } = Layout
 
@@ -27,21 +28,19 @@ export default function DashboardLayout({
   const role = useRole()
   const router = useRouter()
   const paths = router.pathname.split('/')
-  const rolePath = paths.slice(0, 3).join('/')
-  const menuPaths = [rolePath, ...paths.slice(3)]
+  const rolePath1 = paths.slice(0, 3).join('/')
+  const rolePath = paths.slice(0, 3)
+  const menuPaths = [rolePath1, ...paths.slice(3)]
+  const page = paths.slice(-1).toString()
   const { id } = router.query
   const selectedKeys = [router.pathname]
-  const openKeys = [
-    `subMenuKey:${router.pathname.split('/').slice(0, 4).join('/')}`,
-  ]
-
-  const userNav = role ? ROUTES.get(role) : null
+  const openKeys = [router.pathname.split('/').slice(3, 4).toString()]
+  const nav = role ? ROUTES.get(role) : null
+  const userNav = nav ? nav[0].subNav : null
   const [collapsed, setCollapsed] = useState(false)
   const [logoutMenu, setLogoutMenu] = useState(false)
 
-  const breadcrumbDate = userNav
-    ? generateBreadcrumbData(menuPaths, userNav, id, role)
-    : null
+  const breadcrumbDate = nav ? bfsOne(nav, page) : null
 
   const userLogout = async () => {
     const res = await logout()
@@ -110,14 +109,9 @@ export default function DashboardLayout({
           </Row>
         </Header>
 
-        <Breadcrumb className={styles.breadcrumb}>
-          {breadcrumbDate &&
-            breadcrumbDate.map((item) => (
-              <Breadcrumb.Item key={item.href}>
-                <a href={item.href}>{item.label}</a>
-              </Breadcrumb.Item>
-            ))}
-        </Breadcrumb>
+        {breadcrumbDate && (
+          <BreadCrumb breadcrumbDate={breadcrumbDate} rolePath={rolePath} />
+        )}
 
         <Content className={styles.content}>{children}</Content>
       </Layout>

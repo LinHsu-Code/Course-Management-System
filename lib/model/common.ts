@@ -13,8 +13,8 @@ export interface DynamicNav {
   icon?: JSX.Element
   label: string
   path: string
-  isHideInBreadcrumb?: boolean
   isHideInSiderNav?: boolean
+  isNotPage?: boolean
   subNav?: [DynamicNav, ...DynamicNav[]]
 }
 

@@ -2,10 +2,13 @@ import { Menu } from 'antd'
 import Link from 'next/link'
 import { DynamicNav } from '../../../lib/model'
 
-const renderSideMenu = (navData: DynamicNav[], parentPath = '') => {
+const renderSideMenu = (navData: DynamicNav[], parentPath: string[]) => {
   return navData.map((item: DynamicNav) => {
-    const itemPath = parentPath + item.path
-    const subMenuKey = `subMenuKey:${itemPath}`
+    const itemPath =
+      parentPath.slice(-1)[0] === item.path
+        ? parentPath
+        : [...parentPath, item.path]
+    const subMenuKey = itemPath.slice(3, 4).toString()
     if (item.subNav && !!item.subNav.length) {
       return (
         <Menu.SubMenu key={subMenuKey} title={item.label} icon={item.icon}>
@@ -14,8 +17,8 @@ const renderSideMenu = (navData: DynamicNav[], parentPath = '') => {
       )
     } else {
       return item.isHideInSiderNav ? null : (
-        <Menu.Item key={itemPath} icon={item.icon}>
-          <Link href={itemPath} replace>
+        <Menu.Item key={itemPath.join('/')} icon={item.icon}>
+          <Link href={itemPath.join('/')}>
             <a>{item.label}</a>
           </Link>
         </Menu.Item>
@@ -31,7 +34,7 @@ export default function SideMenu({
   selectedKeys,
 }: {
   userNav: DynamicNav[]
-  rolePath: string
+  rolePath: string[]
   openKeys: string[]
   selectedKeys: string[]
 }) {

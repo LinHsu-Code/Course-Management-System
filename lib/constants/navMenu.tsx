@@ -19,17 +19,27 @@ const STUDENTS: DynamicNav = {
   path: NAV_LABEL_TO_PATH.Student,
   label: 'Student',
   icon: <SolutionOutlined />,
-  isHideInBreadcrumb: true,
-  subNav: [{ path: '', label: 'Student List', icon: <TeamOutlined /> }],
+  isNotPage: true,
+  subNav: [
+    {
+      path: NAV_LABEL_TO_PATH.Student,
+      label: 'Student List',
+      icon: <TeamOutlined />,
+    },
+  ],
 }
 
 const COURSES: DynamicNav = {
   path: NAV_LABEL_TO_PATH.Course,
   label: 'Course',
   icon: <ReadOutlined />,
-  isHideInBreadcrumb: true,
+  isNotPage: true,
   subNav: [
-    { path: '', label: 'All Courses', icon: <ProjectOutlined /> },
+    {
+      path: NAV_LABEL_TO_PATH.Course,
+      label: 'All Courses',
+      icon: <ProjectOutlined />,
+    },
     {
       path: NAV_LABEL_TO_PATH['Add Course'],
       label: 'Add Course',
@@ -47,10 +57,10 @@ const TEACHERS: DynamicNav = {
   path: NAV_LABEL_TO_PATH.Teacher,
   label: 'Teacher',
   icon: <DeploymentUnitOutlined />,
-  isHideInBreadcrumb: true,
+  isNotPage: true,
   subNav: [
     {
-      path: '',
+      path: NAV_LABEL_TO_PATH.Teacher,
       label: 'Teacher List',
       icon: <TeamOutlined />,
     },
@@ -67,9 +77,13 @@ const STUDENT_COURSES: DynamicNav = {
   path: NAV_LABEL_TO_PATH.Course,
   label: 'Course',
   icon: <ReadOutlined />,
-  isHideInBreadcrumb: true,
+  isNotPage: true,
   subNav: [
-    { path: '', label: 'All Courses', icon: <ProjectOutlined /> },
+    {
+      path: NAV_LABEL_TO_PATH.Course,
+      label: 'All Courses',
+      icon: <ProjectOutlined />,
+    },
     {
       path: NAV_LABEL_TO_PATH['My Course'],
       label: 'My Courses',
@@ -97,14 +111,38 @@ const MESSAGES: DynamicNav = {
   icon: <MessageOutlined />,
 }
 
+const MANAGER_ROUTES: DynamicNav = {
+  path: '',
+  label: 'CMS MANAGER SYSTEM',
+  subNav: [OVERVIEW, STUDENTS, TEACHERS, COURSES, MESSAGES],
+}
+
+const TEACHER_ROUTES: DynamicNav = {
+  path: '',
+  label: 'CMS TEACHER SYSTEM',
+  subNav: [OVERVIEW, CLASS_SCHEDULE, STUDENTS, COURSES, PROFILE, MESSAGES],
+}
+
+const STUDENT_ROUTES: DynamicNav = {
+  path: '',
+  label: 'CMS STUDENT SYSTEM',
+  subNav: [OVERVIEW, STUDENT_COURSES, CLASS_SCHEDULE, PROFILE, MESSAGES],
+}
+
 export const ROUTES: Map<Role, DynamicNav[]> = new Map([
-  [Role.manager, [OVERVIEW, STUDENTS, TEACHERS, COURSES, MESSAGES]],
-  [
-    Role.teacher,
-    [OVERVIEW, CLASS_SCHEDULE, STUDENTS, COURSES, PROFILE, MESSAGES],
-  ],
-  [
-    Role.student,
-    [OVERVIEW, STUDENT_COURSES, CLASS_SCHEDULE, PROFILE, MESSAGES],
-  ],
+  [Role.manager, [MANAGER_ROUTES]],
+  [Role.teacher, [TEACHER_ROUTES]],
+  [Role.student, [STUDENT_ROUTES]],
 ])
+
+// export const ROUTES: Map<Role, DynamicNav[]> = new Map([
+//   [Role.manager, [OVERVIEW, STUDENTS, TEACHERS, COURSES, MESSAGES]],
+//   [
+//     Role.teacher,
+//     [OVERVIEW, CLASS_SCHEDULE, STUDENTS, COURSES, PROFILE, MESSAGES],
+//   ],
+//   [
+//     Role.student,
+//     [OVERVIEW, STUDENT_COURSES, CLASS_SCHEDULE, PROFILE, MESSAGES],
+//   ],
+// ])
