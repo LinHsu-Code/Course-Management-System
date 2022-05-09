@@ -28,15 +28,12 @@ export default function DashboardLayout({
   const role = useRole()
   const router = useRouter()
   const paths = router.pathname.split('/')
-  const rolePath1 = paths.slice(0, 3).join('/')
   const rolePath = paths.slice(0, 3)
-  const menuPaths = [rolePath1, ...paths.slice(3)]
   const page = paths.slice(-1).toString()
-  const { id } = router.query
   const selectedKeys = [router.pathname]
   const openKeys = [router.pathname.split('/').slice(3, 4).toString()]
   const nav = role ? ROUTES.get(role) : null
-  const userNav = nav ? nav[0].subNav : null
+  const sideNav = nav ? nav[0].subNav : null
   const [collapsed, setCollapsed] = useState(false)
   const [logoutMenu, setLogoutMenu] = useState(false)
 
@@ -68,9 +65,9 @@ export default function DashboardLayout({
           </Link>
         </div>
 
-        {userNav && (
+        {sideNav && (
           <SideMenu
-            userNav={userNav}
+            sideNav={sideNav}
             rolePath={rolePath}
             openKeys={openKeys}
             selectedKeys={selectedKeys}

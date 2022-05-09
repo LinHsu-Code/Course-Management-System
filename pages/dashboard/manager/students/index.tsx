@@ -55,7 +55,7 @@ export default function Page() {
       <Head>
         <title>{'CMS DashBoard: Manager'}</title>
       </Head>
-      <div>
+      <div style={{ overflowX: 'auto' }}>
         <Row style={{ justifyContent: 'space-between', marginBottom: 16 }}>
           <Col>
             <Button
