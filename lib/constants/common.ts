@@ -31,4 +31,5 @@ export const NAV_LABEL_TO_PATH = {
   'My Course': 'own',
   Profile: 'profile',
   Message: 'message',
+  Detail: '[id]',
 }

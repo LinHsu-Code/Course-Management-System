@@ -26,6 +26,11 @@ const STUDENTS: DynamicNav = {
       label: 'Student List',
       icon: <TeamOutlined />,
     },
+    {
+      path: NAV_LABEL_TO_PATH.Detail,
+      label: 'Detail',
+      isHideInSiderNav: true,
+    },
   ],
 }
 
@@ -39,6 +44,11 @@ const COURSES: DynamicNav = {
       path: NAV_LABEL_TO_PATH.Course,
       label: 'All Courses',
       icon: <ProjectOutlined />,
+    },
+    {
+      path: NAV_LABEL_TO_PATH.Detail,
+      label: 'Detail',
+      isHideInSiderNav: true,
     },
     {
       path: NAV_LABEL_TO_PATH['Add Course'],
@@ -63,6 +73,11 @@ const TEACHERS: DynamicNav = {
       path: NAV_LABEL_TO_PATH.Teacher,
       label: 'Teacher List',
       icon: <TeamOutlined />,
+    },
+    {
+      path: NAV_LABEL_TO_PATH.Detail,
+      label: 'Detail',
+      isHideInSiderNav: true,
     },
   ],
 }
