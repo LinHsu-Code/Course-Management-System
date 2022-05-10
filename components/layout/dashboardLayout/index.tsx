@@ -30,7 +30,11 @@ export default function DashboardLayout({
   const paths = router.pathname.split('/')
   const rolePath = paths.slice(0, 3)
   const page = paths.slice(-1).toString()
-  const selectedKeys = [router.pathname]
+  const selectedKeys = [
+    router.pathname.split('/').slice(-1)[0] === '[id]'
+      ? router.pathname.split('/').slice(0, -1).join('/')
+      : router.pathname,
+  ]
   const openKeys = [router.pathname.split('/').slice(3, 4).toString()]
   const nav = role ? ROUTES.get(role) : null
   const sideNav = nav ? nav[0].subNav : null
