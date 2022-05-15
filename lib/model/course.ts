@@ -48,7 +48,7 @@ export interface Course {
 
 export interface Courses {
   total: number
-  students: Course[]
+  courses: Course[]
   paginator: Paginator
 }
 export type GetCoursesResponse = Response<Courses>

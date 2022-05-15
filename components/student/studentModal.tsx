@@ -1,13 +1,13 @@
 import { Modal, Select, Form, Input } from 'antd'
 import { COUNTRY_LIST } from '../../lib/constants'
-import { ListStudentRequest } from '../../lib/model'
+import { EditStudentRequest } from '../../lib/model'
 import { addStudent, editStudent } from '../../lib/request'
 
 export default function StudentModal(props: any) {
   const [form] = Form.useForm()
 
   const handleOk = async () => {
-    const formData: ListStudentRequest = form.getFieldsValue(true)
+    const formData: EditStudentRequest = form.getFieldsValue(true)
     const res =
       Object.keys(props.editContent).length === 0
         ? await addStudent(formData)
