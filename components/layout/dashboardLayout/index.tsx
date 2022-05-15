@@ -35,7 +35,7 @@ export default function DashboardLayout({
       ? router.pathname.split('/').slice(0, -1).join('/')
       : router.pathname,
   ]
-  const openKeys = [router.pathname.split('/').slice(3, 4).toString()]
+  const openKeys = [router.pathname.split('/').slice(2, 4).toString()]
   const nav = role ? ROUTES.get(role) : null
   const sideNav = nav ? nav[0].subNav : null
   const [collapsed, setCollapsed] = useState(false)

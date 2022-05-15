@@ -5,10 +5,11 @@ import { DynamicNav } from '../../../lib/model'
 const renderSideMenu = (sideNav: DynamicNav[], parentPath: string[]) => {
   return sideNav.map((item: DynamicNav) => {
     const itemPath =
-      parentPath.slice(-1)[0] === item.path
+      parentPath.slice(-1)[0] === item.path || item.path === ''
         ? parentPath
         : [...parentPath, item.path]
-    const subMenuKey = itemPath.slice(3, 4).toString()
+    //subMenuKey role,first-level path eg:'manager, students'
+    const subMenuKey = itemPath.slice(2, 4).toString()
     if (item.subNav && !!item.subNav.length) {
       return (
         <Menu.SubMenu key={subMenuKey} title={item.label} icon={item.icon}>
