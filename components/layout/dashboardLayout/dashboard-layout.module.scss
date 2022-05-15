@@ -1,51 +1,63 @@
-.logoContainer {
-  height: 64px;
-  display: inline-flex;
-  width: 100%;
-  justify-content: center;
-  align-items: center;
-  font-size: 24px;
-  color: #fff;
-  text-shadow: 5px 1px 5px;
-  transform: rotateX(45deg);
-  .logo {
+//-----------antd Layout---------
+.sider {
+  position: fixed;
+  min-height: 100vh;
+  .logoContainer {
+    height: 64px;
+    display: inline-flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
     color: #fff;
-    cursor: pointer;
+    text-shadow: 5px 1px 5px;
+    transform: rotateX(45deg);
+    .logo {
+      color: #fff;
+      cursor: pointer;
+    }
   }
 }
+.wholeRight {
+  margin-left: 200px;
+  .header {
+    position: fixed;
+    z-index: 99;
+    width: calc(100% - 200px);
+    padding: 0;
+    .trigger {
+      padding: 0 24px;
+      font-size: 18px;
+      line-height: 64px;
+      cursor: pointer;
+      transition: color 0.3s;
+      color: white;
+      margin-right: auto;
+      &:hover {
+        color: #1890ff;
+      }
+    }
 
-//-----------antd Layout---------
-.header {
-  padding: 0;
-  .trigger {
-    padding: 0 24px;
-    font-size: 18px;
-    line-height: 64px;
-    cursor: pointer;
-    transition: color 0.3s;
-    color: white;
-    margin-right: auto;
-    &:hover {
-      color: #1890ff;
+    .avatar {
+      margin-right: 24px;
+    }
+
+    .logoutMenu {
+      margin-left: auto;
+      position: absolute;
+      right: 0;
+      top: 64px;
+      z-index: 999;
     }
   }
 
-  .avatar {
-    margin-right: 24px;
+  .mainSession {
+    margin-top: 64px;
+    .content {
+      padding: 24px;
+      margin: 24px;
+      margin-top: 0;
+      background-color: white;
+    }
   }
-
-  .logoutMenu {
-    margin-left: auto;
-    position: absolute;
-    right: 0;
-    top: 64px;
-    z-index: 999;
-  }
-}
-
-.content {
-  padding: 24px;
-  margin: 24px;
-  margin-top: 0;
-  background-color: white;
 }

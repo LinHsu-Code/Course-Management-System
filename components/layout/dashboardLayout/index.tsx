@@ -57,9 +57,10 @@ export default function DashboardLayout({
         trigger={null}
         collapsible
         collapsed={collapsed}
-        style={{
-          minHeight: '100vh',
-        }}
+        className={styles.sider}
+        // style={{
+        //   minHeight: '100vh',
+        // }}
       >
         <div className={styles.logoContainer}>
           <Link href={'/'}>
@@ -79,7 +80,7 @@ export default function DashboardLayout({
         )}
       </Sider>
 
-      <Layout>
+      <Layout className={styles.wholeRight}>
         <Header className={styles.header}>
           <Row>
             <Col
@@ -109,12 +110,13 @@ export default function DashboardLayout({
             </Col>
           </Row>
         </Header>
+        <div className={styles.mainSession}>
+          {breadcrumbDate && (
+            <BreadCrumb breadcrumbDate={breadcrumbDate} rolePath={rolePath} />
+          )}
 
-        {breadcrumbDate && (
-          <BreadCrumb breadcrumbDate={breadcrumbDate} rolePath={rolePath} />
-        )}
-
-        <Content className={styles.content}>{children}</Content>
+          <Content className={styles.content}>{children}</Content>
+        </div>
       </Layout>
     </Layout>
   )
