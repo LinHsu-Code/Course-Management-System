@@ -52,15 +52,12 @@ export default function DashboardLayout({
   }
 
   return (
-    <Layout>
+    <Layout className={styles.layout}>
       <Sider
         trigger={null}
         collapsible
         collapsed={collapsed}
-        className={styles.sider}
-        // style={{
-        //   minHeight: '100vh',
-        // }}
+        className={styles.side}
       >
         <div className={styles.logoContainer}>
           <Link href={'/'}>
@@ -110,13 +107,12 @@ export default function DashboardLayout({
             </Col>
           </Row>
         </Header>
-        <div className={styles.mainSession}>
-          {breadcrumbDate && (
-            <BreadCrumb breadcrumbDate={breadcrumbDate} rolePath={rolePath} />
-          )}
 
-          <Content className={styles.content}>{children}</Content>
-        </div>
+        {breadcrumbDate && (
+          <BreadCrumb breadcrumbDate={breadcrumbDate} rolePath={rolePath} />
+        )}
+
+        <Content className={styles.content}>{children}</Content>
       </Layout>
     </Layout>
   )
