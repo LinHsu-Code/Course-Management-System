@@ -21,6 +21,10 @@
 
   .wholeRight {
     overflow-x: hidden;
+
+    overflow-y: auto;
+    height: 100vh;
+
     display: flex;
     flex-direction: column;
     .header {

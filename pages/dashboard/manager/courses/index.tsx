@@ -6,25 +6,26 @@ import styles from './course.module.scss'
 import CourseCard from '../../../../components/course/courseCard'
 import { Course, Paginator } from '../../../../lib/model'
 import InfiniteScroll from 'react-infinite-scroll-component'
-// import { BackTop } from 'antd'
+import { VerticalAlignTopOutlined } from '@ant-design/icons'
+import { BackTop } from 'antd'
+import { relative } from 'path/posix'
 
 export default function Page() {
   const [paginator, setPaginator] = useState<Paginator>({ page: 1, limit: 20 })
   const [hasMore, setHasMore] = useState(true)
   const [courses, setCourses] = useState<Course[]>([])
 
-  const fetchCourses = (paginator: { page: number; limit: number }) => {
-    getCourses(paginator).then((res) => {
-      if (res.data) {
-        setCourses([...courses, ...res.data.courses])
-        if (res.data.total <= paginator.page * paginator.limit) {
-          setHasMore(false)
-        }
-      }
-    })
-  }
-
   useEffect(() => {
+    const fetchCourses = (paginator: { page: number; limit: number }) => {
+      getCourses(paginator).then((res) => {
+        if (res.data) {
+          setCourses([...courses, ...res.data.courses])
+          if (res.data.total <= paginator.page * paginator.limit) {
+            setHasMore(false)
+          }
+        }
+      })
+    }
     if (paginator.page * paginator.limit > courses.length) {
       fetchCourses(paginator)
     }
@@ -36,12 +37,6 @@ export default function Page() {
         <title>{'CMS DashBoard: Manager-Course'}</title>
       </Head>
 
-      {/* <div
-        id="scrollableDiv"
-        // style={{
-        //   overflow: 'auto',
-        // }}
-      > */}
       <InfiniteScroll
         dataLength={courses.length}
         next={() => setPaginator({ ...paginator, page: ++paginator.page })}
@@ -63,24 +58,19 @@ export default function Page() {
             ))}
         </div>
       </InfiniteScroll>
-      {/* </div> */}
 
-      {/* <BackTop>
-        <div
-          style={{
-            height: 40,
-            width: 40,
-            lineHeight: '40px',
-            borderRadius: 4,
-            backgroundColor: '#1088e9',
-            color: '#fff',
-            textAlign: 'center',
-            fontSize: 14,
-          }}
-        >
-          UP
-        </div>
-      </BackTop> */}
+      <BackTop
+        target={() => document.getElementById('scrollableDiv') || window}
+        visibilityHeight={800}
+        // className={styles.backTop}
+        // style={{
+        //   // backgroundImage: 'VerticalAlignTopOutlined',
+        //   width: 50,
+        //   height: 50,
+        //   borderRadius: 1,
+        //   backgroundColor: 'red',
+        // }}
+      ></BackTop>
     </Layout>
   )
 }
