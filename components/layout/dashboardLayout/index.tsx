@@ -77,7 +77,7 @@ export default function DashboardLayout({
         )}
       </Sider>
 
-      <Layout className={styles.wholeRight}>
+      <Layout className={styles.wholeRight} id="scrollableDiv">
         <Header className={styles.header}>
           <Row>
             <Col
