@@ -8,7 +8,6 @@ import { Course, Paginator } from '../../../../lib/model'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { VerticalAlignTopOutlined } from '@ant-design/icons'
 import { BackTop } from 'antd'
-import { relative } from 'path/posix'
 
 export default function Page() {
   const [paginator, setPaginator] = useState<Paginator>({ page: 1, limit: 20 })
@@ -62,15 +61,12 @@ export default function Page() {
       <BackTop
         target={() => document.getElementById('scrollableDiv') || window}
         visibilityHeight={800}
-        // className={styles.backTop}
-        // style={{
-        //   // backgroundImage: 'VerticalAlignTopOutlined',
-        //   width: 50,
-        //   height: 50,
-        //   borderRadius: 1,
-        //   backgroundColor: 'red',
-        // }}
-      ></BackTop>
+        className={styles.backTop}
+      >
+        <div className={styles.backTopContent}>
+          <VerticalAlignTopOutlined className={styles.backTopIcon} />
+        </div>
+      </BackTop>
     </Layout>
   )
 }
