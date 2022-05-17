@@ -5,6 +5,14 @@
   display: flex;
   padding: 8px 0;
   justify-content: space-between;
+  .cardInfo {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    width: 150px;
+    text-align: right;
+  }
 }
 .cardDivider {
   margin: 0 !important;

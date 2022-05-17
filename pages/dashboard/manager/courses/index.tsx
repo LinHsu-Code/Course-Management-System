@@ -6,8 +6,7 @@ import styles from './course.module.scss'
 import CourseCard from '../../../../components/course/courseCard'
 import { Course, Paginator } from '../../../../lib/model'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { VerticalAlignTopOutlined } from '@ant-design/icons'
-import { BackTop } from 'antd'
+import BackTop from '../../../../components/common/backTop'
 
 export default function Page() {
   const [paginator, setPaginator] = useState<Paginator>({ page: 1, limit: 20 })
@@ -31,14 +30,14 @@ export default function Page() {
   }, [paginator, courses])
 
   return (
-    <Layout hasBackTop={true}>
+    <Layout>
       <Head>
         <title>{'CMS DashBoard: Manager-Course'}</title>
       </Head>
 
       <InfiniteScroll
         dataLength={courses.length}
-        next={() => setPaginator({ ...paginator, page: ++paginator.page })}
+        next={() => setPaginator({ ...paginator, page: paginator.page + 1 })}
         hasMore={hasMore}
         scrollableTarget="scrollableDiv"
         loader={<h4>Loading...</h4>}
@@ -58,15 +57,7 @@ export default function Page() {
         </div>
       </InfiniteScroll>
 
-      {/* <BackTop
-        target={() => document.getElementById('scrollableDiv') || window}
-        visibilityHeight={800}
-        className={styles.backTop}
-      >
-        <div className={styles.backTopContent}>
-          <VerticalAlignTopOutlined className={styles.backTopIcon} />
-        </div>
-      </BackTop> */}
+      <BackTop targetId="scrollableDiv" visibilityHeight={800} />
     </Layout>
   )
 }

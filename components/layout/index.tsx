@@ -5,11 +5,9 @@ import AuthLayout from './authLayout'
 export default function Layout({
   children,
   layoutType,
-  hasBackTop = false,
 }: {
   children: React.ReactNode
   layoutType?: string
-  hasBackTop?: boolean
 }) {
   switch (layoutType) {
     case 'auth':
@@ -17,8 +15,6 @@ export default function Layout({
     case 'home':
       return <HomeLayout> {children}</HomeLayout>
     default:
-      return (
-        <DashboardLayout hasBackTop={hasBackTop}> {children}</DashboardLayout>
-      )
+      return <DashboardLayout> {children}</DashboardLayout>
   }
 }

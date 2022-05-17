@@ -37,12 +37,14 @@ export default function CourseCard({ course }: { course: Course }) {
           </Col>
         </Row>
         <Divider className={styles.cardDivider} />
-        <Row className={styles.cardDescription}>
+        <Row className={styles.cardDescription} style={{ flexWrap: 'nowrap' }}>
           <Col>Teacher:</Col>
           <Col>
             <Link href={`/dashboard/manager/teachers/${course.teacherId}`}>
               <a>
-                <strong>{course.teacherName}</strong>
+                <strong className={styles.cardInfo}>
+                  {course.teacherName}
+                </strong>
               </a>
             </Link>
           </Col>
