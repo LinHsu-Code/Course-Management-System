@@ -39,12 +39,10 @@ export default function CourseCard({ course }: { course: Course }) {
         <Divider className={styles.cardDivider} />
         <Row className={styles.cardDescription} style={{ flexWrap: 'nowrap' }}>
           <Col>Teacher:</Col>
-          <Col>
+          <Col className={styles.cardInfo}>
             <Link href={`/dashboard/manager/teachers/${course.teacherId}`}>
               <a>
-                <strong className={styles.cardInfo}>
-                  {course.teacherName}
-                </strong>
+                <strong>{course.teacherName}</strong>
               </a>
             </Link>
           </Col>
