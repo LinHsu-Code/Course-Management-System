@@ -31,7 +31,7 @@ export default function Page() {
   }, [paginator, courses])
 
   return (
-    <Layout>
+    <Layout hasBackTop={true}>
       <Head>
         <title>{'CMS DashBoard: Manager-Course'}</title>
       </Head>
@@ -58,7 +58,7 @@ export default function Page() {
         </div>
       </InfiniteScroll>
 
-      <BackTop
+      {/* <BackTop
         target={() => document.getElementById('scrollableDiv') || window}
         visibilityHeight={800}
         className={styles.backTop}
@@ -66,7 +66,7 @@ export default function Page() {
         <div className={styles.backTopContent}>
           <VerticalAlignTopOutlined className={styles.backTopIcon} />
         </div>
-      </BackTop>
+      </BackTop> */}
     </Layout>
   )
 }

@@ -16,13 +16,16 @@ import SideMenu from './sideMenu'
 import { bfsOne } from '../../../lib/util'
 import { useAuth, useRole } from '../../../hooks'
 import BreadCrumb from './breadCrumb'
+import BackTop from '../../common/backTop'
 
 const { Header, Content, Sider } = Layout
 
 export default function DashboardLayout({
   children,
+  hasBackTop,
 }: {
   children: React.ReactNode
+  hasBackTop?: boolean
 }) {
   useAuth()
   const role = useRole()
@@ -113,6 +116,10 @@ export default function DashboardLayout({
         )}
 
         <Content className={styles.content}>{children}</Content>
+
+        {hasBackTop && (
+          <BackTop targetId="scrollableDiv" visibilityHeight={800} />
+        )}
       </Layout>
     </Layout>
   )
