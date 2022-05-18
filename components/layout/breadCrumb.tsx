@@ -1,5 +1,5 @@
 import { Breadcrumb } from 'antd'
-import { DynamicNav } from '../../../lib/model'
+import { DynamicNav } from '../../lib/model'
 
 const renderBreadCrumb = (
   breadcrumbDate: DynamicNav[],

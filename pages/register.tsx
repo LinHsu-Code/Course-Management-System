@@ -1,14 +1,17 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import Layout from '../components/layout'
+import { Layout } from 'antd'
+const { Header, Content, Footer } = Layout
 
 const Page: NextPage = () => {
   return (
-    <Layout layoutType="auth">
+    <Layout>
       <Head>
         <title>{'Course Management Assistant: Register'}</title>
       </Head>
-      <section>register</section>
+      <Header>Header</Header>
+      <Content>register</Content>
+      <Footer>Footer</Footer>
     </Layout>
   )
 }

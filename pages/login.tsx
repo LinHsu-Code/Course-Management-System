@@ -1,11 +1,12 @@
-import Layout from '../components/layout'
+import Link from 'next/link'
 import Head from 'next/head'
-import { Row, Col, Form, Input, Button, Checkbox, Radio } from 'antd'
+import { Layout, Row, Col, Form, Input, Button, Checkbox, Radio } from 'antd'
 import styles from '../styles/auth.module.scss'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { login } from '../lib/request'
 import { useRouter } from 'next/router'
 import { useUser } from '../hooks'
+const { Header, Footer, Content } = Layout
 
 export default function Page() {
   useUser()
@@ -14,23 +15,36 @@ export default function Page() {
   const onFinish = async (values: any) => {
     const res = await login(values)
     if (res.data) {
-      const {
-        data: { token, role, userId },
-      } = res
+      const { token, role, userId } = res.data
       localStorage.setItem('role', role)
       localStorage.setItem('token', token)
       localStorage.setItem('userId', userId)
-      router.push(`dashboard/${role}`)
+      router.replace(`/dashboard/${role}`, undefined, { shallow: true })
     }
   }
 
   return (
-    <Layout layoutType="auth">
+    <Layout className={styles.container}>
       <Head>
         <title>{'Course Management Assistant: Sign In'}</title>
       </Head>
 
-      <div>
+      <Header>
+        {' '}
+        <Link href={`/`}>
+          <a>Home</a>
+        </Link>
+        <span> </span>
+        <Link href={`/login`}>
+          <a>Sign In</a>
+        </Link>
+        <span> </span>
+        <Link href={`/register`}>
+          <a>Sign up</a>
+        </Link>
+      </Header>
+
+      <Content className={styles.main}>
         <h1 className={styles.FormHeading}>COURSE MANAGEMENT ASSISTANT</h1>
         <Row justify="center">
           <Col md={8}>
@@ -105,7 +119,9 @@ export default function Page() {
             </Form>
           </Col>
         </Row>
-      </div>
+      </Content>
+
+      <Footer className={styles.footer}>Footer</Footer>
     </Layout>
   )
 }

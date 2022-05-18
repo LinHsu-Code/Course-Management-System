@@ -1,11 +1,17 @@
 .container {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  .header {
+    color: gray;
+    height: 65px;
+  }
   .main {
     flex: 1;
     display: flex;
-    justify-content: center;
   }
   .footer {
+    height: 65px;
     background-color: #ddd;
   }
 }
