@@ -13,31 +13,40 @@ export default function Page() {
   const [hasMore, setHasMore] = useState(true)
   const [courses, setCourses] = useState<Course[]>([])
 
-  useEffect(() => {
-    const fetchCourses = (paginator: { page: number; limit: number }) => {
-      getCourses(paginator).then((res) => {
-        if (res.data) {
-          setCourses([...courses, ...res.data.courses])
-          if (res.data.total <= paginator.page * paginator.limit) {
-            setHasMore(false)
-          }
+  const AppendCourses = (paginator: Paginator) => {
+    getCourses(paginator).then((res) => {
+      if (res.data) {
+        setCourses((pre) => [...pre, ...res.data.courses])
+        if (res.data.total <= paginator.page * paginator.limit) {
+          setHasMore(false)
         }
-      })
-    }
-    if (paginator.page * paginator.limit > courses.length) {
-      fetchCourses(paginator)
-    }
-  }, [paginator, courses])
+      }
+    })
+  }
+
+  useEffect(() => {
+    getCourses({ page: 1, limit: 20 }).then((res) => {
+      if (res.data) {
+        setCourses(res.data.courses)
+        if (res.data.total <= paginator.page * paginator.limit) {
+          setHasMore(false)
+        }
+      }
+    })
+  }, [])
 
   return (
     <Layout>
       <Head>
-        <title>{'CMS DashBoard: Manager-Course'}</title>
+        <title>{'CMS DashBoard: Manager-Course List'}</title>
       </Head>
 
       <InfiniteScroll
         dataLength={courses.length}
-        next={() => setPaginator({ ...paginator, page: paginator.page + 1 })}
+        next={() => {
+          AppendCourses({ ...paginator, page: paginator.page + 1 })
+          setPaginator({ ...paginator, page: paginator.page + 1 })
+        }}
         hasMore={hasMore}
         scrollableTarget="scrollableDiv"
         loader={<h4>Loading...</h4>}
