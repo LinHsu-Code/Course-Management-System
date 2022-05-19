@@ -1,8 +1,19 @@
 import { getInstance, showMessage } from './common'
-import { GetCoursesRequest, GetCoursesResponse } from '../../lib/model'
+import {
+  GetCoursesRequest,
+  GetCoursesResponse,
+  GetCourseRequest,
+  GetCourseResponse,
+} from '../../lib/model'
 
 const getCourses = (params: GetCoursesRequest): Promise<GetCoursesResponse> => {
   return getInstance('/courses', params).then((res) => showMessage(res, false))
 }
 
-export { getCourses }
+const getCourse = (params: GetCourseRequest): Promise<GetCourseResponse> => {
+  return getInstance('/courses/detail', params).then((res) =>
+    showMessage(res, false)
+  )
+}
+
+export { getCourses, getCourse }

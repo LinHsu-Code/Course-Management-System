@@ -1,4 +1,5 @@
 import { Response, Paginator } from './common'
+import { CourseTeacher } from './teacher'
 export interface CourseType {
   id: number
   name: string
@@ -52,3 +53,43 @@ export interface Courses {
   paginator: Paginator
 }
 export type GetCoursesResponse = Response<Courses>
+
+export type GetCourseRequest = { id: string }
+
+export interface CourseDetail extends Course {
+  teacher: CourseTeacher
+  schedule: Schedule
+  sales: Sales
+}
+export type GetCourseResponse = Response<CourseDetail>
+
+export interface Sales {
+  createdAt: Date
+  updatedAt: Date
+  id: number
+  batches: number
+  price: number
+  earnings: number
+  paidAmount: number
+  studentAmount: number
+  paidIds: number[]
+}
+
+export interface Schedule {
+  createdAt: Date
+  updatedAt: Date
+  id: number
+  status: number
+  current: number
+  classTime: string[]
+  chapters: Chapter[]
+}
+
+export interface Chapter {
+  createdAt: Date
+  updatedAt: Date
+  id: number
+  name: string
+  order: number
+  content: string
+}
