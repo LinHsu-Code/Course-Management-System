@@ -93,3 +93,26 @@ export interface Chapter {
   order: number
   content: string
 }
+
+export interface ScheduleTime {
+  Sunday: string
+  Monday: string
+  Tuesday: string
+  Wednesday: string
+  Thursday: string
+  Friday: string
+  Saturday: string
+}
+// export enum CourseStatusText {
+//   'finished',
+//   'processing',
+//   'pending',
+// }
+
+// export type CourseStatus = 'warning' | 'success' | 'default'
+
+// export enum CourseStatusColor {
+//   'default',
+//   'green',
+//   'orange',
+// }

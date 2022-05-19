@@ -20,6 +20,16 @@ export const PROGRAM_LANGUAGE_COLORS: string[] = [
   'lime',
 ]
 
+export const Weekdays = [
+  'Sunday',
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+]
+
 export const NAV_LABEL_TO_PATH = {
   Overview: '',
   Teacher: 'teachers',

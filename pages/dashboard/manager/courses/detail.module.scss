@@ -1,0 +1,20 @@
+.salesContainer {
+  width: calc(100% + 48px);
+  margin: 0px 0px -24px -24px !important;
+  border-top: 1px solid rgb(240, 240, 240);
+  .salesItem {
+    display: flex;
+    flex-direction: column;
+    padding: 8px 3px;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid rgb(240, 240, 240);
+    &:last-child {
+      border-right: none;
+    }
+    strong {
+      color: rgb(115, 86, 241);
+      font-size: 24px;
+    }
+  }
+}

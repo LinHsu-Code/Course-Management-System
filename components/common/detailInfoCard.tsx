@@ -1,4 +1,4 @@
-import { Card, Avatar, Row, Col } from 'antd'
+import { Card, Avatar } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
 import { Descriptions } from 'antd'
 

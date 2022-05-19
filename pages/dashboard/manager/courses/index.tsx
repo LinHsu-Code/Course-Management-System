@@ -1,4 +1,6 @@
 import Head from 'next/head'
+import Link from 'next/link'
+import { Row, Button } from 'antd'
 import { useState, useEffect } from 'react'
 import Layout from '../../../../components/layout'
 import { getCourses } from '../../../../lib/request'
@@ -60,7 +62,16 @@ export default function Page() {
           {courses &&
             courses.map((course) => (
               <div key={course.id} className={styles.card}>
-                <CourseCard course={course} />
+                <CourseCard course={course}>
+                  <Row>
+                    <Link
+                      href={`/dashboard/manager/courses/${course.id}`}
+                      passHref
+                    >
+                      <Button type="primary">Read More</Button>
+                    </Link>
+                  </Row>
+                </CourseCard>
               </div>
             ))}
         </div>
