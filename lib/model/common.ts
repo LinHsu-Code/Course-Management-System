@@ -23,3 +23,11 @@ export enum Role {
   teacher = 'teacher',
   student = 'student',
 }
+
+export type BadgeStatus =
+  | 'processing'
+  | 'warning'
+  | 'success'
+  | 'error'
+  | 'default'
+  | undefined

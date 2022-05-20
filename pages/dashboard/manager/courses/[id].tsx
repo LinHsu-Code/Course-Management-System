@@ -46,8 +46,9 @@ export default function Page(props: { id: string }) {
         <title>{'CMS DashBoard: Manager-Course-Detail'}</title>
       </Head>
 
-      <Row gutter={[6, 16]}>
-        <Col flex="0 1 400px">
+      <Row gutter={[6, 16]} wrap={false}>
+        {/* <Col flex="0 1 400px"> */}
+        <Col flex="1 250px">
           {course && (
             <CourseCard course={course}>
               <Row className={styles.salesContainer}>
@@ -61,7 +62,7 @@ export default function Page(props: { id: string }) {
             </CourseCard>
           )}
         </Col>
-        <Col flex="1 1 500px">
+        <Col flex="2 2 300px">
           {course && <CourseDetailCard course={course} />}
         </Col>
       </Row>
