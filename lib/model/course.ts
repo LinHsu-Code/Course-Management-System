@@ -94,16 +94,6 @@ export interface Chapter {
   content: string
 }
 
-// export interface ScheduleTime {
-//   Sunday: string
-//   Monday: string
-//   Tuesday: string
-//   Wednesday: string
-//   Thursday: string
-//   Friday: string
-//   Saturday: string
-// }
-
 export interface ScheduleTime {
   Sunday: string
   Monday: string
@@ -114,7 +104,7 @@ export interface ScheduleTime {
   Saturday: string
 }
 
-export interface ScheduleData extends ScheduleTime {
+export interface ScheduleTableData extends ScheduleTime {
   key: string
 }
 
