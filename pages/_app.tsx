@@ -1,10 +1,14 @@
 import '../styles/globals.scss'
 import Head from 'next/head'
 import type { AppProps } from 'next/app'
+import { useRouter } from 'next/router'
 
 export const siteTitle = 'custom-title'
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const router = useRouter()
+  const path = router.pathname
+  console.log(111, path)
   return (
     <>
       <Head>

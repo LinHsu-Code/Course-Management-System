@@ -1,3 +1,5 @@
+import { Weekday } from '../model'
+
 export const COUNTRY_LIST: string[] = [
   'China',
   'New Zealand',
@@ -20,7 +22,7 @@ export const PROGRAM_LANGUAGE_COLORS: string[] = [
   'lime',
 ]
 
-export const Weekdays = [
+export const Weekdays: Weekday[] = [
   'Sunday',
   'Monday',
   'Tuesday',
