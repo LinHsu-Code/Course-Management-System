@@ -1,6 +1,5 @@
 import Head from 'next/head'
 import Link from 'next/link'
-import Layout from '../../../../components/layout'
 import { getStudent } from '../../../../lib/request'
 import { useState, useEffect } from 'react'
 import { Row, Col, Card, Tabs, Tag, Table } from 'antd'
@@ -100,7 +99,7 @@ export default function Page(props: { id: string }) {
   }, [])
 
   return (
-    <Layout>
+    <>
       <Head>
         <title>{'CMS DashBoard: Student Detail'}</title>
       </Head>
@@ -142,6 +141,6 @@ export default function Page(props: { id: string }) {
           </Card>
         </Col>
       </Row>
-    </Layout>
+    </>
   )
 }

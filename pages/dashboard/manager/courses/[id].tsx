@@ -1,5 +1,4 @@
 import Head from 'next/head'
-import Layout from '../../../../components/layout'
 import { getCourse } from '../../../../lib/request'
 import { GetServerSideProps } from 'next/types'
 import CourseCard from '../../../../components/course/courseCard'
@@ -48,7 +47,7 @@ export default function Page(props: { id: string }) {
   }, [])
 
   return (
-    <Layout>
+    <>
       <Head>
         <title>{'CMS DashBoard: Manager-Course-Detail'}</title>
       </Head>
@@ -72,6 +71,6 @@ export default function Page(props: { id: string }) {
           {course && <CourseDetailCard course={course} />}
         </Col>
       </Row>
-    </Layout>
+    </>
   )
 }

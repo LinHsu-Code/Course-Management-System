@@ -2,6 +2,7 @@ import '../styles/globals.scss'
 import Head from 'next/head'
 import type { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
+import DashboardLayout from '../components/layout'
 
 export const siteTitle = 'custom-title'
 
@@ -9,7 +10,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter()
   const path = router.pathname
   console.log(111, path)
-  return (
+  const content = (
     <>
       <Head>
         <link rel="icon" href="/favicon.ico" />
@@ -29,6 +30,34 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Component {...pageProps} />
     </>
   )
+  {
+    return /dashboard/.test(path) ? (
+      <DashboardLayout>{content}</DashboardLayout>
+    ) : (
+      content
+    )
+  }
+
+  // return (
+  //   <>
+  //     <Head>
+  //       <link rel="icon" href="/favicon.ico" />
+  //       <meta
+  //         name="description"
+  //         content="a course management website using Next.js"
+  //       />
+  //       <meta
+  //         property="og:image"
+  //         content={`https://og-image.vercel.app/${encodeURI(
+  //           siteTitle
+  //         )}.png?theme=light&md=0&fontSize=75px&images=https%3A%2F%2Fassets.zeit.co%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fnextjs-black-logo.svg`}
+  //       />
+  //       <meta name="og:title" content={siteTitle} />
+  //       <meta name="twitter:card" content="summary_large_image" />
+  //     </Head>
+  //     <Component {...pageProps} />
+  //   </>
+  // )
 }
 
 export default MyApp

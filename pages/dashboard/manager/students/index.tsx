@@ -1,7 +1,6 @@
 import Head from 'next/head'
 import { useState, useEffect } from 'react'
 import { Input, Button, Row, Col } from 'antd'
-import Layout from '../../../../components/layout'
 import { getStudents } from '../../../../lib/request'
 import { PlusOutlined } from '@ant-design/icons'
 import { debounce } from 'lodash'
@@ -51,7 +50,7 @@ export default function Page() {
   }
 
   return (
-    <Layout>
+    <>
       <Head>
         <title>{'CMS DashBoard: Manager'}</title>
       </Head>
@@ -96,6 +95,6 @@ export default function Page() {
           />
         )}
       </div>
-    </Layout>
+    </>
   )
 }

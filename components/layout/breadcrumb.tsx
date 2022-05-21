@@ -1,7 +1,7 @@
 import { Breadcrumb } from 'antd'
 import { DynamicNav } from '../../lib/model'
 
-const renderBreadCrumb = (
+const renderBreadcrumb = (
   breadcrumbDate: DynamicNav[],
   parentPath: string[]
 ) => {
@@ -22,7 +22,7 @@ const renderBreadCrumb = (
     )
 }
 
-export default function BreadCrumb({
+export default function CustomBreadcrumb({
   breadcrumbDate,
   rolePath,
 }: {
@@ -31,7 +31,7 @@ export default function BreadCrumb({
 }) {
   return (
     <Breadcrumb style={{ padding: '16px 24px' }}>
-      {renderBreadCrumb(breadcrumbDate, rolePath)}
+      {renderBreadcrumb(breadcrumbDate, rolePath)}
     </Breadcrumb>
   )
 }

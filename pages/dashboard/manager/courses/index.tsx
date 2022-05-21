@@ -2,7 +2,6 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { Row, Button } from 'antd'
 import { useState, useEffect } from 'react'
-import Layout from '../../../../components/layout'
 import { getCourses } from '../../../../lib/request'
 import styles from './course.module.scss'
 import CourseCard from '../../../../components/course/courseCard'
@@ -38,7 +37,7 @@ export default function Page() {
   }, [])
 
   return (
-    <Layout>
+    <>
       <Head>
         <title>{'CMS DashBoard: Manager-Course List'}</title>
       </Head>
@@ -78,6 +77,6 @@ export default function Page() {
       </InfiniteScroll>
 
       <BackTop targetId="scrollableDiv" visibilityHeight={800} />
-    </Layout>
+    </>
   )
 }
