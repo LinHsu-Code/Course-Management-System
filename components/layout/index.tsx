@@ -30,6 +30,7 @@ export default function DashboardLayout({
   const paths = router.pathname.split('/')
   const rolePath = paths.slice(0, 3)
   const page = paths.slice(-1).toString()
+  const detailForWhat = page === '[id]' ? paths.slice(-2, -1).toString() : ''
   const selectedKeys = [
     router.pathname.split('/').slice(-1)[0] === '[id]'
       ? router.pathname.split('/').slice(0, -1).join('/')
@@ -41,7 +42,11 @@ export default function DashboardLayout({
   const [collapsed, setCollapsed] = useState(false)
   const [logoutMenu, setLogoutMenu] = useState(false)
 
-  const breadcrumbDate = nav ? bfsOne(nav, page) : null
+  const breadcrumbDate = nav
+    ? page === '[id]'
+      ? bfsOne(nav, detailForWhat)?.concat([{ path: '[id]', label: 'Detail' }])
+      : bfsOne(nav, page)
+    : null
 
   const userLogout = async () => {
     const res = await logout()

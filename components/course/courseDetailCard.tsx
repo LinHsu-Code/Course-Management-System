@@ -88,7 +88,7 @@ export default function CourseDetailCard({ course }: { course: CourseDetail }) {
               key={item.id}
               extra={genExtra(course.schedule, index)}
             >
-              <p>{item.content}</p>
+              <p style={{ margin: 0 }}>{item.content}</p>
             </Collapse.Panel>
           ))}
         </Collapse>

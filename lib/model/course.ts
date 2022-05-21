@@ -114,4 +114,8 @@ export interface ScheduleTime {
   Saturday: string
 }
 
+export interface ScheduleData extends ScheduleTime {
+  key: string
+}
+
 export type Weekday = keyof ScheduleTime

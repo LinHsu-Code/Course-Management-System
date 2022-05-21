@@ -17,6 +17,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 }
 
+// const getServerSideProps: GetServerSideProps = async (context) => {
+//   const id = context.query.id as string
+//   return {
+//     props: { id },
+//   }
+// }
+
 export default function Page(props: { id: string }) {
   const [course, setCourse] = useState<CourseDetail | null>(null)
   const [info, setInfo] = useState<{ label: string; value: string | number }[]>(
@@ -47,7 +54,6 @@ export default function Page(props: { id: string }) {
       </Head>
 
       <Row gutter={[6, 16]} wrap={false}>
-        {/* <Col flex="0 1 400px"> */}
         <Col flex="1 250px">
           {course && (
             <CourseCard course={course}>

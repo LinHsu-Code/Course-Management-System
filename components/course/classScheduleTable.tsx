@@ -1,15 +1,15 @@
 import { Table } from 'antd'
 import { ColumnType } from 'antd/lib/table'
-import { ScheduleTime, Weekday } from '../../lib/model'
+import { ScheduleData, Weekday } from '../../lib/model'
 import { Weekdays } from '../../lib/constants'
 
 const getClassTimes = (
   weekdays: Weekday[],
   classTime: string[]
-): ScheduleTime[] => {
-  const tableData: ScheduleTime = weekdays.reduce(
+): ScheduleData[] => {
+  const tableData: ScheduleData = weekdays.reduce(
     (acc, cur) => ({ ...acc, [cur]: '' }),
-    {} as ScheduleTime
+    {} as ScheduleData
   )
   classTime.forEach((item) => {
     const arr = item.split(' ')
@@ -17,11 +17,11 @@ const getClassTimes = (
     const time = arr[1]
     tableData[weekday] = time
   })
-  console.log(tableData)
+  tableData.key = '1'
   return [tableData]
 }
 
-const columns: ColumnType<ScheduleTime>[] = Weekdays.map((weekday, index) => {
+const columns: ColumnType<ScheduleData>[] = Weekdays.map((weekday, index) => {
   return { title: weekday, dataIndex: weekday, key: index }
 })
 
