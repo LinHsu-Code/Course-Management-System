@@ -1,6 +1,8 @@
 import Head from 'next/head'
-import { Steps } from 'antd'
+import { Empty, Steps } from 'antd'
 import { useState } from 'react'
+import CourseDetailForm from '../../../../../components/course/courseDetailForm'
+import CourseScheduleForm from '../../../../../components/course/courseScheduleForm'
 
 const { Step } = Steps
 
@@ -16,11 +18,13 @@ export default function Page() {
       <Head>
         <title>{'CMS DashBoard: Manager-Add Course'}</title>
       </Head>
+
       <Steps
         type="navigation"
         current={current}
         onChange={(current) => setCurrent(current)}
         className="site-navigation-steps"
+        style={{ marginBottom: 24 }}
       >
         <Step title="Course Detail" />
         <Step
@@ -29,6 +33,19 @@ export default function Page() {
         />
         <Step disabled={getDisabled(2, finishedSteps)} title="Success" />
       </Steps>
+
+      {(() => {
+        switch (current) {
+          case 0:
+            return <CourseDetailForm />
+          case 1:
+            return <CourseScheduleForm />
+          case 2:
+            return <div>success!!</div>
+          default:
+            return <Empty />
+        }
+      })()}
     </>
   )
 }
