@@ -31,3 +31,8 @@ export type BadgeStatus =
   | 'error'
   | 'default'
   | undefined
+
+export interface OptionValue {
+  label: string
+  value: number
+}
