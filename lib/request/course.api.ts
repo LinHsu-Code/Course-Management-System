@@ -4,6 +4,7 @@ import {
   GetCoursesResponse,
   GetCourseRequest,
   GetCourseResponse,
+  GetCourseTypesResponse,
 } from '../../lib/model'
 
 const getCourses = (params: GetCoursesRequest): Promise<GetCoursesResponse> => {
@@ -16,4 +17,7 @@ const getCourse = (params: GetCourseRequest): Promise<GetCourseResponse> => {
   )
 }
 
-export { getCourses, getCourse }
+const getCourseTypes = (): Promise<GetCourseTypesResponse> => {
+  return getInstance('/courses/type').then((res) => showMessage(res, false))
+}
+export { getCourses, getCourse, getCourseTypes }

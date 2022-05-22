@@ -1,4 +1,4 @@
-import { CourseType, StudentDetailCourse } from './course'
+import { StudentCourseType, StudentDetailCourse } from './course'
 import { Response, Paginator } from './common'
 
 export interface StudentType {
@@ -14,7 +14,7 @@ export interface Student {
   type: StudentType | null
   country: string
   profileId: number
-  courses: CourseType[]
+  courses: StudentCourseType[]
 }
 
 export interface GetStudentsRequest {

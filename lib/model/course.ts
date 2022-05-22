@@ -6,6 +6,10 @@ export interface CourseType {
   courseId?: number
 }
 
+export interface StudentCourseType extends CourseType {
+  courseId: number
+}
+
 export interface StudentDetailCourse {
   createdAt: Date
   updatedAt: Date
@@ -109,3 +113,5 @@ export interface ScheduleTableData extends ScheduleTime {
 }
 
 export type Weekday = keyof ScheduleTime
+
+export type GetCourseTypesResponse = Response<CourseType[]>

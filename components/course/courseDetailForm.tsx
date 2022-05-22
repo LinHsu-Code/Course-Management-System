@@ -1,10 +1,8 @@
 import { Col, Form, Row, Button, Input, Select } from 'antd'
 import { useEffect, useState } from 'react'
-import { getTeachers } from '../../lib/request'
-import { OptionValue } from '../../lib/model'
+import { getCourseTypes, getTeachers } from '../../lib/request'
+import { CourseType, OptionValue } from '../../lib/model'
 import { ValidateMessages } from '../../lib/constants'
-
-import React from 'react'
 import DebouncedSearchSelect from '../common/debouncedSearchSelect'
 
 async function fetchTeacherList(teacherName: string): Promise<OptionValue[]> {
@@ -17,9 +15,16 @@ async function fetchTeacherList(teacherName: string): Promise<OptionValue[]> {
 }
 
 export default function CourseDetailForm({}: {}) {
-  const [value, setValue] = React.useState([])
-  console.log('value:', value)
+  const [teacherId, setTeacherId] = useState()
+  const [courseTypes, setCourseTypes] = useState<CourseType[]>([])
 
+  useEffect(() => {
+    getCourseTypes().then((res) => {
+      if (res.data) {
+        setCourseTypes(res.data)
+      }
+    })
+  }, [])
   return (
     <Form
       name="add_course"
@@ -46,20 +51,43 @@ export default function CourseDetailForm({}: {}) {
             rules={[{ required: true }]}
           >
             <DebouncedSearchSelect
-              value={value}
+              value={teacherId}
               placeholder="search and select teacher"
               fetchOptions={fetchTeacherList}
               onChange={(newValue) => {
-                setValue(newValue)
+                setTeacherId(newValue)
               }}
             />
           </Form.Item>
         </Col>
         <Col xs={12} md={6}>
-          3
+          <Form.Item label="Type" name="type" rules={[{ required: true }]}>
+            <Select mode="multiple" placeholder="select course types">
+              {courseTypes.map((courseType) => (
+                <Select.Option key={courseType.id} value={courseType.id}>
+                  {courseType.name}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
         </Col>
         <Col xs={12} md={6}>
-          4
+          <Form.Item
+            label="Course Code"
+            name="uid"
+            rules={[{ required: true }]}
+          >
+            <Input
+              type="text"
+              placeholder="course code"
+              disabled
+              //   addonAfter={
+              //     isGenCodeDisplay ? (
+              //       <KeyOutlined style={{ cursor: 'pointer' }} />
+              //     ) : null
+              //   }
+            />
+          </Form.Item>
         </Col>
       </Row>
       <Row>

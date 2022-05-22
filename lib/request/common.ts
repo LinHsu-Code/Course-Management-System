@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { message } from 'antd'
+import { isEmpty } from 'lodash'
 
 const axiosInstance = axios.create({
   baseURL: process.env.BASE_URL,
@@ -26,7 +27,9 @@ axiosInstance.interceptors.request.use((config) => {
 })
 
 const getInstance = (url: string, params = {}) => {
-  url = !!params ? `${url}?${new URLSearchParams(params).toString()}` : url
+  url = !isEmpty(params)
+    ? `${url}?${new URLSearchParams(params).toString()}`
+    : url
 
   return axiosInstance
     .get(url)
