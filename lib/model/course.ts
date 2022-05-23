@@ -1,3 +1,4 @@
+import { StringOptions } from 'sass'
 import { Response, Paginator } from './common'
 import { CourseTeacher } from './teacher'
 export interface CourseType {
@@ -115,3 +116,5 @@ export interface ScheduleTableData extends ScheduleTime {
 export type Weekday = keyof ScheduleTime
 
 export type GetCourseTypesResponse = Response<CourseType[]>
+
+export type GenerateCourseCodeResponse = Response<string>
