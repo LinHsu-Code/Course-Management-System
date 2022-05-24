@@ -48,11 +48,6 @@ const disabledDate: RangePickerProps['disabledDate'] = (current) => {
   return current && current < moment().endOf('day')
 }
 
-const genCode = async () => {
-  const { data } = await generateCourseCode()
-  form.setFieldsValue({ uid: data })
-}
-
 const selectAfter = (
   <Select defaultValue="month" className="select-after">
     <Select.Option value="year">year</Select.Option>
@@ -147,7 +142,9 @@ export default function CourseDetailForm({}: {}) {
   )
 
   const onFinish = async (values: any) => {
-    console.log('values:', values)
+    const startTime = moment(values.startTime).format('YYYY-MM-DD')
+
+    console.log('values:', { ...values, startTime })
   }
   return (
     <Form
@@ -234,7 +231,7 @@ export default function CourseDetailForm({}: {}) {
             />
           </Form.Item>
         </Col>
-        <Col xs={24} md={8}>
+        {/* <Col xs={24} md={8}>
           <FullHeightFormItem
             label="Description"
             name="detail"
@@ -268,7 +265,7 @@ export default function CourseDetailForm({}: {}) {
               </Upload>
             </ImgCrop>
           </Form.Item>
-        </Col>
+        </Col> */}
       </Row>
       <Row>
         {' '}
