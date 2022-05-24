@@ -39,9 +39,9 @@ export default function DebouncedSearchSelect<
   }, [fetchOptions, debounceTimeout])
 
   return (
-    <Select<OptionValue>
+    <Select
       showSearch
-      labelInValue
+      //labelInValue
       filterOption={false}
       onSearch={debounceFetcher}
       notFoundContent={fetching ? <Spin size="small" /> : null}

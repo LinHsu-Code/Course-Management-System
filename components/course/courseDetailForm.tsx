@@ -10,6 +10,7 @@ import {
   DatePicker,
   Upload,
   message,
+  Empty,
 } from 'antd'
 import ImgCrop from 'antd-img-crop'
 import { useEffect, useState } from 'react'
@@ -25,7 +26,10 @@ import type { RangePickerProps } from 'antd/es/date-picker'
 import moment from 'moment'
 import styled from 'styled-components'
 import { InboxOutlined } from '@ant-design/icons'
+import type { UploadChangeParam } from 'antd/es/upload'
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface'
+import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
+import { useForm } from 'antd/lib/form/Form'
 
 const FullHeightFormItem = styled(Form.Item)`
   .ant-form-item-control {
@@ -42,6 +46,11 @@ const FullHeightFormItem = styled(Form.Item)`
 
 const disabledDate: RangePickerProps['disabledDate'] = (current) => {
   return current && current < moment().endOf('day')
+}
+
+const genCode = async () => {
+  const { data } = await generateCourseCode()
+  form.setFieldsValue({ uid: data })
 }
 
 const selectAfter = (
@@ -63,37 +72,32 @@ async function fetchTeacherList(teacherName: string): Promise<OptionValue[]> {
 }
 
 export default function CourseDetailForm({}: {}) {
-  const [teacherId, setTeacherId] = useState()
-  const [uid, setUid] = useState<string>()
+  const [form] = useForm()
+  const [uid, setUid] = useState<string>('')
   const [courseTypes, setCourseTypes] = useState<CourseType[]>([])
   const [fileList, setFileList] = useState<UploadFile[]>([])
-  const [loading, setLoading] = useState(false)
-  const [imageUrl, setImageUrl] = useState()
+  const [isReady, setIsReady] = useState(true)
+  const [imageUrl, setImageUrl] = useState('')
 
-  const props: UploadProps = {
-    name: 'file',
-    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-    onChange(info) {
-      const { status } = info.file
-      if (status !== 'uploading') {
-        //console.log(info.file, info.fileList)
-        setLoading(true)
-      }
-      if (status === 'done') {
-        setFileList(info.fileList)
-        console.log(info.file, info.fileList)
-        getBase64(info.file.originFileObj, (url) => {
-          setLoading(false)
-          setImageUrl(url)
-        })
-        message.success(`${info.file.name} file uploaded successfully.`)
-      } else if (status === 'error') {
-        message.error(`${info.file.name} file upload failed.`)
-      }
-    },
-    onDrop(e) {
-      console.log('Dropped files', e.dataTransfer.files)
-    },
+  const handleChange: UploadProps['onChange'] = (
+    info: UploadChangeParam<UploadFile>
+  ) => {
+    // const { fileList: newFileList, file } = info
+    if (info.file.status === 'uploading') {
+      //   setImageUrl('')
+      setIsReady(false)
+    }
+    if (info.file.status === 'done') {
+      setIsReady(true)
+      //   setFileList(info.fileList)
+      setImageUrl(info.file.response.url)
+      message.success('Course image uploaded successfully.')
+    }
+    if (info.file.status === 'error') {
+      setIsReady(false)
+      //setImageUrl('')
+      message.error('Course image upload failed.')
+    }
   }
 
   const onPreview = async (file: UploadFile) => {
@@ -111,10 +115,11 @@ export default function CourseDetailForm({}: {}) {
     imgWindow?.document.write(image.outerHTML)
   }
 
-  const getBase64 = (img, callback) => {
-    const reader = new FileReader()
-    reader.addEventListener('load', () => callback(reader.result))
-    reader.readAsDataURL(img)
+  const onRemove = (file) => {
+    // setFileList([])
+    console.log(file)
+    setIsReady(true)
+    setImageUrl('')
   }
 
   useEffect(() => {
@@ -123,23 +128,38 @@ export default function CourseDetailForm({}: {}) {
         setCourseTypes(res.data)
       }
     })
-    generateCourseCode().then((res) => {
-      if (res.data) {
-        setUid(res.data)
-      }
-    })
   }, [])
 
+  const genCode = async () => {
+    const { data } = await generateCourseCode()
+    form.setFieldsValue({ uid: data })
+  }
+
+  const uploadButton = (
+    <div>
+      <p className="ant-upload-drag-icon">
+        <InboxOutlined />
+      </p>
+      <p className="ant-upload-text">
+        Click or drag file to this area to upload
+      </p>
+    </div>
+  )
+
+  const onFinish = async (values: any) => {
+    console.log('values:', values)
+  }
   return (
     <Form
       name="add_course"
-      // onFinish={onFinish}
+      form={form}
+      onFinish={onFinish}
       // onFinishFailed={onFinishFailed}
       validateMessages={ValidateMessages}
       autoComplete="off"
       layout="vertical"
     >
-      <Row gutter={[16, 24]}>
+      {/* <Row gutter={[16, 24]}>
         <Col xs={12} md={6}>
           <Form.Item
             label="Course Name"
@@ -156,12 +176,8 @@ export default function CourseDetailForm({}: {}) {
             rules={[{ required: true }]}
           >
             <DebouncedSearchSelect
-              value={teacherId}
               placeholder="search and select teacher"
               fetchOptions={fetchTeacherList}
-              onChange={(newValue) => {
-                setTeacherId(newValue)
-              }}
             />
           </Form.Item>
         </Col>
@@ -177,17 +193,16 @@ export default function CourseDetailForm({}: {}) {
           </Form.Item>
         </Col>
         <Col xs={12} md={6}>
-          {/* <Form.Item
+          <Form.Item
             label="Course Code"
             name="uid"
             rules={[{ required: true }]}
+            initialValue={genCode()}
           >
-            <Input type="text" placeholder="course code" disabled>
-              {uid}
-            </Input>
-          </Form.Item> */}
+            <Input disabled />
+          </Form.Item>
         </Col>
-      </Row>
+      </Row> */}
       <Row gutter={[16, 24]}>
         <Col xs={24} md={8}>
           <Form.Item label="Start Date" name="startTime">
@@ -195,7 +210,7 @@ export default function CourseDetailForm({}: {}) {
           </Form.Item>
 
           <Form.Item label="Price" name="price" rules={[{ required: true }]}>
-            <InputNumber prefix="￥" min={0} style={{ width: '100%' }} />
+            <InputNumber prefix="$" min={0} style={{ width: '100%' }} />
           </Form.Item>
 
           <Form.Item
@@ -239,25 +254,18 @@ export default function CourseDetailForm({}: {}) {
         <Col xs={24} md={8}>
           <Form.Item label="Cover" name="cover">
             <ImgCrop rotate>
-              {imageUrl ? (
-                <Upload
-                  action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                  listType="picture-card"
-                  fileList={fileList}
-                  onPreview={onPreview}
-                >
-                  {/* {fileList.length < 5 && '+ Upload'} */}
-                </Upload>
-              ) : (
-                <Upload.Dragger {...props}>
-                  <p className="ant-upload-drag-icon">
-                    <InboxOutlined />
-                  </p>
-                  <p className="ant-upload-text">
-                    Click or drag file to this area to upload
-                  </p>
-                </Upload.Dragger>
-              )}
+              <Upload
+                name="avatar"
+                listType="picture-card"
+                className="avatar-uploader"
+                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                onChange={handleChange}
+                // fileList={fileList}
+                onRemove={onRemove}
+                maxCount={1}
+              >
+                {imageUrl || !isReady ? null : uploadButton}
+              </Upload>
             </ImgCrop>
           </Form.Item>
         </Col>
@@ -266,7 +274,7 @@ export default function CourseDetailForm({}: {}) {
         {' '}
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
           <Button type="primary" htmlType="submit">
-            Submit
+            Create Course
           </Button>
         </Form.Item>
       </Row>
