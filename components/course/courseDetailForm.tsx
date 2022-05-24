@@ -10,7 +10,6 @@ import {
   DatePicker,
   Upload,
   message,
-  Empty,
 } from 'antd'
 import ImgCrop from 'antd-img-crop'
 import { useEffect, useState } from 'react'
@@ -19,6 +18,7 @@ import {
   getTeachers,
   generateCourseCode,
 } from '../../lib/request'
+import { disabledDate } from '../../lib/util'
 import { CourseType, OptionValue } from '../../lib/model'
 import { ValidateMessages } from '../../lib/constants'
 import DebouncedSearchSelect from '../common/debouncedSearchSelect'
@@ -28,35 +28,42 @@ import styled from 'styled-components'
 import { InboxOutlined } from '@ant-design/icons'
 import type { UploadChangeParam } from 'antd/es/upload'
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface'
-import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
 import { useForm } from 'antd/lib/form/Form'
+import styles from './courseDetailForm.module.scss'
 
 const FullHeightFormItem = styled(Form.Item)`
+  width: 100%;
+  .ant-form-item {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
   .ant-form-item-control {
-    position: absolute;
-    top: 30px;
-    bottom: 24px;
+    flex: 1;
   }
   .ant-form-item-control-input,
-  .ant-form-item-control-input-content,
-  textarea.ant-input {
+  .ant-form-item-control-input-content {
     height: 100% !important;
   }
 `
-
-const disabledDate: RangePickerProps['disabledDate'] = (current) => {
-  return current && current < moment().endOf('day')
-}
-
-const selectAfter = (
-  <Select defaultValue="month" className="select-after">
-    <Select.Option value="year">year</Select.Option>
-    <Select.Option value="day">day</Select.Option>
-    <Select.Option value="week">week</Select.Option>
-    <Select.Option value="hour">hour</Select.Option>
-  </Select>
-)
-
+const FullHeightFormItemUpload = styled(FullHeightFormItem)`
+  //   animation-duration: 0s !important;
+  .ant-upload-picture-card-wrapper,
+  .ant-form-item-control-input,
+  .ant-upload-list-picture-card,
+  .ant-upload,
+  .ant-upload-list-picture-card-container,
+  .ant-upload-list-item,
+  .ant-upload-list-item-removed,
+  .ant-upload-list-item-list-type-picture-card {
+    width: 100%;
+    height: 100%;
+    animation-duration: 0s;
+  }
+  //   .ant-upload-picture-card-wrapper img {
+  //     object-fit: cover !important;
+  //   }
+`
 async function fetchTeacherList(teacherName: string): Promise<OptionValue[]> {
   return getTeachers({ query: teacherName }).then((res) =>
     res.data.teachers.map((teacher) => ({
@@ -70,13 +77,15 @@ export default function CourseDetailForm({}: {}) {
   const [form] = useForm()
   const [uid, setUid] = useState<string>('')
   const [courseTypes, setCourseTypes] = useState<CourseType[]>([])
-  const [fileList, setFileList] = useState<UploadFile[]>([])
+  const [unit, setUnit] = useState<number>(2)
   const [isReady, setIsReady] = useState(true)
-  const [imageUrl, setImageUrl] = useState('')
+  //const [imageUrl, setImageUrl] = useState('')
+  const [fileList, setFileList] = useState<UploadFile[]>([])
 
   const handleChange: UploadProps['onChange'] = (
     info: UploadChangeParam<UploadFile>
   ) => {
+    console.log('onChange', info)
     // const { fileList: newFileList, file } = info
     if (info.file.status === 'uploading') {
       //   setImageUrl('')
@@ -85,8 +94,13 @@ export default function CourseDetailForm({}: {}) {
     if (info.file.status === 'done') {
       setIsReady(true)
       //   setFileList(info.fileList)
-      setImageUrl(info.file.response.url)
+      //setImageUrl(info.file.response.url)
+      setFileList(info.fileList)
       message.success('Course image uploaded successfully.')
+    }
+    if (info.file.status === 'removed') {
+      setFileList(info.fileList)
+      //setImageUrl('')
     }
     if (info.file.status === 'error') {
       setIsReady(false)
@@ -110,13 +124,6 @@ export default function CourseDetailForm({}: {}) {
     imgWindow?.document.write(image.outerHTML)
   }
 
-  const onRemove = (file) => {
-    // setFileList([])
-    console.log(file)
-    setIsReady(true)
-    setImageUrl('')
-  }
-
   useEffect(() => {
     getCourseTypes().then((res) => {
       if (res.data) {
@@ -131,8 +138,8 @@ export default function CourseDetailForm({}: {}) {
   }
 
   const uploadButton = (
-    <div>
-      <p className="ant-upload-drag-icon">
+    <div className={styles.upload}>
+      <p className={styles.icon}>
         <InboxOutlined />
       </p>
       <p className="ant-upload-text">
@@ -141,10 +148,29 @@ export default function CourseDetailForm({}: {}) {
     </div>
   )
 
+  const selectAfter = (
+    <Select
+      value={unit}
+      className="select-after"
+      onChange={(newUnit) => setUnit(newUnit)}
+    >
+      <Select.Option value={1}>year</Select.Option>
+      <Select.Option value={2}>month</Select.Option>
+      <Select.Option value={3}>day</Select.Option>
+      <Select.Option value={4}>week</Select.Option>
+      <Select.Option value={5}>hour</Select.Option>
+    </Select>
+  )
+
   const onFinish = async (values: any) => {
     const startTime = moment(values.startTime).format('YYYY-MM-DD')
 
-    console.log('values:', { ...values, startTime })
+    console.log('values:', {
+      ...values,
+      startTime,
+      durationUnit: unit,
+      //   cover: imageUrl,
+    })
   }
   return (
     <Form
@@ -206,14 +232,18 @@ export default function CourseDetailForm({}: {}) {
             <DatePicker disabledDate={disabledDate} style={{ width: '100%' }} />
           </Form.Item>
 
-          <Form.Item label="Price" name="price" rules={[{ required: true }]}>
+          <Form.Item
+            label="Price"
+            name="price"
+            rules={[{ required: true, type: 'number', min: 0 }]}
+          >
             <InputNumber prefix="$" min={0} style={{ width: '100%' }} />
           </Form.Item>
 
           <Form.Item
             label="Student Limit"
             name="maxStudents"
-            rules={[{ required: true }]}
+            rules={[{ required: true, type: 'number', min: 1, max: 10 }]}
           >
             <InputNumber min={1} max={10} style={{ width: '100%' }} />
           </Form.Item>
@@ -231,7 +261,7 @@ export default function CourseDetailForm({}: {}) {
             />
           </Form.Item>
         </Col>
-        {/* <Col xs={24} md={8}>
+        <Col xs={24} md={8} style={{ display: 'flex' }}>
           <FullHeightFormItem
             label="Description"
             name="detail"
@@ -245,11 +275,29 @@ export default function CourseDetailForm({}: {}) {
               },
             ]}
           >
-            <Input.TextArea placeholder="Course description" />
+            <Input.TextArea
+              placeholder="Course description"
+              style={{ height: '100%' }}
+            />
           </FullHeightFormItem>
         </Col>
-        <Col xs={24} md={8}>
-          <Form.Item label="Cover" name="cover">
+        <Col xs={24} md={8} style={{ display: 'flex' }}>
+          <FullHeightFormItemUpload label="Cover" name="cover">
+            <ImgCrop rotate>
+              <Upload
+                name="avatar"
+                listType="picture-card"
+                className="avatar-uploader"
+                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                onChange={handleChange}
+                //fileList={fileList}
+                maxCount={1}
+              >
+                {fileList.length > 0 ? null : uploadButton}
+              </Upload>
+            </ImgCrop>
+          </FullHeightFormItemUpload>
+          {/* <FullHeightFormItemUpload label="Cover" name="cover">
             <ImgCrop rotate>
               <Upload
                 name="avatar"
@@ -258,17 +306,15 @@ export default function CourseDetailForm({}: {}) {
                 action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                 onChange={handleChange}
                 // fileList={fileList}
-                onRemove={onRemove}
                 maxCount={1}
               >
                 {imageUrl || !isReady ? null : uploadButton}
               </Upload>
             </ImgCrop>
-          </Form.Item>
-        </Col> */}
+          </FullHeightFormItemUpload> */}
+        </Col>
       </Row>
       <Row>
-        {' '}
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
           <Button type="primary" htmlType="submit">
             Create Course
