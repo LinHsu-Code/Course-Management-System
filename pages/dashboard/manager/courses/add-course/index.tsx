@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import { Empty, Steps } from 'antd'
 import { useState } from 'react'
+import { Course } from '../../../../../lib/model'
 import CourseDetailForm from '../../../../../components/course/courseDetailForm'
 import CourseScheduleForm from '../../../../../components/course/courseScheduleForm'
 
@@ -11,7 +12,13 @@ function getDisabled(stepNumber: number, finishedSteps: number) {
 }
 export default function Page() {
   const [current, setCurrent] = useState(0)
-  const [finishedSteps, setFinishedSteps] = useState(0)
+  const [finishedSteps, setFinishedSteps] = useState(-1)
+  const [courseId, setCourseId] = useState<number>(0)
+  const [scheduleId, setScheduleId] = useState<number>(0)
+  // const moveToNextStep = () => {
+  //   setStep(step + 1);
+  //   setAvailableNavigate([...availableNavigate, step + 1]);
+  // };
 
   return (
     <>
@@ -37,7 +44,16 @@ export default function Page() {
       {(() => {
         switch (current) {
           case 0:
-            return <CourseDetailForm />
+            return (
+              <CourseDetailForm
+                afterAddSuccess={(course: Course) => {
+                  setCourseId(course.id)
+                  setScheduleId(course.scheduleId)
+                  setCurrent(1)
+                  setFinishedSteps(0)
+                }}
+              />
+            )
           case 1:
             return <CourseScheduleForm />
           case 2:

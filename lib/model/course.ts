@@ -118,3 +118,19 @@ export type Weekday = keyof ScheduleTime
 export type GetCourseTypesResponse = Response<CourseType[]>
 
 export type GenerateCourseCodeResponse = Response<string>
+
+export type AddCourseRequest = Pick<
+  Course,
+  | 'cover'
+  | 'detail'
+  | 'duration'
+  | 'durationUnit'
+  | 'maxStudents'
+  | 'name'
+  | 'price'
+  | 'startTime'
+  | 'uid'
+  | 'teacherId'
+> & { type: number[] }
+
+export type AddCourseResponse = Response<Course>

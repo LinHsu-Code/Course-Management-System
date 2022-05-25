@@ -17,6 +17,7 @@ import {
   getCourseTypes,
   getTeachers,
   generateCourseCode,
+  addCourse,
 } from '../../lib/request'
 import { disabledDate } from '../../lib/util'
 import { CourseType, OptionValue } from '../../lib/model'
@@ -78,13 +79,17 @@ async function fetchTeacherList(teacherName: string): Promise<OptionValue[]> {
   )
 }
 
-export default function CourseDetailForm({}: {}) {
+export default function CourseDetailForm({
+  afterAddSuccess,
+}: {
+  afterAddSuccess: (course: Course) => void
+}) {
   const [form] = useForm()
   const [uid, setUid] = useState<string>('')
   const [courseTypes, setCourseTypes] = useState<CourseType[]>([])
   const [unit, setUnit] = useState<number>(2)
   const [isReady, setIsReady] = useState(true)
-  //const [imageUrl, setImageUrl] = useState('')
+  const [imageUrl, setImageUrl] = useState('')
   const [fileList, setFileList] = useState<UploadFile[]>([])
   const [loading, setLoading] = useState(false)
 
@@ -94,7 +99,7 @@ export default function CourseDetailForm({}: {}) {
     console.log('onChange', info)
     // const { fileList: newFileList, file } = info
     if (info.file.status === 'uploading') {
-      //   setImageUrl('')
+      setImageUrl('')
       setLoading(true)
       setIsReady(false)
     }
@@ -102,18 +107,18 @@ export default function CourseDetailForm({}: {}) {
       setLoading(false)
       setIsReady(true)
       //   setFileList(info.fileList)
-      //setImageUrl(info.file.response.url)
+      setImageUrl(info.file.response.url)
       setFileList(info.fileList)
       message.success('Course image uploaded successfully.')
     }
     if (info.file.status === 'removed') {
       setFileList(info.fileList)
-      //setImageUrl('')
+      setImageUrl('')
     }
     if (info.file.status === 'error') {
       setLoading(false)
       setIsReady(false)
-      //setImageUrl('')
+      setImageUrl('')
       message.error('Course image upload failed.')
     }
   }
@@ -139,6 +144,7 @@ export default function CourseDetailForm({}: {}) {
         setCourseTypes(res.data)
       }
     })
+    genCode()
   }, [])
 
   const genCode = async () => {
@@ -180,11 +186,20 @@ export default function CourseDetailForm({}: {}) {
   const onFinish = async (values: any) => {
     const startTime = moment(values.startTime).format('YYYY-MM-DD')
 
-    console.log('values:', {
+    // console.log('values:', {
+    //   ...values,
+    //   startTime,
+    //   durationUnit: unit,
+    //   cover: imageUrl,
+    // })
+
+    addCourse({
       ...values,
       startTime,
       durationUnit: unit,
-      //   cover: imageUrl,
+      cover: imageUrl,
+    }).then((res) => {
+      afterAddSuccess(res.data)
     })
   }
   return (

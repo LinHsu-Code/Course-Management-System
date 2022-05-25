@@ -16,13 +16,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 }
 
-// const getServerSideProps: GetServerSideProps = async (context) => {
-//   const id = context.query.id as string
-//   return {
-//     props: { id },
-//   }
-// }
-
 export default function Page(props: { id: string }) {
   const [course, setCourse] = useState<CourseDetail | null>(null)
   const [info, setInfo] = useState<{ label: string; value: string | number }[]>(
