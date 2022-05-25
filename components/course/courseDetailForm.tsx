@@ -25,7 +25,7 @@ import DebouncedSearchSelect from '../common/debouncedSearchSelect'
 import type { RangePickerProps } from 'antd/es/date-picker'
 import moment from 'moment'
 import styled from 'styled-components'
-import { InboxOutlined } from '@ant-design/icons'
+import { InboxOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons'
 import type { UploadChangeParam } from 'antd/es/upload'
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface'
 import { useForm } from 'antd/lib/form/Form'
@@ -47,7 +47,7 @@ const FullHeightFormItem = styled(Form.Item)`
   }
 `
 const FullHeightFormItemUpload = styled(FullHeightFormItem)`
-  //   animation-duration: 0s !important;
+  animation-duration: 0s !important;
   .ant-upload-picture-card-wrapper,
   .ant-form-item-control-input,
   .ant-upload-list-picture-card,
@@ -58,7 +58,12 @@ const FullHeightFormItemUpload = styled(FullHeightFormItem)`
   .ant-upload-list-item-list-type-picture-card {
     width: 100%;
     height: 100%;
-    animation-duration: 0s;
+    //animation-duration: 0s;
+  }
+  .ant-upload-animate-inline-appear,
+  .ant-upload-list-item-removed,
+  .ant-upload-animate-inline {
+    display: none;
   }
   //   .ant-upload-picture-card-wrapper img {
   //     object-fit: cover !important;
@@ -81,6 +86,7 @@ export default function CourseDetailForm({}: {}) {
   const [isReady, setIsReady] = useState(true)
   //const [imageUrl, setImageUrl] = useState('')
   const [fileList, setFileList] = useState<UploadFile[]>([])
+  const [loading, setLoading] = useState(false)
 
   const handleChange: UploadProps['onChange'] = (
     info: UploadChangeParam<UploadFile>
@@ -89,9 +95,11 @@ export default function CourseDetailForm({}: {}) {
     // const { fileList: newFileList, file } = info
     if (info.file.status === 'uploading') {
       //   setImageUrl('')
+      setLoading(true)
       setIsReady(false)
     }
     if (info.file.status === 'done') {
+      setLoading(false)
       setIsReady(true)
       //   setFileList(info.fileList)
       //setImageUrl(info.file.response.url)
@@ -103,6 +111,7 @@ export default function CourseDetailForm({}: {}) {
       //setImageUrl('')
     }
     if (info.file.status === 'error') {
+      setLoading(false)
       setIsReady(false)
       //setImageUrl('')
       message.error('Course image upload failed.')
@@ -138,13 +147,19 @@ export default function CourseDetailForm({}: {}) {
   }
 
   const uploadButton = (
-    <div className={styles.upload}>
-      <p className={styles.icon}>
-        <InboxOutlined />
-      </p>
-      <p className="ant-upload-text">
-        Click or drag file to this area to upload
-      </p>
+    <div>
+      {loading ? (
+        <LoadingOutlined />
+      ) : (
+        <div className={styles.upload}>
+          <p className={styles.icon}>
+            <InboxOutlined />
+          </p>
+          <p className="ant-upload-text">
+            Click or drag file to this area to upload
+          </p>
+        </div>
+      )}
     </div>
   )
 
@@ -182,8 +197,8 @@ export default function CourseDetailForm({}: {}) {
       autoComplete="off"
       layout="vertical"
     >
-      {/* <Row gutter={[16, 24]}>
-        <Col xs={12} md={6}>
+      <Row gutter={[16, 24]}>
+        <Col xs={24} md={8}>
           <Form.Item
             label="Course Name"
             name="name"
@@ -192,40 +207,44 @@ export default function CourseDetailForm({}: {}) {
             <Input type="text" placeholder="course name" />
           </Form.Item>
         </Col>
-        <Col xs={12} md={6}>
-          <Form.Item
-            label="Teacher"
-            name="teacherId"
-            rules={[{ required: true }]}
-          >
-            <DebouncedSearchSelect
-              placeholder="search and select teacher"
-              fetchOptions={fetchTeacherList}
-            />
-          </Form.Item>
+        <Col xs={24} md={16}>
+          <Row gutter={[16, 24]}>
+            <Col xs={24} md={8}>
+              <Form.Item
+                label="Teacher"
+                name="teacherId"
+                rules={[{ required: true }]}
+              >
+                <DebouncedSearchSelect
+                  placeholder="search and select teacher"
+                  fetchOptions={fetchTeacherList}
+                />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={8}>
+              <Form.Item label="Type" name="type" rules={[{ required: true }]}>
+                <Select mode="multiple" placeholder="select course types">
+                  {courseTypes.map((courseType) => (
+                    <Select.Option key={courseType.id} value={courseType.id}>
+                      {courseType.name}
+                    </Select.Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={8}>
+              <Form.Item
+                label="Course Code"
+                name="uid"
+                rules={[{ required: true }]}
+                // initialValue={genCode()}
+              >
+                <Input disabled />
+              </Form.Item>
+            </Col>
+          </Row>
         </Col>
-        <Col xs={12} md={6}>
-          <Form.Item label="Type" name="type" rules={[{ required: true }]}>
-            <Select mode="multiple" placeholder="select course types">
-              {courseTypes.map((courseType) => (
-                <Select.Option key={courseType.id} value={courseType.id}>
-                  {courseType.name}
-                </Select.Option>
-              ))}
-            </Select>
-          </Form.Item>
-        </Col>
-        <Col xs={12} md={6}>
-          <Form.Item
-            label="Course Code"
-            name="uid"
-            rules={[{ required: true }]}
-            initialValue={genCode()}
-          >
-            <Input disabled />
-          </Form.Item>
-        </Col>
-      </Row> */}
+      </Row>
       <Row gutter={[16, 24]}>
         <Col xs={24} md={8}>
           <Form.Item label="Start Date" name="startTime">
