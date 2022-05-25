@@ -20,7 +20,7 @@ import {
   addCourse,
 } from '../../lib/request'
 import { disabledDate } from '../../lib/util'
-import { CourseType, OptionValue } from '../../lib/model'
+import { CourseType, OptionValue, Course } from '../../lib/model'
 import { ValidateMessages } from '../../lib/constants'
 import DebouncedSearchSelect from '../common/debouncedSearchSelect'
 import type { RangePickerProps } from 'antd/es/date-picker'

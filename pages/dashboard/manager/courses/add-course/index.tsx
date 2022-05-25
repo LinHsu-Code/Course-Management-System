@@ -7,8 +7,13 @@ import CourseScheduleForm from '../../../../../components/course/courseScheduleF
 
 const { Step } = Steps
 
-function getDisabled(stepNumber: number, finishedSteps: number) {
-  return stepNumber > finishedSteps ? true : false
+function getDisabled(
+  stepNumber: number,
+  current: number,
+  finishedSteps: number
+) {
+  return false
+  // return stepNumber > Math.max(finishedSteps, current) ? true : false
 }
 export default function Page() {
   const [current, setCurrent] = useState(0)
@@ -35,10 +40,13 @@ export default function Page() {
       >
         <Step title="Course Detail" />
         <Step
-          disabled={getDisabled(1, finishedSteps)}
+          disabled={getDisabled(1, current, finishedSteps)}
           title="Course Schedule"
         />
-        <Step disabled={getDisabled(2, finishedSteps)} title="Success" />
+        <Step
+          disabled={getDisabled(2, current, finishedSteps)}
+          title="Success"
+        />
       </Steps>
 
       {(() => {
@@ -55,7 +63,16 @@ export default function Page() {
               />
             )
           case 1:
-            return <CourseScheduleForm />
+            return (
+              <CourseScheduleForm
+                courseId={courseId}
+                scheduleId={scheduleId}
+                afterUpdateScheduleSuccess={() => {
+                  setCurrent(2)
+                  setFinishedSteps(1)
+                }}
+              />
+            )
           case 2:
             return <div>success!!</div>
           default:
