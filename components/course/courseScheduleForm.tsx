@@ -10,30 +10,45 @@ import {
   TimePicker,
   Form,
 } from 'antd'
-import { format } from 'date-fns'
 import React, { useEffect, useState } from 'react'
 import { Weekdays } from '../../lib/constants'
+import moment from 'moment'
 
 const { Option } = Select
-const classTime = 'classTime'
-const chapters = 'chapters'
+// const classTime = 'classTime'
+// const chapters = 'chapters'
+
+// type ScheduleFormValue = {
+//   [chapters]: {
+//     name: string
+//     content: string
+//   }[]
+//   [classTime]: {
+//     weekday: string
+//     time: Date
+//   }[]
+// }
+
+// const initialValues = {
+//   [chapters]: [{ name: '', content: '' }],
+//   [classTime]: [{ weekday: '', time: '' }],
+// }
 
 type ScheduleFormValue = {
-  [chapters]: {
+  chapters: {
     name: string
     content: string
   }[]
-  [classTime]: {
+  classTime: {
     weekday: string
     time: Date
   }[]
 }
 
 const initialValues = {
-  [chapters]: [{ name: '', content: '' }],
-  [classTime]: [{ weekday: '', time: '' }],
+  chapters: [{ name: '', content: '' }],
+  classTime: [{ weekday: '', time: '' }],
 }
-
 export default function CourseScheduleForm({
   courseId,
   scheduleId,
@@ -46,8 +61,12 @@ export default function CourseScheduleForm({
   const [form] = Form.useForm<ScheduleFormValue>()
   const [selectedWeekdays, setSelectedWeekdays] = useState<string[]>([])
 
-  const onFinish = (values: ScheduleFormValue) => {
-    console.log(values)
+  const onFinish = (formValues: ScheduleFormValue) => {
+    const classTime = formValues.classTime.map(
+      (item) => `${item.weekday} ${moment(item.time).format('HH:mm:ss')}`
+    )
+    console.log({ ...formValues, classTime })
+
     // if (!courseId && !scheduleId) {
     //   message.error('You must select a course to update!')
     //   return

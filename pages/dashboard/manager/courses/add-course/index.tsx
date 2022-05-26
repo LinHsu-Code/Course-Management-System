@@ -20,10 +20,6 @@ export default function Page() {
   const [finishedSteps, setFinishedSteps] = useState(-1)
   const [courseId, setCourseId] = useState<number>(0)
   const [scheduleId, setScheduleId] = useState<number>(0)
-  // const moveToNextStep = () => {
-  //   setStep(step + 1);
-  //   setAvailableNavigate([...availableNavigate, step + 1]);
-  // };
 
   return (
     <>
