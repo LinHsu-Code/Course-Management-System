@@ -23,13 +23,11 @@ import { disabledDate } from '../../lib/util'
 import { CourseType, OptionValue, Course } from '../../lib/model'
 import { ValidateMessages } from '../../lib/constants'
 import DebouncedSearchSelect from '../common/debouncedSearchSelect'
-import type { RangePickerProps } from 'antd/es/date-picker'
 import moment from 'moment'
 import styled from 'styled-components'
 import { InboxOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons'
 import type { UploadChangeParam } from 'antd/es/upload'
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface'
-import { useForm } from 'antd/lib/form/Form'
 import styles from './courseDetailForm.module.scss'
 
 const FullHeightFormItem = styled(Form.Item)`
@@ -84,7 +82,7 @@ export default function CourseDetailForm({
 }: {
   afterAddSuccess: (course: Course) => void
 }) {
-  const [form] = useForm()
+  const [form] = Form.useForm()
   const [uid, setUid] = useState<string>('')
   const [courseTypes, setCourseTypes] = useState<CourseType[]>([])
   const [unit, setUnit] = useState<number>(2)

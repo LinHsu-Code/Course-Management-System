@@ -8,18 +8,11 @@ import {
   Select,
   Space,
   TimePicker,
+  Form,
 } from 'antd'
-import Form from 'antd/lib/form'
-import { useForm } from 'antd/lib/form/Form'
-import FormItem from 'antd/lib/form/FormItem'
-import { FormListFieldData } from 'antd/lib/form/FormList'
 import { format } from 'date-fns'
 import React, { useEffect, useState } from 'react'
 import { Weekdays } from '../../lib/constants'
-// import { gutter, validateMessages, weekDays } from '../../lib/constant'
-// import { ScheduleRequest } from '../../lib/model'
-// import apiService from '../../lib/services/api-service'
-// import TimePicker from '../common/time-picker'
 
 const { Option } = Select
 const classTime = 'classTime'
@@ -50,58 +43,34 @@ export default function CourseScheduleForm({
   scheduleId: number
   afterUpdateScheduleSuccess: (res: boolean) => void
 }) {
-  const [form] = useForm<ScheduleFormValue>()
+  const [form] = Form.useForm<ScheduleFormValue>()
   const [selectedWeekdays, setSelectedWeekdays] = useState<string[]>([])
-  // const [weekdays, setWeekdays] = useState({
-  //   Sunday: 0,
-  //   Monday: 0,
-  //   Tuesday: 0,
-  //   Wednesday: 0,
-  //   Thursday: 0,
-  //   Friday: 0,
-  //   Saturday: 0,
-  // })
-
-  // const updateSelectedWeekdays = (namePath?: (string | number)[]) => {
-  //   const selected: {
-  //     weekday: string
-  //     time: string
-  //   }[] = form.getFieldValue(classTime) || []
-  //   let result = selected.map((item) => item?.weekday)
-
-  //   if (namePath) {
-  //     const value = form.getFieldValue(namePath)
-
-  //     result = result.filter((item) => item !== value)
-  //   }
-
-  //   setSelectedWeekdays(result)
-  // }
 
   const onFinish = (values: ScheduleFormValue) => {
-    if (!courseId && !scheduleId) {
-      message.error('You must select a course to update!')
-      return
-    }
+    console.log(values)
+    // if (!courseId && !scheduleId) {
+    //   message.error('You must select a course to update!')
+    //   return
+    // }
 
-    const { classTime: origin, chapters } = values
-    const classTime = origin.map(
-      ({ weekday, time }) => `${weekday} ${format(time, 'hh:mm:ss')}`
-    )
-    const req: ScheduleRequest = {
-      chapters: chapters.map((item, index) => ({ ...item, order: index + 1 })),
-      classTime,
-      scheduleId,
-      courseId,
-    }
+    // const { classTime: origin, chapters } = values
+    // const classTime = origin.map(
+    //   ({ weekday, time }) => `${weekday} ${format(time, 'hh:mm:ss')}`
+    // )
+    // const req: ScheduleRequest = {
+    //   chapters: chapters.map((item, index) => ({ ...item, order: index + 1 })),
+    //   classTime,
+    //   scheduleId,
+    //   courseId,
+    // }
 
-    apiService.updateSchedule(req).then((res) => {
-      const { data } = res
+    // apiService.updateSchedule(req).then((res) => {
+    //   const { data } = res
 
-      if (!!afterUpdateScheduleSuccess && data) {
-        afterUpdateScheduleSuccess(true)
-      }
-    })
+    //   if (!!afterUpdateScheduleSuccess && data) {
+    //     afterUpdateScheduleSuccess(true)
+    //   }
+    // })
   }
 
   // useEffect(() => {
@@ -127,12 +96,10 @@ export default function CourseScheduleForm({
 
   return (
     <Form
-      //form={form}
+      form={form}
       name="schedule"
-      //onFinish={onFinish}
-      //autoComplete="off"
+      onFinish={onFinish}
       //validateMessages={validateMessages}
-      //style={{ padding: '0 1.6%' }}
       initialValues={initialValues}
     >
       <Row gutter={[16, 24]}>
@@ -156,47 +123,53 @@ export default function CourseScheduleForm({
             {(fields, { add, remove }) => (
               <>
                 {fields.map(({ key, name, ...restField }) => (
-                  <Space
+                  <Row
                     key={key}
-                    style={{
-                      display: 'flex',
-                    }}
-                    align="baseline"
+                    gutter={[16, 24]}
+                    style={{ alignItems: 'baseline' }}
                   >
-                    <Form.Item
-                      {...restField}
-                      name={[name, 'name']}
-                      rules={[
-                        {
-                          required: true,
-                          message: 'Missing chapter name',
-                        },
-                      ]}
-                    >
-                      <Input size="large" placeholder="chapter name" />
-                    </Form.Item>
-                    <Form.Item
-                      {...restField}
-                      name={[name, 'content']}
-                      rules={[
-                        {
-                          required: true,
-                          message: 'Missing chapter content',
-                        },
-                      ]}
-                    >
-                      <Input size="large" placeholder="chapter content" />
-                    </Form.Item>
-                    <MinusCircleOutlined
-                      onClick={() => {
-                        if (fields.length > 1) {
-                          remove(name)
-                        } else {
-                          message.warn('You must set at least one chapter.')
-                        }
-                      }}
-                    />
-                  </Space>
+                    <Col span={8}>
+                      <Form.Item
+                        {...restField}
+                        name={[name, 'name']}
+                        rules={[
+                          {
+                            required: true,
+                            message: 'Missing chapter name',
+                          },
+                        ]}
+                      >
+                        <Input size="large" placeholder="chapter name" />
+                      </Form.Item>
+                    </Col>
+
+                    <Col span={12}>
+                      <Form.Item
+                        {...restField}
+                        name={[name, 'content']}
+                        rules={[
+                          {
+                            required: true,
+                            message: 'Missing chapter content',
+                          },
+                        ]}
+                      >
+                        <Input size="large" placeholder="chapter content" />
+                      </Form.Item>
+                    </Col>
+
+                    <Col span={2}>
+                      <MinusCircleOutlined
+                        onClick={() => {
+                          if (fields.length > 1) {
+                            remove(name)
+                          } else {
+                            message.warn('You must set at least one chapter.')
+                          }
+                        }}
+                      />
+                    </Col>
+                  </Row>
                 ))}
                 <Form.Item>
                   <Button
@@ -221,73 +194,85 @@ export default function CourseScheduleForm({
             {(fields, { add, remove }) => (
               <>
                 {fields.map(({ key, name, ...restField }) => (
-                  <Space
+                  <Row
                     key={key}
-                    style={{
-                      display: 'flex',
-                    }}
-                    align="baseline"
+                    gutter={[16, 24]}
+                    style={{ alignItems: 'baseline' }}
                   >
-                    <Form.Item
-                      {...restField}
-                      name={[name, 'weekday']}
-                      rules={[
-                        {
-                          required: true,
-                          message: 'Missing a specific day',
-                        },
-                      ]}
-                    >
-                      <Select
-                        size="large"
-                        onChange={(value: string) =>
-                          setSelectedWeekdays([...selectedWeekdays, value])
-                        }
+                    <Col span={8}>
+                      <Form.Item
+                        {...restField}
+                        name={[name, 'weekday']}
+                        rules={[
+                          {
+                            required: true,
+                            message: 'Missing a specific day',
+                          },
+                        ]}
                       >
-                        {Weekdays.map((day) => (
-                          <Option
-                            key={day}
-                            value={day}
-                            disabled={selectedWeekdays.includes(day)}
-                          >
-                            {day}
-                          </Option>
-                        ))}
-                      </Select>
-                      {/* <Input size="large" placeholder="chapter name" /> */}
-                    </Form.Item>
-                    <Form.Item
-                      {...restField}
-                      name={[name, 'time']}
-                      rules={[
-                        {
-                          required: true,
-                          message: 'Missing a specific time',
-                        },
-                      ]}
-                    >
-                      <TimePicker size="large" />
-                    </Form.Item>
-                    <MinusCircleOutlined
-                      onClick={(v) => {
-                        if (fields.length > 1) {
-                          console.log(v)
-                          console.log([classTime, name, 'weekday'])
+                        <Select
+                          size="large"
+                          onChange={(value: string) =>
+                            setSelectedWeekdays([...selectedWeekdays, value])
+                          }
+                        >
+                          {Weekdays.map((day) => (
+                            <Option
+                              key={day}
+                              value={day}
+                              disabled={selectedWeekdays.includes(day)}
+                            >
+                              {day}
+                            </Option>
+                          ))}
+                        </Select>
+                      </Form.Item>
+                    </Col>
 
-                          // updateSelectedWeekdays([classTime, field.name, 'weekday']);
-                          remove(name)
-                        } else {
-                          message.warn('You must set at least one class time.')
-                        }
-                      }}
-                    />
-                  </Space>
+                    <Col span={12}>
+                      <Form.Item
+                        {...restField}
+                        name={[name, 'time']}
+                        rules={[
+                          {
+                            required: true,
+                            message: 'Missing a specific time',
+                          },
+                        ]}
+                      >
+                        <TimePicker size="large" style={{ width: '100%' }} />
+                      </Form.Item>
+                    </Col>
+
+                    <Col span={2}>
+                      <MinusCircleOutlined
+                        onClick={(v) => {
+                          if (fields.length > 1) {
+                            console.log(selectedWeekdays.slice(0, name))
+                            console.log(selectedWeekdays.slice(name + 1))
+                            setSelectedWeekdays(
+                              selectedWeekdays
+                                .slice(0, name)
+                                .concat(selectedWeekdays.slice(name + 1))
+                            )
+                            remove(name)
+                          } else {
+                            message.warn(
+                              'You must set at least one class time.'
+                            )
+                          }
+                        }}
+                      />
+                    </Col>
+                  </Row>
                 ))}
+
                 <Form.Item>
                   <Button
                     type="dashed"
                     size="large"
                     onClick={() => add()}
+                    disabled={fields.length >= 7}
                     block
                     icon={<PlusOutlined />}
                   >

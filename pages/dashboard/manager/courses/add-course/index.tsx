@@ -49,36 +49,29 @@ export default function Page() {
         />
       </Steps>
 
-      {(() => {
-        switch (current) {
-          case 0:
-            return (
-              <CourseDetailForm
-                afterAddSuccess={(course: Course) => {
-                  setCourseId(course.id)
-                  setScheduleId(course.scheduleId)
-                  setCurrent(1)
-                  setFinishedSteps(0)
-                }}
-              />
-            )
-          case 1:
-            return (
-              <CourseScheduleForm
-                courseId={courseId}
-                scheduleId={scheduleId}
-                afterUpdateScheduleSuccess={() => {
-                  setCurrent(2)
-                  setFinishedSteps(1)
-                }}
-              />
-            )
-          case 2:
-            return <div>success!!</div>
-          default:
-            return <Empty />
-        }
-      })()}
+      <div style={{ display: current === 0 ? 'block' : 'none' }}>
+        <CourseDetailForm
+          afterAddSuccess={(course: Course) => {
+            setCourseId(course.id)
+            setScheduleId(course.scheduleId)
+            setCurrent(1)
+            setFinishedSteps(0)
+          }}
+        />
+      </div>
+
+      <div style={{ display: current === 1 ? 'block' : 'none' }}>
+        <CourseScheduleForm
+          courseId={courseId}
+          scheduleId={scheduleId}
+          afterUpdateScheduleSuccess={() => {
+            setCurrent(2)
+            setFinishedSteps(1)
+          }}
+        />
+      </div>
+
+      <div style={{ display: current === 2 ? 'block' : 'none' }}>success!!</div>
     </>
   )
 }
