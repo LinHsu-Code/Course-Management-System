@@ -27,9 +27,9 @@ export default function CourseScheduleForm({
   scheduleId,
   afterUpdateScheduleSuccess,
 }: {
-  courseId: number
-  scheduleId: number
-  afterUpdateScheduleSuccess: () => void
+  courseId?: number
+  scheduleId?: number
+  afterUpdateScheduleSuccess?: () => void
 }) {
   const [form] = Form.useForm()
   const [selectedWeekdays, setSelectedWeekdays] = useState<string[]>([])
@@ -63,16 +63,13 @@ export default function CourseScheduleForm({
   //     if (!scheduleId || isAdd) {
   //       return;
   //     }
-
   //     const { data } = await apiService.getScheduleById({ scheduleId });
-
   //     if (!!data) {
   //       const classTimes = data.classTime.map((item) => {
   //         const [weekday, time] = item.split(' ');
 
-  //         return { weekday, time: new Date(`2020-11-11 ${time}`) }; // 日期无所谓，随便设置的
+  //         return { weekday, time: new Date(`2020-11-11 ${time}`) };
   //       });
-
   //       form.setFieldsValue({ chapters: data.chapters, classTime: classTimes });
   //       setSelectedWeekdays(classTimes.map((item) => item.weekday));
   //     }

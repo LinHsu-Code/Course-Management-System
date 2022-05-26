@@ -159,3 +159,5 @@ export type CourseScheduleFormValues = {
     time: Date
   }[]
 }
+
+export type CourseSearchBy = 'uid' | 'name' | 'type'

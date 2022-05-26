@@ -25,7 +25,7 @@ import { ValidateMessages } from '../../lib/constants'
 import DebouncedSearchSelect from '../common/debouncedSearchSelect'
 import moment from 'moment'
 import styled from 'styled-components'
-import { InboxOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons'
+import { InboxOutlined, LoadingOutlined } from '@ant-design/icons'
 import type { UploadChangeParam } from 'antd/es/upload'
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface'
 import styles from './courseDetailForm.module.scss'
@@ -79,8 +79,10 @@ async function fetchTeacherList(teacherName: string): Promise<OptionValue[]> {
 
 export default function CourseDetailForm({
   afterAddSuccess,
+  course,
 }: {
-  afterAddSuccess: (course: Course) => void
+  afterAddSuccess?: (course: Course) => void
+  course?: Course
 }) {
   const [form] = Form.useForm()
   const [uid, setUid] = useState<string>('')
@@ -145,6 +147,20 @@ export default function CourseDetailForm({
     genCode()
   }, [])
 
+  useEffect(() => {
+    if (course) {
+      const values = {
+        ...course,
+        type: course.type.map((item) => item.id),
+        teacherId: course.teacherName,
+        startTime: new Date(course.startTime),
+        duration: { number: course.duration, unit: course.durationUnit },
+      }
+      // form.setFieldsValue(values)
+      // setFileList([{ name: 'Cover Image', url: course.cover }]);
+    }
+  }, [course])
+
   const genCode = async () => {
     const { data } = await generateCourseCode()
     form.setFieldsValue({ uid: data })
@@ -183,14 +199,6 @@ export default function CourseDetailForm({
 
   const onFinish = async (values: any) => {
     const startTime = moment(values.startTime).format('YYYY-MM-DD')
-
-    // console.log('values:', {
-    //   ...values,
-    //   startTime,
-    //   durationUnit: unit,
-    //   cover: imageUrl,
-    // })
-
     addCourse({
       ...values,
       startTime,
@@ -200,6 +208,7 @@ export default function CourseDetailForm({
       afterAddSuccess(res.data)
     })
   }
+
   return (
     <Form
       name="add_course"
@@ -250,7 +259,6 @@ export default function CourseDetailForm({
                 label="Course Code"
                 name="uid"
                 rules={[{ required: true }]}
-                // initialValue={genCode()}
               >
                 <Input disabled />
               </Form.Item>
