@@ -6,7 +6,6 @@ import {
   message,
   Row,
   Select,
-  Space,
   TimePicker,
   Form,
 } from 'antd'
@@ -14,42 +13,15 @@ import React, { useEffect, useState } from 'react'
 import { Weekdays } from '../../lib/constants'
 import moment from 'moment'
 import { updateCourseSchedule } from '../../lib/request'
+import { CourseScheduleFormValues } from '../../lib/model'
 
 const { Option } = Select
-// const classTime = 'classTime'
-// const chapters = 'chapters'
-
-// type ScheduleFormValue = {
-//   [chapters]: {
-//     name: string
-//     content: string
-//   }[]
-//   [classTime]: {
-//     weekday: string
-//     time: Date
-//   }[]
-// }
-
-// const initialValues = {
-//   [chapters]: [{ name: '', content: '' }],
-//   [classTime]: [{ weekday: '', time: '' }],
-// }
-
-type ScheduleFormValue = {
-  chapters: {
-    name: string
-    content: string
-  }[]
-  classTime: {
-    weekday: string
-    time: Date
-  }[]
-}
 
 const initialValues = {
   chapters: [{ name: '', content: '' }],
   classTime: [{ weekday: '', time: '' }],
 }
+
 export default function CourseScheduleForm({
   courseId,
   scheduleId,
@@ -57,50 +29,33 @@ export default function CourseScheduleForm({
 }: {
   courseId: number
   scheduleId: number
-  afterUpdateScheduleSuccess: (res: boolean) => void
+  afterUpdateScheduleSuccess: () => void
 }) {
-  const [form] = Form.useForm<ScheduleFormValue>()
+  const [form] = Form.useForm()
   const [selectedWeekdays, setSelectedWeekdays] = useState<string[]>([])
 
-  const onFinish = (formValues: ScheduleFormValue) => {
-    const classTime = formValues.classTime.map(
-      (item) => `${item.weekday} ${moment(item.time).format('HH:mm:ss')}`
+  const onFinish = (formValues: CourseScheduleFormValues) => {
+    if (!courseId && !scheduleId) {
+      message.error('You must select a course to update!')
+      return
+    }
+
+    const formattedChapters = formValues.chapters.map((item, index) => ({
+      ...item,
+      order: index + 1,
+    }))
+    const formattedClassTime = formValues.classTime.map(
+      (item) => `${item.weekday} ${moment(item.time).format('hh:mm:ss')}`
     )
-    console.log({ ...formValues, classTime })
+
     updateCourseSchedule({
-      ...formValues,
-      classTime,
+      chapters: formattedChapters,
+      classTime: formattedClassTime,
       scheduleId: 1849,
       courseId: 1534,
     }).then((res) => {
-      if (res.data) {
-        console.log(res.data)
-      }
+      afterUpdateScheduleSuccess()
     })
-
-    // if (!courseId && !scheduleId) {
-    //   message.error('You must select a course to update!')
-    //   return
-    // }
-
-    // const { classTime: origin, chapters } = values
-    // const classTime = origin.map(
-    //   ({ weekday, time }) => `${weekday} ${format(time, 'hh:mm:ss')}`
-    // )
-    // const req: ScheduleRequest = {
-    //   chapters: chapters.map((item, index) => ({ ...item, order: index + 1 })),
-    //   classTime,
-    //   scheduleId,
-    //   courseId,
-    // }
-
-    // apiService.updateSchedule(req).then((res) => {
-    //   const { data } = res
-
-    //   if (!!afterUpdateScheduleSuccess && data) {
-    //     afterUpdateScheduleSuccess(true)
-    //   }
-    // })
   }
 
   // useEffect(() => {

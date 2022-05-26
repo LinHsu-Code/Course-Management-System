@@ -141,10 +141,21 @@ export interface Chapter {
   id: number
 }
 export interface UpdateCourseScheduleRequest {
-  chapters: Pick<Chapter, 'content' | 'name'>[]
+  chapters: (Pick<Chapter, 'content' | 'name'> & { order: number })[]
   classTime: string[]
   scheduleId: number
   courseId: number
 }
 
 export type UpdateCourseScheduleResponse = Response<boolean>
+
+export type CourseScheduleFormValues = {
+  chapters: {
+    name: string
+    content: string
+  }[]
+  classTime: {
+    weekday: string
+    time: Date
+  }[]
+}

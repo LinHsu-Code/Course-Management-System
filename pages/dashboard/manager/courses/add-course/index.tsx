@@ -1,9 +1,10 @@
 import Head from 'next/head'
-import { Empty, Steps } from 'antd'
+import { Steps, Result, Button } from 'antd'
 import { useState } from 'react'
 import { Course } from '../../../../../lib/model'
 import CourseDetailForm from '../../../../../components/course/courseDetailForm'
 import CourseScheduleForm from '../../../../../components/course/courseScheduleForm'
+import { useRouter } from 'next/router'
 
 const { Step } = Steps
 
@@ -20,6 +21,8 @@ export default function Page() {
   const [finishedSteps, setFinishedSteps] = useState(-1)
   const [courseId, setCourseId] = useState<number>(0)
   const [scheduleId, setScheduleId] = useState<number>(0)
+
+  const router = useRouter()
 
   return (
     <>
@@ -67,7 +70,32 @@ export default function Page() {
         />
       </div>
 
-      <div style={{ display: current === 2 ? 'block' : 'none' }}>success!!</div>
+      <div style={{ display: current === 2 ? 'block' : 'none' }}>
+        <Result
+          status="success"
+          title="Successfully Create Course!"
+          extra={[
+            <Button
+              type="primary"
+              key="detail"
+              onClick={() =>
+                router.push(`/dashboard/manager/courses/${courseId}`)
+              }
+            >
+              Go Course
+            </Button>,
+            <Button
+              key="again"
+              onClick={() => {
+                router.reload()
+              }}
+            >
+              Create Again
+            </Button>,
+          ]}
+        />
+        ,
+      </div>
     </>
   )
 }
