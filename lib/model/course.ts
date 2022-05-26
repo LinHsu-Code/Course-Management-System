@@ -134,3 +134,17 @@ export type AddCourseRequest = Pick<
 > & { type: number[] }
 
 export type AddCourseResponse = Response<Course>
+
+export interface Chapter {
+  content: string
+  name: string
+  id: number
+}
+export interface UpdateCourseScheduleRequest {
+  chapters: Pick<Chapter, 'content' | 'name'>[]
+  classTime: string[]
+  scheduleId: number
+  courseId: number
+}
+
+export type UpdateCourseScheduleResponse = Response<boolean>

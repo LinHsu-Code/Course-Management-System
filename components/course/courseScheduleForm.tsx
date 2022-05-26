@@ -13,6 +13,7 @@ import {
 import React, { useEffect, useState } from 'react'
 import { Weekdays } from '../../lib/constants'
 import moment from 'moment'
+import { updateCourseSchedule } from '../../lib/request'
 
 const { Option } = Select
 // const classTime = 'classTime'
@@ -66,6 +67,16 @@ export default function CourseScheduleForm({
       (item) => `${item.weekday} ${moment(item.time).format('HH:mm:ss')}`
     )
     console.log({ ...formValues, classTime })
+    updateCourseSchedule({
+      ...formValues,
+      classTime,
+      scheduleId: 1849,
+      courseId: 1534,
+    }).then((res) => {
+      if (res.data) {
+        console.log(res.data)
+      }
+    })
 
     // if (!courseId && !scheduleId) {
     //   message.error('You must select a course to update!')

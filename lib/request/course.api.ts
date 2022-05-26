@@ -1,4 +1,4 @@
-import { getInstance, postInstance, showMessage } from './common'
+import { getInstance, postInstance, putInstance, showMessage } from './common'
 import {
   GetCoursesRequest,
   GetCoursesResponse,
@@ -8,6 +8,8 @@ import {
   GenerateCourseCodeResponse,
   AddCourseRequest,
   AddCourseResponse,
+  UpdateCourseScheduleRequest,
+  UpdateCourseScheduleResponse,
 } from '../../lib/model'
 
 const getCourses = (params: GetCoursesRequest): Promise<GetCoursesResponse> => {
@@ -34,4 +36,19 @@ const addCourse = (
   return postInstance('/courses', formValues).then((res) => showMessage(res))
 }
 
-export { getCourses, getCourse, getCourseTypes, generateCourseCode, addCourse }
+const updateCourseSchedule = (
+  formValues: UpdateCourseScheduleRequest
+): Promise<UpdateCourseScheduleResponse> => {
+  return putInstance('/courses/schedule', formValues).then((res) =>
+    showMessage(res)
+  )
+}
+
+export {
+  getCourses,
+  getCourse,
+  getCourseTypes,
+  generateCourseCode,
+  addCourse,
+  updateCourseSchedule,
+}
