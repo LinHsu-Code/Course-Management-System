@@ -119,7 +119,14 @@ export default function Page(props: { id: string }) {
                   <h3 className="detail_about_title">Interesting</h3>
                   <div>
                     {student?.interest.map((item, index) => (
-                      <Tag key={index} color={PROGRAM_LANGUAGE_COLORS[index]}>
+                      <Tag
+                        key={index}
+                        color={
+                          PROGRAM_LANGUAGE_COLORS[
+                            index % PROGRAM_LANGUAGE_COLORS.length
+                          ]
+                        }
+                      >
                         {item}
                       </Tag>
                     ))}

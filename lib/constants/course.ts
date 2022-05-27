@@ -14,5 +14,5 @@ export const CourseSearchBySelect: { value: CourseSearchBy; label: string }[] =
   [
     { value: 'uid', label: 'Code' },
     { value: 'name', label: 'Name' },
-    { value: 'type', label: 'type' },
+    { value: 'type', label: 'Category' },
   ]

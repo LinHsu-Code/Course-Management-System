@@ -13,9 +13,10 @@ function getDisabled(
   current: number,
   finishedSteps: number
 ) {
-  return false
-  // return stepNumber > Math.max(finishedSteps, current) ? true : false
+  //return false
+  return stepNumber > Math.max(finishedSteps, current) ? true : false
 }
+
 export default function Page() {
   const [current, setCurrent] = useState(0)
   const [finishedSteps, setFinishedSteps] = useState(-1)
@@ -94,7 +95,6 @@ export default function Page() {
             </Button>,
           ]}
         />
-        ,
       </div>
     </>
   )

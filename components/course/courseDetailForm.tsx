@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import {
   Col,
   Form,
@@ -85,40 +84,27 @@ export default function CourseDetailForm({
   course?: Course
 }) {
   const [form] = Form.useForm()
-  const [uid, setUid] = useState<string>('')
   const [courseTypes, setCourseTypes] = useState<CourseType[]>([])
   const [unit, setUnit] = useState<number>(2)
-  const [isReady, setIsReady] = useState(true)
-  const [imageUrl, setImageUrl] = useState('')
   const [fileList, setFileList] = useState<UploadFile[]>([])
   const [loading, setLoading] = useState(false)
 
   const handleChange: UploadProps['onChange'] = (
     info: UploadChangeParam<UploadFile>
   ) => {
-    console.log('onChange', info)
-    // const { fileList: newFileList, file } = info
     if (info.file.status === 'uploading') {
-      setImageUrl('')
       setLoading(true)
-      setIsReady(false)
     }
     if (info.file.status === 'done') {
       setLoading(false)
-      setIsReady(true)
-      //   setFileList(info.fileList)
-      setImageUrl(info.file.response.url)
       setFileList(info.fileList)
       message.success('Course image uploaded successfully.')
     }
     if (info.file.status === 'removed') {
       setFileList(info.fileList)
-      setImageUrl('')
     }
     if (info.file.status === 'error') {
       setLoading(false)
-      setIsReady(false)
-      setImageUrl('')
       message.error('Course image upload failed.')
     }
   }
@@ -166,20 +152,16 @@ export default function CourseDetailForm({
     form.setFieldsValue({ uid: data })
   }
 
-  const uploadButton = (
-    <div>
-      {loading ? (
-        <LoadingOutlined />
-      ) : (
-        <div className={styles.upload}>
-          <p className={styles.icon}>
-            <InboxOutlined />
-          </p>
-          <p className="ant-upload-text">
-            Click or drag file to this area to upload
-          </p>
-        </div>
-      )}
+  const uploadButton = loading ? (
+    <LoadingOutlined />
+  ) : (
+    <div className={styles.upload}>
+      <p className={styles.icon}>
+        <InboxOutlined />
+      </p>
+      <p className="ant-upload-text">
+        Click or drag file to this area to upload
+      </p>
     </div>
   )
 
@@ -203,7 +185,7 @@ export default function CourseDetailForm({
       ...values,
       startTime,
       durationUnit: unit,
-      cover: imageUrl,
+      cover: fileList[0].response.url,
     }).then((res) => {
       afterAddSuccess(res.data)
     })

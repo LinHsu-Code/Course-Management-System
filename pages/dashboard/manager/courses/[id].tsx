@@ -29,10 +29,10 @@ export default function Page(props: { id: string }) {
         console.log(res.data)
         const sales = res.data.sales
         const info = [
-          { label: 'Price', value: sales.price },
-          { label: 'Batches', value: sales.batches },
-          { label: 'Students', value: sales.studentAmount },
-          { label: 'Earings', value: sales.earnings },
+          { label: 'Price', value: sales.price || 0 },
+          { label: 'Batches', value: sales.batches || 0 },
+          { label: 'Students', value: sales.studentAmount || 0 },
+          { label: 'Earings', value: sales.earnings || 0 },
         ]
         setInfo(info)
       }

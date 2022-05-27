@@ -12,7 +12,6 @@ import { getCourses } from '../../../../../lib/request'
 const { Option } = Select
 
 export default function Page() {
-  const [isSearching, setIsSearching] = useState(false)
   const [searchBy, setSearchBy] = useState<CourseSearchBy>('uid')
   const [searchResult, setSearchResult] = useState<Course[]>([])
   const [course, setCourse] = useState<Course>()
@@ -35,11 +34,12 @@ export default function Page() {
         <title>{'CMS DashBoard: Manager-Edit Course'}</title>
       </Head>
       <Row gutter={[16, 24]} style={{ paddingBottom: 16 }}>
-        <Col span={12}>
+        <Col span={10}>
           <Input.Group compact size="large" style={{ display: 'flex' }}>
             <Select
               defaultValue="uid"
               onChange={(value: CourseSearchBy) => setSearchBy(value)}
+              style={{ flex: 1 }}
             >
               {CourseSearchBySelect.map((item) => (
                 <Option value={item.value} key={item.value}>
@@ -48,6 +48,7 @@ export default function Page() {
               ))}
             </Select>
             <DebouncedSearchSelect
+              style={{ flex: 3 }}
               placeholder={`search and select by ${searchBy}`}
               fetchOptions={fetchList}
               onSelect={(id: number) => {

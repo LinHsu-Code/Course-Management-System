@@ -5,6 +5,7 @@ import {
   CourseStatusColor,
   CourseStatusText,
   CourseBadgeStatus,
+  PROGRAM_LANGUAGE_COLORS,
 } from '../../lib/constants'
 import ClassScheduleTable from './classScheduleTable'
 import styles from './courseDetailCard.module.scss'
@@ -40,9 +41,8 @@ export default function CourseDetailCard({ course }: { course: CourseDetail }) {
       </Row> */}
 
       <Badge color={CourseStatusColor[course.status]} dot offset={[5, 18]}>
-        <h3>Status{course.status}</h3>
+        <h3>Status</h3>
       </Badge>
-
       <Row className={styles.stepsContainer}>
         <Steps
           size="small"
@@ -65,19 +65,26 @@ export default function CourseDetailCard({ course }: { course: CourseDetail }) {
       <Row>{course.uid}</Row>
 
       <h3>Class Time</h3>
-      <ClassScheduleTable classTime={course.schedule.classTime} />
+      {course.schedule.classTime && (
+        <ClassScheduleTable classTime={course.schedule.classTime} />
+      )}
 
       <h3>Category</h3>
       <Row>
-        {course.type.map((item) => (
-          <Tag color="geekblue" key={item.name}>
+        {course.type.map((item, index) => (
+          <Tag
+            color={
+              PROGRAM_LANGUAGE_COLORS[index % PROGRAM_LANGUAGE_COLORS.length]
+            }
+            key={item.name}
+          >
             {item.name}
           </Tag>
         ))}
       </Row>
 
       <h3>Description</h3>
-      <Row>{course.detail}</Row>
+      <div style={{ overflowWrap: 'break-word' }}>{course.detail}</div>
 
       <h3>Chapter</h3>
       {course.schedule && (

@@ -51,8 +51,8 @@ export default function CourseScheduleForm({
     updateCourseSchedule({
       chapters: formattedChapters,
       classTime: formattedClassTime,
-      scheduleId: 1849,
-      courseId: 1534,
+      scheduleId,
+      courseId,
     }).then((res) => {
       afterUpdateScheduleSuccess()
     })
@@ -125,7 +125,7 @@ export default function CourseScheduleForm({
                       </Form.Item>
                     </Col>
 
-                    <Col span={12}>
+                    <Col span={14}>
                       <Form.Item
                         {...restField}
                         name={[name, 'content']}
@@ -211,7 +211,7 @@ export default function CourseScheduleForm({
                       </Form.Item>
                     </Col>
 
-                    <Col span={12}>
+                    <Col span={14}>
                       <Form.Item
                         {...restField}
                         name={[name, 'time']}
