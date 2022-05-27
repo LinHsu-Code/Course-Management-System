@@ -84,7 +84,9 @@ export default function CourseDetailCard({ course }: { course: CourseDetail }) {
       </Row>
 
       <h3>Description</h3>
-      <div style={{ overflowWrap: 'break-word' }}>{course.detail}</div>
+      <Row style={{ overflowWrap: 'break-word', display: 'block' }}>
+        {course.detail}
+      </Row>
 
       <h3>Chapter</h3>
       {course.schedule && (

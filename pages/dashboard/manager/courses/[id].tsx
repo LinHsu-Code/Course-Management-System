@@ -10,6 +10,7 @@ import { CourseDetail } from '../../../../lib/model'
 import styles from './detail.module.scss'
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+  console.log(context)
   const id = context.query.id as string
   return {
     props: { id },

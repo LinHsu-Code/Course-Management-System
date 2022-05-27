@@ -17,19 +17,19 @@ export default function DebouncedSearchSelect<
 >({ fetchOptions, debounceTimeout = 800, ...props }: DebounceSelectProps) {
   const [fetching, setFetching] = React.useState(false)
   const [options, setOptions] = React.useState<OptionValue[]>([])
-  //   const fetchRef = React.useRef(0)
+  const fetchRef = React.useRef(0)
   const debounceFetcher = React.useMemo(() => {
     const loadOptions = (value: string) => {
-      //   fetchRef.current += 1
-      //   const fetchId = fetchRef.current
+      fetchRef.current += 1
+      const fetchId = fetchRef.current
       setOptions([])
       setFetching(true)
       value &&
         fetchOptions(value).then((newOptions) => {
-          //   if (fetchId !== fetchRef.current) {
-          //     // for fetch callback order
-          //     return
-          //   }
+          if (fetchId !== fetchRef.current) {
+            // for fetch callback order
+            return
+          }
           setOptions(newOptions)
           setFetching(false)
         })

@@ -67,13 +67,16 @@ const FullHeightFormItemUpload = styled(FullHeightFormItem)`
   //     object-fit: cover !important;
   //   }
 `
+
 async function fetchTeacherList(teacherName: string): Promise<OptionValue[]> {
-  return getTeachers({ query: teacherName }).then((res) =>
-    res.data.teachers.map((teacher) => ({
-      label: teacher.name,
-      value: teacher.id,
-    }))
-  )
+  return getTeachers({ query: teacherName }).then((res) => {
+    return res.data
+      ? res.data.teachers.map((teacher) => ({
+          label: teacher.name,
+          value: teacher.id,
+        }))
+      : []
+  })
 }
 
 export default function CourseDetailForm({
@@ -196,7 +199,6 @@ export default function CourseDetailForm({
       name="add_course"
       form={form}
       onFinish={onFinish}
-      // onFinishFailed={onFinishFailed}
       validateMessages={ValidateMessages}
       autoComplete="off"
       layout="vertical"
