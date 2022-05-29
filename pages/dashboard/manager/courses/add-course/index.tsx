@@ -14,7 +14,7 @@ function getDisabled(
   finishedSteps: number
 ) {
   //return false
-  return stepNumber > Math.max(finishedSteps, current) ? true : false
+  return stepNumber > Math.max(finishedSteps + 1, current) ? true : false
 }
 
 export default function Page() {

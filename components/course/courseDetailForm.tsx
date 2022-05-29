@@ -17,6 +17,7 @@ import {
   getTeachers,
   generateCourseCode,
   addCourse,
+  updateCourse,
 } from '../../lib/request'
 import { disabledDate } from '../../lib/util'
 import { CourseType, OptionValue, Course } from '../../lib/model'
@@ -91,6 +92,8 @@ export default function CourseDetailForm({
   const [unit, setUnit] = useState<number>(2)
   const [fileList, setFileList] = useState<UploadFile[]>([])
   const [loading, setLoading] = useState(false)
+  const [courseId, setCourseId] = useState()
+  //const [isAddSuccess, setIsAddSuccess] = useState(false)
 
   const handleChange: UploadProps['onChange'] = (
     info: UploadChangeParam<UploadFile>
@@ -184,14 +187,35 @@ export default function CourseDetailForm({
 
   const onFinish = async (values: any) => {
     const startTime = moment(values.startTime).format('YYYY-MM-DD')
-    addCourse({
-      ...values,
-      startTime,
-      durationUnit: unit,
-      cover: fileList[0].response.url,
-    }).then((res) => {
-      afterAddSuccess(res.data)
-    })
+    const params =
+      fileList.length > 0
+        ? {
+            ...values,
+            startTime,
+            durationUnit: unit,
+            cover: fileList[0].response.url,
+          }
+        : {
+            ...values,
+            startTime,
+            durationUnit: unit,
+          }
+    if (course) {
+      updateCourse({ ...params, id: course.id }).then((res) => {})
+    } else if (courseId) {
+      updateCourse({ ...params, id: courseId }).then((res) => {
+        if (res.data) {
+          afterAddSuccess(res.data)
+        }
+      })
+    } else {
+      addCourse(params).then((res) => {
+        if (res.data) {
+          afterAddSuccess(res.data)
+          setCourseId(res.data.id)
+        }
+      })
+    }
   }
 
   return (
@@ -339,9 +363,9 @@ export default function CourseDetailForm({
         </Col>
       </Row>
       <Row>
-        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+        <Form.Item>
           <Button type="primary" htmlType="submit">
-            Create Course
+            {courseId ? 'Update Course' : 'Create Course'}
           </Button>
         </Form.Item>
       </Row>

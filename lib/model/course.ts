@@ -161,3 +161,9 @@ export type CourseScheduleFormValues = {
 }
 
 export type CourseSearchBy = 'uid' | 'name' | 'type'
+
+export interface UpdateCourseRequest extends AddCourseRequest {
+  id: number
+}
+
+export type UpdateCourseResponse = Response<CourseDetail>
