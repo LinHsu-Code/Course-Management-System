@@ -12,6 +12,8 @@ import {
   UpdateCourseScheduleResponse,
   UpdateCourseRequest,
   UpdateCourseResponse,
+  GetCourseScheduleRequest,
+  GetCourseScheduleResponse,
 } from '../../lib/model'
 
 const getCourses = (params: GetCoursesRequest): Promise<GetCoursesResponse> => {
@@ -52,6 +54,14 @@ const updateCourse = (
   return putInstance('/courses', formValues).then((res) => showMessage(res))
 }
 
+const getCourseSchedule = (
+  params: GetCourseScheduleRequest
+): Promise<GetCourseScheduleResponse> => {
+  return getInstance('/courses/schedule', params).then((res) =>
+    showMessage(res, false)
+  )
+}
+
 export {
   getCourses,
   getCourse,
@@ -60,4 +70,5 @@ export {
   addCourse,
   updateCourseSchedule,
   updateCourse,
+  getCourseSchedule,
 }

@@ -81,19 +81,19 @@ async function fetchTeacherList(teacherName: string): Promise<OptionValue[]> {
 }
 
 export default function CourseDetailForm({
-  afterAddSuccess,
+  afterSuccess,
   course,
 }: {
-  afterAddSuccess?: (course: Course) => void
-  course?: Course
+  afterSuccess?: (course: Course) => void
+  course: Course | null
 }) {
   const [form] = Form.useForm()
+  const [teacherId, setTeacherId] = useState<number>()
   const [courseTypes, setCourseTypes] = useState<CourseType[]>([])
   const [unit, setUnit] = useState<number>(2)
   const [fileList, setFileList] = useState<UploadFile[]>([])
+  //const [fileList, setFileList] = useState([])
   const [loading, setLoading] = useState(false)
-  const [courseId, setCourseId] = useState()
-  //const [isAddSuccess, setIsAddSuccess] = useState(false)
 
   const handleChange: UploadProps['onChange'] = (
     info: UploadChangeParam<UploadFile>
@@ -131,13 +131,15 @@ export default function CourseDetailForm({
   }
 
   useEffect(() => {
-    getCourseTypes().then((res) => {
-      if (res.data) {
-        setCourseTypes(res.data)
-      }
-    })
-    genCode()
-  }, [])
+    if (!course) {
+      getCourseTypes().then((res) => {
+        if (res.data) {
+          setCourseTypes(res.data)
+        }
+      })
+      genCode()
+    }
+  }, [course])
 
   useEffect(() => {
     if (course) {
@@ -145,11 +147,26 @@ export default function CourseDetailForm({
         ...course,
         type: course.type.map((item) => item.id),
         teacherId: course.teacherName,
-        startTime: new Date(course.startTime),
-        duration: { number: course.duration, unit: course.durationUnit },
+        startTime: moment(course.startTime, 'YYYY-MM-DD'),
+        cover: [
+          {
+            uid: '1',
+            name: 'cover',
+            url: course.cover,
+            response: { url: course.cover },
+          },
+        ],
       }
-      // form.setFieldsValue(values)
-      // setFileList([{ name: 'Cover Image', url: course.cover }]);
+      form.setFieldsValue(values)
+      setTeacherId(course.teacherId)
+      setFileList([
+        {
+          uid: '1',
+          name: 'cover',
+          url: course.cover,
+          response: { url: course.cover },
+        },
+      ])
     }
   }, [course])
 
@@ -193,28 +210,21 @@ export default function CourseDetailForm({
             ...values,
             startTime,
             durationUnit: unit,
+            teacherId,
             cover: fileList[0].response.url,
           }
         : {
             ...values,
             startTime,
+            teacherId,
             durationUnit: unit,
           }
-    if (course) {
-      updateCourse({ ...params, id: course.id }).then((res) => {})
-    } else if (courseId) {
-      updateCourse({ ...params, id: courseId }).then((res) => {
-        if (res.data) {
-          afterAddSuccess(res.data)
-        }
-      })
-    } else {
-      addCourse(params).then((res) => {
-        if (res.data) {
-          afterAddSuccess(res.data)
-          setCourseId(res.data.id)
-        }
-      })
+    console.log(params)
+    const res = course
+      ? await updateCourse({ ...params, id: course.id })
+      : await addCourse(params)
+    if (res.data) {
+      afterSuccess && afterSuccess(res.data)
     }
   }
 
@@ -248,6 +258,7 @@ export default function CourseDetailForm({
                 <DebouncedSearchSelect
                   placeholder="search and select teacher"
                   fetchOptions={fetchTeacherList}
+                  onChange={(value) => setTeacherId(value)}
                 />
               </Form.Item>
             </Col>
@@ -365,7 +376,7 @@ export default function CourseDetailForm({
       <Row>
         <Form.Item>
           <Button type="primary" htmlType="submit">
-            {courseId ? 'Update Course' : 'Create Course'}
+            {course ? 'Update Course' : 'Create Course'}
           </Button>
         </Form.Item>
       </Row>

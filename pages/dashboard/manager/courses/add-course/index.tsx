@@ -20,8 +20,7 @@ function getDisabled(
 export default function Page() {
   const [current, setCurrent] = useState(0)
   const [finishedSteps, setFinishedSteps] = useState(-1)
-  const [courseId, setCourseId] = useState<number>(0)
-  const [scheduleId, setScheduleId] = useState<number>(0)
+  const [course, setCourse] = useState<Course | null>(null)
 
   const router = useRouter()
 
@@ -51,9 +50,9 @@ export default function Page() {
 
       <div style={{ display: current === 0 ? 'block' : 'none' }}>
         <CourseDetailForm
-          afterAddSuccess={(course: Course) => {
-            setCourseId(course.id)
-            setScheduleId(course.scheduleId)
+          course={course}
+          afterSuccess={(course: Course) => {
+            setCourse(course)
             setCurrent(1)
             setFinishedSteps(0)
           }}
@@ -62,9 +61,8 @@ export default function Page() {
 
       <div style={{ display: current === 1 ? 'block' : 'none' }}>
         <CourseScheduleForm
-          courseId={courseId}
-          scheduleId={scheduleId}
-          afterUpdateScheduleSuccess={() => {
+          course={course}
+          afterSuccess={() => {
             setCurrent(2)
             setFinishedSteps(1)
           }}
@@ -80,7 +78,7 @@ export default function Page() {
               type="primary"
               key="detail"
               onClick={() =>
-                router.push(`/dashboard/manager/courses/${courseId}`)
+                router.push(`/dashboard/manager/courses/${course?.id}`)
               }
             >
               Go Course

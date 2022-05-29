@@ -12,8 +12,8 @@ import {
 import React, { useEffect, useState } from 'react'
 import { Weekdays } from '../../lib/constants'
 import moment from 'moment'
-import { updateCourseSchedule } from '../../lib/request'
-import { CourseScheduleFormValues } from '../../lib/model'
+import { updateCourseSchedule, getCourseSchedule } from '../../lib/request'
+import { CourseScheduleFormValues, Course } from '../../lib/model'
 
 const { Option } = Select
 
@@ -23,23 +23,16 @@ const initialValues = {
 }
 
 export default function CourseScheduleForm({
-  courseId,
-  scheduleId,
-  afterUpdateScheduleSuccess,
+  course,
+  afterSuccess,
 }: {
-  courseId?: number
-  scheduleId?: number
-  afterUpdateScheduleSuccess?: () => void
+  course: Course | null
+  afterSuccess?: () => void
 }) {
   const [form] = Form.useForm()
   const [selectedWeekdays, setSelectedWeekdays] = useState<string[]>([])
 
   const onFinish = (formValues: CourseScheduleFormValues) => {
-    if (!courseId && !scheduleId) {
-      message.error('You must select a course to update!')
-      return
-    }
-
     const formattedChapters = formValues.chapters.map((item, index) => ({
       ...item,
       order: index + 1,
@@ -51,30 +44,31 @@ export default function CourseScheduleForm({
     updateCourseSchedule({
       chapters: formattedChapters,
       classTime: formattedClassTime,
-      scheduleId,
-      courseId,
+      scheduleId: course?.scheduleId,
     }).then((res) => {
-      afterUpdateScheduleSuccess()
+      if (res.data) {
+        afterSuccess && afterSuccess()
+      }
     })
   }
 
-  // useEffect(() => {
-  //   (async () => {
-  //     if (!scheduleId || isAdd) {
-  //       return;
-  //     }
-  //     const { data } = await apiService.getScheduleById({ scheduleId });
-  //     if (!!data) {
-  //       const classTimes = data.classTime.map((item) => {
-  //         const [weekday, time] = item.split(' ');
-
-  //         return { weekday, time: new Date(`2020-11-11 ${time}`) };
-  //       });
-  //       form.setFieldsValue({ chapters: data.chapters, classTime: classTimes });
-  //       setSelectedWeekdays(classTimes.map((item) => item.weekday));
-  //     }
-  //   })();
-  // }, [scheduleId]);
+  useEffect(() => {
+    if (course) {
+      getCourseSchedule({ scheduleId: course?.scheduleId }).then((res) => {
+        if (res.data) {
+          const classTime = res.data.classTime
+            ? res.data.classTime.map((item) => {
+                const [weekday, time] = item.split(' ')
+                setSelectedWeekdays([...selectedWeekdays, weekday])
+                return { weekday, time: moment(time, 'hh-mm-ss') }
+              })
+            : []
+          const chapters = res.data.chapters || []
+          form.setFieldsValue({ chapters, classTime })
+        }
+      })
+    }
+  }, [course])
 
   return (
     <Form
@@ -87,21 +81,7 @@ export default function CourseScheduleForm({
       <Row gutter={[16, 24]}>
         <Col span={12}>
           <h2>Chapters</h2>
-          <Form.List
-            name="chapters"
-            // rules={[
-            //   {
-            //     validator: async (_, chapters) => {
-            //       if (!chapters || chapters.length < 1) {
-            //         return Promise.reject(
-            //           new Error('You must set at least one chapter')
-            //         )
-            //       }
-            //     },
-            //   },
-            // ]}
-          >
-            {/* {(fields, { add, remove }, { errors }) => ( */}
+          <Form.List name="chapters">
             {(fields, { add, remove }) => (
               <>
                 {fields.map(({ key, name, ...restField }) => (
@@ -163,7 +143,6 @@ export default function CourseScheduleForm({
                   >
                     Add Chapter
                   </Button>
-                  {/* <Form.ErrorList errors={errors} /> */}
                 </Form.Item>
               </>
             )}

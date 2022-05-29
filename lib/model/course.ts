@@ -1,4 +1,3 @@
-import { StringOptions } from 'sass'
 import { Response, Paginator } from './common'
 import { CourseTeacher } from './teacher'
 export interface CourseType {
@@ -135,25 +134,17 @@ export type AddCourseRequest = Pick<
 
 export type AddCourseResponse = Response<Course>
 
-export interface Chapter {
-  content: string
-  name: string
-  id: number
-}
 export interface UpdateCourseScheduleRequest {
-  chapters: (Pick<Chapter, 'content' | 'name'> & { order: number })[]
+  chapters: Pick<Chapter, 'content' | 'name' | 'order'>[]
   classTime: string[]
-  scheduleId: number
-  courseId: number
+  scheduleId?: number
+  courseId?: number
 }
 
 export type UpdateCourseScheduleResponse = Response<boolean>
 
 export type CourseScheduleFormValues = {
-  chapters: {
-    name: string
-    content: string
-  }[]
+  chapters: Pick<Chapter, 'content' | 'name'>[]
   classTime: {
     weekday: string
     time: Date
@@ -167,3 +158,9 @@ export interface UpdateCourseRequest extends AddCourseRequest {
 }
 
 export type UpdateCourseResponse = Response<CourseDetail>
+
+export interface GetCourseScheduleRequest {
+  courseId?: number
+  scheduleId?: number
+}
+export type GetCourseScheduleResponse = Response<Schedule>

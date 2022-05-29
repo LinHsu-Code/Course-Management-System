@@ -14,7 +14,7 @@ const { Option } = Select
 export default function Page() {
   const [searchBy, setSearchBy] = useState<CourseSearchBy>('uid')
   const [searchResult, setSearchResult] = useState<Course[]>([])
-  const [course, setCourse] = useState<Course>()
+  const [course, setCourse] = useState<Course | null>(null)
 
   const router = useRouter()
 
@@ -34,7 +34,7 @@ export default function Page() {
         <title>{'CMS DashBoard: Manager-Edit Course'}</title>
       </Head>
       <Row gutter={[16, 24]} style={{ paddingBottom: 16 }}>
-        <Col span={10}>
+        <Col span={12}>
           <Input.Group compact size="large" style={{ display: 'flex' }}>
             <Select
               defaultValue="uid"
@@ -53,7 +53,7 @@ export default function Page() {
               fetchOptions={fetchList}
               onSelect={(id: number) => {
                 const course = searchResult.find((item) => item.id === id)
-                setCourse(course)
+                setCourse(course || null)
               }}
             />
           </Input.Group>
@@ -66,10 +66,7 @@ export default function Page() {
         </Tabs.TabPane>
 
         <Tabs.TabPane key="chapter" tab="Course Schedule">
-          <CourseScheduleForm
-            courseId={course?.id}
-            scheduleId={course?.scheduleId}
-          />
+          <CourseScheduleForm course={course} />
         </Tabs.TabPane>
       </Tabs>
     </>
