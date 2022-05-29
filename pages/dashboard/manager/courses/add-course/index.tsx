@@ -8,18 +8,9 @@ import { useRouter } from 'next/router'
 
 const { Step } = Steps
 
-function getDisabled(
-  stepNumber: number,
-  current: number,
-  finishedSteps: number
-) {
-  //return false
-  return stepNumber > Math.max(finishedSteps + 1, current) ? true : false
-}
-
 export default function Page() {
   const [current, setCurrent] = useState(0)
-  const [finishedSteps, setFinishedSteps] = useState(-1)
+  const [minAvailableStep, setMinAvailableStep] = useState(0)
   const [course, setCourse] = useState<Course | null>(null)
 
   const router = useRouter()
@@ -38,14 +29,10 @@ export default function Page() {
         style={{ marginBottom: 24 }}
       >
         <Step title="Course Detail" />
-        <Step
-          disabled={getDisabled(1, current, finishedSteps)}
-          title="Course Schedule"
-        />
-        <Step
-          disabled={getDisabled(2, current, finishedSteps)}
-          title="Success"
-        />
+        {/* <Step title="Course Schedule" />
+        <Step title="Success" /> */}
+        <Step disabled={1 > minAvailableStep} title="Course Schedule" />
+        <Step disabled={2 > minAvailableStep} title="Success" />
       </Steps>
 
       <div style={{ display: current === 0 ? 'block' : 'none' }}>
@@ -54,7 +41,7 @@ export default function Page() {
           afterSuccess={(course: Course) => {
             setCourse(course)
             setCurrent(1)
-            setFinishedSteps(0)
+            setMinAvailableStep(1)
           }}
         />
       </div>
@@ -64,7 +51,7 @@ export default function Page() {
           course={course}
           afterSuccess={() => {
             setCurrent(2)
-            setFinishedSteps(1)
+            setMinAvailableStep(2)
           }}
         />
       </div>
@@ -86,7 +73,10 @@ export default function Page() {
             <Button
               key="again"
               onClick={() => {
-                router.reload()
+                //router.reload()
+                setCurrent(0)
+                setMinAvailableStep(0)
+                setCourse(null)
               }}
             >
               Create Again

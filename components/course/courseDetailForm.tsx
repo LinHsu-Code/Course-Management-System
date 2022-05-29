@@ -167,6 +167,8 @@ export default function CourseDetailForm({
           response: { url: course.cover },
         },
       ])
+    } else {
+      form.resetFields()
     }
   }, [course])
 

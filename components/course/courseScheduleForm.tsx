@@ -17,11 +17,6 @@ import { CourseScheduleFormValues, Course } from '../../lib/model'
 
 const { Option } = Select
 
-const initialValues = {
-  chapters: [{ name: '', content: '' }],
-  classTime: [{ weekday: '', time: '' }],
-}
-
 export default function CourseScheduleForm({
   course,
   afterSuccess,
@@ -33,6 +28,7 @@ export default function CourseScheduleForm({
   const [selectedWeekdays, setSelectedWeekdays] = useState<string[]>([])
 
   const onFinish = (formValues: CourseScheduleFormValues) => {
+    console.log(formValues)
     const formattedChapters = formValues.chapters.map((item, index) => ({
       ...item,
       order: index + 1,
@@ -56,15 +52,18 @@ export default function CourseScheduleForm({
     if (course) {
       getCourseSchedule({ scheduleId: course?.scheduleId }).then((res) => {
         if (res.data) {
+          const chapters = res.data.chapters.length
+            ? res.data.chapters
+            : [{ name: '', content: '' }]
           const classTime = res.data.classTime
             ? res.data.classTime.map((item) => {
                 const [weekday, time] = item.split(' ')
-                setSelectedWeekdays([...selectedWeekdays, weekday])
                 return { weekday, time: moment(time, 'hh-mm-ss') }
               })
-            : []
-          const chapters = res.data.chapters || []
+            : [{ weekday: '', time: '' }]
+          console.log({ chapters, classTime })
           form.setFieldsValue({ chapters, classTime })
+          setSelectedWeekdays(classTime.map((item) => item.weekday))
         }
       })
     }
@@ -76,7 +75,6 @@ export default function CourseScheduleForm({
       name="schedule"
       onFinish={onFinish}
       //validateMessages={validateMessages}
-      initialValues={initialValues}
     >
       <Row gutter={[16, 24]}>
         <Col span={12}>

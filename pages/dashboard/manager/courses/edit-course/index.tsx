@@ -1,6 +1,5 @@
 import Head from 'next/head'
 import { Col, Input, Row, Select, Tabs } from 'antd'
-import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { Course, CourseSearchBy, OptionValue } from '../../../../../lib/model'
 import CourseDetailForm from '../../../../../components/course/courseDetailForm'
@@ -15,8 +14,6 @@ export default function Page() {
   const [searchBy, setSearchBy] = useState<CourseSearchBy>('uid')
   const [searchResult, setSearchResult] = useState<Course[]>([])
   const [course, setCourse] = useState<Course | null>(null)
-
-  const router = useRouter()
 
   async function fetchList(searchByValue: string): Promise<OptionValue[]> {
     return getCourses({ [searchBy]: searchByValue }).then((res) => {
