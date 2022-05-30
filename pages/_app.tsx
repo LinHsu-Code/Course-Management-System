@@ -34,25 +34,31 @@ function MyApp({ Component, pageProps }: AppProps) {
   )
 
   useEffect(() => {
-    const path = router.pathname
-    const role = localStorage.getItem('role') as Role
-    const token = localStorage.getItem('token')
-    if (/dashboard/.test(path)) {
-      if (!token) {
-        router.replace('/login', undefined, { shallow: true }) //!token or !checkedToken api
-        return
+    ;(async () => {
+      const path = router.pathname
+      const role = localStorage.getItem('role') as Role
+      const token = localStorage.getItem('token')
+      if (/dashboard/.test(path)) {
+        if (!token) {
+          await router.replace('/login', undefined, { shallow: true }) //!token or !checkedToken api
+          return
+        }
+        if (role && /dashboard$/.test(path)) {
+          await router.replace(`/dashboard/${role}`, undefined, {
+            shallow: true,
+          })
+          return
+        }
+      } else if (/login/.test(path)) {
+        if (role && token) {
+          await router.replace(`/dashboard/${role}`, undefined, {
+            shallow: true,
+          }) //role and checkedToken api
+          return
+        }
       }
-      if (role && /dashboard$/.test(path)) {
-        router.replace(`/dashboard/${role}`, undefined, { shallow: true })
-        return
-      }
-    } else if (/login/.test(path)) {
-      if (role && token) {
-        router.replace(`/dashboard/${role}`, undefined, { shallow: true }) //role and checkedToken api
-        return
-      }
-    }
-    setLoading(false)
+      setLoading(false)
+    })()
   }, [router])
 
   return loading ? (

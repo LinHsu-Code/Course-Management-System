@@ -29,7 +29,6 @@ import { InboxOutlined, LoadingOutlined } from '@ant-design/icons'
 import type { UploadChangeParam } from 'antd/es/upload'
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface'
 import styles from './courseDetailForm.module.scss'
-import { isAuth } from '../../lib/util'
 
 const FullHeightFormItem = styled(Form.Item)`
   width: 100%;
@@ -166,7 +165,7 @@ export default function CourseDetailForm({
   }, [course])
 
   useEffect(() => {
-    if (!course && isAuth()) {
+    if (!course) {
       getCourseTypes().then((res) => {
         if (res.data) {
           setCourseTypes(res.data)
@@ -174,7 +173,7 @@ export default function CourseDetailForm({
       })
       afterSuccess && genCode()
     }
-  }, [course, isAuth])
+  }, [course])
 
   const genCode = async () => {
     const { data } = await generateCourseCode()
