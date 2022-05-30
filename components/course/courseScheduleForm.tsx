@@ -16,6 +16,12 @@ import { updateCourseSchedule, getCourseSchedule } from '../../lib/request'
 import { CourseScheduleFormValues, Course } from '../../lib/model'
 
 const { Option } = Select
+const initialChapters = [{ name: '', content: '' }]
+const initialClassTime = [{ weekday: '', time: '' }]
+const initialScheduleValue = {
+  chapters: initialChapters,
+  classTime: initialClassTime,
+}
 
 export default function CourseScheduleForm({
   course,
@@ -54,18 +60,20 @@ export default function CourseScheduleForm({
         if (res.data) {
           const chapters = res.data.chapters.length
             ? res.data.chapters
-            : [{ name: '', content: '' }]
+            : initialChapters
           const classTime = res.data.classTime
             ? res.data.classTime.map((item) => {
                 const [weekday, time] = item.split(' ')
                 return { weekday, time: moment(time, 'hh-mm-ss') }
               })
-            : [{ weekday: '', time: '' }]
+            : initialClassTime
           console.log({ chapters, classTime })
           form.setFieldsValue({ chapters, classTime })
           setSelectedWeekdays(classTime.map((item) => item.weekday))
         }
       })
+    } else {
+      form.setFieldsValue(initialScheduleValue)
     }
   }, [course])
 

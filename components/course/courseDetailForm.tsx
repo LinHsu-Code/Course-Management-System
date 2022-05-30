@@ -131,17 +131,6 @@ export default function CourseDetailForm({
   }
 
   useEffect(() => {
-    if (!course) {
-      getCourseTypes().then((res) => {
-        if (res.data) {
-          setCourseTypes(res.data)
-        }
-      })
-      genCode()
-    }
-  }, [course])
-
-  useEffect(() => {
     if (course) {
       const values = {
         ...course,
@@ -169,6 +158,21 @@ export default function CourseDetailForm({
       ])
     } else {
       form.resetFields()
+      setTeacherId(0)
+      setUnit(2)
+      setFileList([])
+      setLoading(false)
+    }
+  }, [course])
+
+  useEffect(() => {
+    if (!course) {
+      getCourseTypes().then((res) => {
+        if (res.data) {
+          setCourseTypes(res.data)
+        }
+      })
+      genCode()
     }
   }, [course])
 
