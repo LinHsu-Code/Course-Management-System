@@ -171,7 +171,7 @@ export default function CourseDetailForm({
           setCourseTypes(res.data)
         }
       })
-      genCode()
+      afterSuccess && genCode()
     }
   }, [course])
 
@@ -284,7 +284,7 @@ export default function CourseDetailForm({
                 name="uid"
                 rules={[{ required: true }]}
               >
-                <Input disabled />
+                <Input disabled type="text" placeholder="course code" />
               </Form.Item>
             </Col>
           </Row>

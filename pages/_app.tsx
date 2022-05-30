@@ -42,7 +42,6 @@ function MyApp({ Component, pageProps }: AppProps) {
       role &&
         regex.test(path) &&
         router.replace(`/dashboard/${role}`, undefined, { shallow: true })
-      role && router.replace(path, undefined, { shallow: true })
     } else if (/login/.test(path)) {
       role && router.replace(`/dashboard/${role}`, undefined, { shallow: true }) //role and checkedToken api
     }
