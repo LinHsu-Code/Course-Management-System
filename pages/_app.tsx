@@ -39,23 +39,18 @@ function MyApp({ Component, pageProps }: AppProps) {
       const role = localStorage.getItem('role') as Role
       const token = localStorage.getItem('token')
       if (/dashboard/.test(path)) {
-        if (!token) {
-          await router.replace('/login', undefined, { shallow: true }) //!token or !checkedToken api
-          return
-        }
-        if (role && /dashboard$/.test(path)) {
-          await router.replace(`/dashboard/${role}`, undefined, {
+        !token && (await router.replace('/login', undefined, { shallow: true })) //!token or !checkedToken api
+        role &&
+          /dashboard$/.test(path) &&
+          (await router.replace(`/dashboard/${role}`, undefined, {
             shallow: true,
-          })
-          return
-        }
+          }))
       } else if (/login/.test(path)) {
-        if (role && token) {
-          await router.replace(`/dashboard/${role}`, undefined, {
+        role &&
+          token &&
+          (await router.replace(`/dashboard/${role}`, undefined, {
             shallow: true,
-          }) //role and checkedToken api
-          return
-        }
+          })) //role and checkedToken api
       }
       setLoading(false)
     })()
