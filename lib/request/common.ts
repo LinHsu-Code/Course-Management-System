@@ -73,8 +73,8 @@ const errorHandler = (err: any) => {
       // Server was able to send us a response, so this is an API Error.
       console.error('[API Error]:', err.response.data)
       return {
-        msg: err.response.data.message,
-        code: err.response.data.statusCode,
+        msg: err.response.data.msg || err.response.data.message,
+        code: err.response.data.code || err.response.data.statusCode,
       }
     } else {
       // Axios was not able to get a response at all. This is a Network-Level Error.

@@ -4,10 +4,8 @@ import styles from '../styles/auth.module.scss'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { login } from '../lib/request'
 import { useRouter } from 'next/router'
-import { useUser } from '../hooks'
 
 export default function Page() {
-  useUser()
   const router = useRouter()
 
   const onFinish = async (values: any) => {

@@ -1,6 +1,6 @@
 import { Menu } from 'antd'
 import Link from 'next/link'
-import { DynamicNav } from '../../../lib/model'
+import { DynamicNav } from '../../lib/model'
 
 const renderSideMenu = (sideNav: DynamicNav[], parentPath: string[]) => {
   return sideNav.map((item: DynamicNav) => {

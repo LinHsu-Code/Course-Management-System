@@ -2,14 +2,15 @@ import '../styles/globals.scss'
 import Head from 'next/head'
 import type { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
+import { useEffect } from 'react'
 import DashboardLayout from '../components/layout'
+import { Role } from '../lib/model'
 
 export const siteTitle = 'custom-title'
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter()
   const path = router.pathname
-  console.log(111, path)
   const content = (
     <>
       <Head>
@@ -30,13 +31,28 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Component {...pageProps} />
     </>
   )
-  {
-    return /dashboard/.test(path) ? (
-      <DashboardLayout>{content}</DashboardLayout>
-    ) : (
-      content
-    )
-  }
+
+  useEffect(() => {
+    const path = router.pathname
+    const role = localStorage.getItem('role') as Role
+    const token = localStorage.getItem('token')
+    if (/dashboard/.test(path)) {
+      !token && router.replace('/login', undefined, { shallow: true }) //!token or !checkedToken api
+      const regex = new RegExp(`/dashboard$ | dashboard\/$/`, 'g')
+      role &&
+        regex.test(path) &&
+        router.replace(`/dashboard/${role}`, undefined, { shallow: true })
+      role && router.replace(path, undefined, { shallow: true })
+    } else if (/login/.test(path)) {
+      role && router.replace(`/dashboard/${role}`, undefined, { shallow: true }) //role and checkedToken api
+    }
+  }, [router])
+
+  return /dashboard/.test(path) ? (
+    <DashboardLayout>{content}</DashboardLayout>
+  ) : (
+    content
+  )
 }
 
 export default MyApp

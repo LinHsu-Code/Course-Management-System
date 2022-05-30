@@ -29,8 +29,6 @@ export default function Page() {
         style={{ marginBottom: 24 }}
       >
         <Step title="Course Detail" />
-        {/* <Step title="Course Schedule" />
-        <Step title="Success" /> */}
         <Step disabled={1 > minAvailableStep} title="Course Schedule" />
         <Step disabled={2 > minAvailableStep} title="Success" />
       </Steps>
@@ -73,7 +71,6 @@ export default function Page() {
             <Button
               key="again"
               onClick={() => {
-                //router.reload()
                 setCurrent(0)
                 setMinAvailableStep(0)
                 setCourse(null)

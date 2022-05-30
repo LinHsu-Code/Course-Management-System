@@ -92,7 +92,6 @@ export default function CourseDetailForm({
   const [courseTypes, setCourseTypes] = useState<CourseType[]>([])
   const [unit, setUnit] = useState<number>(2)
   const [fileList, setFileList] = useState<UploadFile[]>([])
-  //const [fileList, setFileList] = useState([])
   const [loading, setLoading] = useState(false)
 
   const handleChange: UploadProps['onChange'] = (

@@ -14,8 +14,8 @@ import { logout } from '../../lib/request'
 import { ROUTES } from '../../lib/constants'
 import SideMenu from './sideMenu'
 import { bfsOne } from '../../lib/util'
-import { useAuth, useRole } from '../../hooks'
 import Breadcrumb from './breadcrumb'
+import { Role } from '../../lib/model'
 
 const { Header, Content, Sider } = Layout
 
@@ -24,10 +24,9 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode
 }) {
-  useAuth()
-  const role = useRole()
   const router = useRouter()
   const paths = router.pathname.split('/')
+  const role = paths[2] as Role
   const rolePath = paths.slice(0, 3)
   const page = paths.slice(-1).toString()
   const detailForWhat = page === '[id]' ? paths.slice(-2, -1).toString() : ''
@@ -52,7 +51,6 @@ export default function DashboardLayout({
     const res = await logout()
     if (res.data) {
       localStorage.clear()
-      console.log(124)
       router.replace('/login', undefined, { shallow: true })
     }
   }

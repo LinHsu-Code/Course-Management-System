@@ -67,7 +67,6 @@ export default function CourseScheduleForm({
                 return { weekday, time: moment(time, 'hh-mm-ss') }
               })
             : initialClassTime
-          console.log({ chapters, classTime })
           form.setFieldsValue({ chapters, classTime })
           setSelectedWeekdays(classTime.map((item) => item.weekday))
         }
@@ -215,8 +214,6 @@ export default function CourseScheduleForm({
                       <MinusCircleOutlined
                         onClick={(v) => {
                           if (fields.length > 1) {
-                            console.log(selectedWeekdays.slice(0, name))
-                            console.log(selectedWeekdays.slice(name + 1))
                             setSelectedWeekdays(
                               selectedWeekdays
                                 .slice(0, name)

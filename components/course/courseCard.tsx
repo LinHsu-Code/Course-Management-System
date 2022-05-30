@@ -30,6 +30,7 @@ export default function CourseCard({
         <Row>
           <h3>{course.name}</h3>
         </Row>
+
         <Row className={styles.cardDescription}>
           <Col>{course.startTime}</Col>
           <Col>
@@ -39,14 +40,18 @@ export default function CourseCard({
             <strong>{course.star}</strong>
           </Col>
         </Row>
+
         <Divider className={styles.cardDivider} />
+
         <Row className={styles.cardDescription}>
           <Col>Duration:</Col>
           <Col>
             <strong>{course.duration} years</strong>
           </Col>
         </Row>
+
         <Divider className={styles.cardDivider} />
+
         <Row className={styles.cardDescription} style={{ flexWrap: 'nowrap' }}>
           <Col>Teacher:</Col>
           <Col className={styles.cardInfo}>
@@ -57,7 +62,9 @@ export default function CourseCard({
             </Link>
           </Col>
         </Row>
+
         <Divider className={styles.cardDivider} />
+
         <Row className={styles.cardDescription}>
           <Col>
             <UserOutlined
@@ -69,6 +76,7 @@ export default function CourseCard({
             <strong>{course.maxStudents}</strong>
           </Col>
         </Row>
+
         {children}
       </div>
     </Card>
