@@ -11,7 +11,7 @@ import {
   message,
 } from 'antd'
 import ImgCrop from 'antd-img-crop'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import {
   getCourseTypes,
   getTeachers,
@@ -46,7 +46,6 @@ const FullHeightFormItem = styled(Form.Item)`
   }
 `
 const FullHeightFormItemUpload = styled(FullHeightFormItem)`
-  animation-duration: 0s !important;
   .ant-upload-picture-card-wrapper,
   .ant-form-item-control-input,
   .ant-upload-list-picture-card,
@@ -57,28 +56,12 @@ const FullHeightFormItemUpload = styled(FullHeightFormItem)`
   .ant-upload-list-item-list-type-picture-card {
     width: 100%;
     height: 100%;
-    //animation-duration: 0s;
+    animation-duration: 0s;
   }
-  .ant-upload-animate-inline-appear,
-  .ant-upload-list-item-removed,
-  .ant-upload-animate-inline {
+  .ant-upload-list-picture-card-container.ant-upload-animate-inline {
     display: none;
   }
-  //   .ant-upload-picture-card-wrapper img {
-  //     object-fit: cover !important;
-  //   }
 `
-
-async function fetchTeacherList(teacherName: string): Promise<OptionValue[]> {
-  return getTeachers({ query: teacherName }).then((res) => {
-    return res.data
-      ? res.data.teachers.map((teacher) => ({
-          label: teacher.name,
-          value: teacher.id,
-        }))
-      : []
-  })
-}
 
 export default function CourseDetailForm({
   afterSuccess,
@@ -99,6 +82,7 @@ export default function CourseDetailForm({
   ) => {
     if (info.file.status === 'uploading') {
       setLoading(true)
+      setFileList(info.fileList)
     }
     if (info.file.status === 'done') {
       setLoading(false)
@@ -106,10 +90,11 @@ export default function CourseDetailForm({
       message.success('Course image uploaded successfully.')
     }
     if (info.file.status === 'removed') {
-      setFileList(info.fileList)
+      setFileList([])
     }
     if (info.file.status === 'error') {
       setLoading(false)
+      setFileList(info.fileList)
       message.error('Course image upload failed.')
     }
   }
@@ -128,6 +113,11 @@ export default function CourseDetailForm({
     const imgWindow = window.open(src)
     imgWindow?.document.write(image.outerHTML)
   }
+
+  const coverRemoveButton = document.querySelector('.ant-btn-text')
+  coverRemoveButton?.addEventListener('click', () => {
+    setFileList([])
+  })
 
   useEffect(() => {
     if (course) {
@@ -162,7 +152,12 @@ export default function CourseDetailForm({
       setFileList([])
       setLoading(false)
     }
-  }, [course])
+  }, [course, form])
+
+  const genCode = useCallback(async () => {
+    const { data } = await generateCourseCode()
+    form.setFieldsValue({ uid: data })
+  }, [form])
 
   useEffect(() => {
     if (!course) {
@@ -173,12 +168,7 @@ export default function CourseDetailForm({
       })
       afterSuccess && genCode()
     }
-  }, [course])
-
-  const genCode = async () => {
-    const { data } = await generateCourseCode()
-    form.setFieldsValue({ uid: data })
-  }
+  }, [afterSuccess, course, genCode])
 
   const uploadButton = loading ? (
     <LoadingOutlined />
@@ -208,7 +198,8 @@ export default function CourseDetailForm({
   )
 
   const onFinish = async (values: any) => {
-    const startTime = moment(values.startTime).format('YYYY-MM-DD')
+    const startTime = values.startTime.format('YYYY-MM-DD')
+    console.log('fileList:', fileList)
     const params =
       fileList.length > 0
         ? {
@@ -262,7 +253,18 @@ export default function CourseDetailForm({
               >
                 <DebouncedSearchSelect
                   placeholder="search and select teacher"
-                  fetchOptions={fetchTeacherList}
+                  fetchOptions={(
+                    teacherName: string
+                  ): Promise<OptionValue[]> => {
+                    return getTeachers({ query: teacherName }).then((res) => {
+                      return res.data
+                        ? res.data.teachers.map((teacher) => ({
+                            label: teacher.name,
+                            value: teacher.id,
+                          }))
+                        : []
+                    })
+                  }}
                   onChange={(value) => setTeacherId(value)}
                 />
               </Form.Item>
@@ -316,7 +318,6 @@ export default function CourseDetailForm({
             label="Duration"
             name="duration"
             rules={[{ required: true }]}
-            //rules={[{ required: true }, { validator: validateDuration }]}
           >
             <InputNumber
               min={1}
@@ -354,28 +355,13 @@ export default function CourseDetailForm({
                 className="avatar-uploader"
                 action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                 onChange={handleChange}
-                //fileList={fileList}
+                fileList={fileList}
                 maxCount={1}
               >
-                {fileList.length > 0 ? null : uploadButton}
+                {fileList.length > 0 && !loading ? null : uploadButton}
               </Upload>
             </ImgCrop>
           </FullHeightFormItemUpload>
-          {/* <FullHeightFormItemUpload label="Cover" name="cover">
-            <ImgCrop rotate>
-              <Upload
-                name="avatar"
-                listType="picture-card"
-                className="avatar-uploader"
-                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                onChange={handleChange}
-                // fileList={fileList}
-                maxCount={1}
-              >
-                {imageUrl || !isReady ? null : uploadButton}
-              </Upload>
-            </ImgCrop>
-          </FullHeightFormItemUpload> */}
         </Col>
       </Row>
       <Row>
