@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import {
   Col,
   Form,
@@ -9,6 +10,7 @@ import {
   DatePicker,
   Upload,
   message,
+  Modal,
 } from 'antd'
 import ImgCrop from 'antd-img-crop'
 import { useCallback, useEffect, useState } from 'react'
@@ -58,10 +60,20 @@ const FullHeightFormItemUpload = styled(FullHeightFormItem)`
     height: 100%;
     animation-duration: 0s;
   }
+  .ant-upload-animate-inline-appear,
+  .ant-upload-list-item-removed,
   .ant-upload-list-picture-card-container.ant-upload-animate-inline {
     display: none;
   }
 `
+
+const getBase64 = (file: RcFile): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = () => resolve(reader.result as string)
+    reader.onerror = (error) => reject(error)
+  })
 
 export default function CourseDetailForm({
   afterSuccess,
@@ -76,6 +88,9 @@ export default function CourseDetailForm({
   const [unit, setUnit] = useState<number>(2)
   const [fileList, setFileList] = useState<UploadFile[]>([])
   const [loading, setLoading] = useState(false)
+  const [previewVisible, setPreviewVisible] = useState(false)
+  const [previewImage, setPreviewImage] = useState('')
+  const [previewTitle, setPreviewTitle] = useState('')
 
   const handleChange: UploadProps['onChange'] = (
     info: UploadChangeParam<UploadFile>
@@ -99,19 +114,18 @@ export default function CourseDetailForm({
     }
   }
 
-  const onPreview = async (file: UploadFile) => {
-    let src = file.url as string
-    if (!src) {
-      src = await new Promise((resolve) => {
-        const reader = new FileReader()
-        reader.readAsDataURL(file.originFileObj as RcFile)
-        reader.onload = () => resolve(reader.result as string)
-      })
+  const handleCancel = () => setPreviewVisible(false)
+
+  const handlePreview = async (file: UploadFile) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj as RcFile)
     }
-    const image = new Image()
-    image.src = src
-    const imgWindow = window.open(src)
-    imgWindow?.document.write(image.outerHTML)
+
+    setPreviewImage(file.url || (file.preview as string))
+    setPreviewVisible(true)
+    setPreviewTitle(
+      file.name || file.url!.substring(file.url!.lastIndexOf('/') + 1)
+    )
   }
 
   const coverRemoveButton = document.querySelector('.ant-btn-text')
@@ -225,152 +239,170 @@ export default function CourseDetailForm({
   }
 
   return (
-    <Form
-      name="add_course"
-      form={form}
-      onFinish={onFinish}
-      validateMessages={ValidateMessages}
-      autoComplete="off"
-      layout="vertical"
-    >
-      <Row gutter={[16, 24]}>
-        <Col xs={24} md={8}>
-          <Form.Item
-            label="Course Name"
-            name="name"
-            rules={[{ required: true }, { max: 100, min: 3 }]}
-          >
-            <Input type="text" placeholder="course name" />
-          </Form.Item>
-        </Col>
-        <Col xs={24} md={16}>
-          <Row gutter={[16, 24]}>
-            <Col xs={24} md={8}>
-              <Form.Item
-                label="Teacher"
-                name="teacherId"
-                rules={[{ required: true }]}
-              >
-                <DebouncedSearchSelect
-                  placeholder="search and select teacher"
-                  fetchOptions={(
-                    teacherName: string
-                  ): Promise<OptionValue[]> => {
-                    return getTeachers({ query: teacherName }).then((res) => {
-                      return res.data
-                        ? res.data.teachers.map((teacher) => ({
-                            label: teacher.name,
-                            value: teacher.id,
-                          }))
-                        : []
-                    })
-                  }}
-                  onChange={(value) => setTeacherId(value)}
-                />
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={8}>
-              <Form.Item label="Type" name="type" rules={[{ required: true }]}>
-                <Select mode="multiple" placeholder="select course types">
-                  {courseTypes.map((courseType) => (
-                    <Select.Option key={courseType.id} value={courseType.id}>
-                      {courseType.name}
-                    </Select.Option>
-                  ))}
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={8}>
-              <Form.Item
-                label="Course Code"
-                name="uid"
-                rules={[{ required: true }]}
-              >
-                <Input disabled type="text" placeholder="course code" />
-              </Form.Item>
-            </Col>
-          </Row>
-        </Col>
-      </Row>
-      <Row gutter={[16, 24]}>
-        <Col xs={24} md={8}>
-          <Form.Item label="Start Date" name="startTime">
-            <DatePicker disabledDate={disabledDate} style={{ width: '100%' }} />
-          </Form.Item>
+    <>
+      <Form
+        name="add_course"
+        form={form}
+        onFinish={onFinish}
+        validateMessages={ValidateMessages}
+        autoComplete="off"
+        layout="vertical"
+      >
+        <Row gutter={[16, 24]}>
+          <Col xs={24} md={8}>
+            <Form.Item
+              label="Course Name"
+              name="name"
+              rules={[{ required: true }, { max: 100, min: 3 }]}
+            >
+              <Input type="text" placeholder="course name" />
+            </Form.Item>
+          </Col>
+          <Col xs={24} md={16}>
+            <Row gutter={[16, 24]}>
+              <Col xs={24} md={8}>
+                <Form.Item
+                  label="Teacher"
+                  name="teacherId"
+                  rules={[{ required: true }]}
+                >
+                  <DebouncedSearchSelect
+                    placeholder="search and select teacher"
+                    fetchOptions={(
+                      teacherName: string
+                    ): Promise<OptionValue[]> => {
+                      return getTeachers({ query: teacherName }).then((res) => {
+                        return res.data
+                          ? res.data.teachers.map((teacher) => ({
+                              label: teacher.name,
+                              value: teacher.id,
+                            }))
+                          : []
+                      })
+                    }}
+                    onChange={(value) => setTeacherId(value)}
+                  />
+                </Form.Item>
+              </Col>
+              <Col xs={24} md={8}>
+                <Form.Item
+                  label="Type"
+                  name="type"
+                  rules={[{ required: true }]}
+                >
+                  <Select mode="multiple" placeholder="select course types">
+                    {courseTypes.map((courseType) => (
+                      <Select.Option key={courseType.id} value={courseType.id}>
+                        {courseType.name}
+                      </Select.Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col xs={24} md={8}>
+                <Form.Item
+                  label="Course Code"
+                  name="uid"
+                  rules={[{ required: true }]}
+                >
+                  <Input disabled type="text" placeholder="course code" />
+                </Form.Item>
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+        <Row gutter={[16, 24]}>
+          <Col xs={24} md={8}>
+            <Form.Item label="Start Date" name="startTime">
+              <DatePicker
+                disabledDate={disabledDate}
+                style={{ width: '100%' }}
+              />
+            </Form.Item>
 
-          <Form.Item
-            label="Price"
-            name="price"
-            rules={[{ required: true, type: 'number', min: 0 }]}
-          >
-            <InputNumber prefix="$" min={0} style={{ width: '100%' }} />
-          </Form.Item>
+            <Form.Item
+              label="Price"
+              name="price"
+              rules={[{ required: true, type: 'number', min: 0 }]}
+            >
+              <InputNumber prefix="$" min={0} style={{ width: '100%' }} />
+            </Form.Item>
 
-          <Form.Item
-            label="Student Limit"
-            name="maxStudents"
-            rules={[{ required: true, type: 'number', min: 1, max: 10 }]}
-          >
-            <InputNumber min={1} max={10} style={{ width: '100%' }} />
-          </Form.Item>
+            <Form.Item
+              label="Student Limit"
+              name="maxStudents"
+              rules={[{ required: true, type: 'number', min: 1, max: 10 }]}
+            >
+              <InputNumber min={1} max={10} style={{ width: '100%' }} />
+            </Form.Item>
 
-          <Form.Item
-            label="Duration"
-            name="duration"
-            rules={[{ required: true }]}
-          >
-            <InputNumber
-              min={1}
-              addonAfter={selectAfter}
-              style={{ width: '100%' }}
-            />
+            <Form.Item
+              label="Duration"
+              name="duration"
+              rules={[{ required: true }]}
+            >
+              <InputNumber
+                min={1}
+                addonAfter={selectAfter}
+                style={{ width: '100%' }}
+              />
+            </Form.Item>
+          </Col>
+          <Col xs={24} md={8} style={{ display: 'flex' }}>
+            <FullHeightFormItem
+              label="Description"
+              name="detail"
+              rules={[
+                { required: true },
+                {
+                  min: 100,
+                  max: 1000,
+                  message:
+                    'Description length must between 100 - 1000 characters.',
+                },
+              ]}
+            >
+              <Input.TextArea
+                placeholder="Course description"
+                style={{ height: '100%' }}
+              />
+            </FullHeightFormItem>
+          </Col>
+          <Col xs={24} md={8} style={{ display: 'flex' }}>
+            <FullHeightFormItemUpload label="Cover" name="cover">
+              <ImgCrop rotate>
+                <Upload
+                  name="avatar"
+                  listType="picture-card"
+                  className="avatar-uploader"
+                  action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                  onChange={handleChange}
+                  fileList={fileList}
+                  maxCount={1}
+                  onPreview={handlePreview}
+                >
+                  {fileList.length > 0 && !loading ? null : uploadButton}
+                </Upload>
+              </ImgCrop>
+            </FullHeightFormItemUpload>
+          </Col>
+        </Row>
+        <Row>
+          <Form.Item>
+            <Button type="primary" htmlType="submit">
+              {course ? 'Update Course' : 'Create Course'}
+            </Button>
           </Form.Item>
-        </Col>
-        <Col xs={24} md={8} style={{ display: 'flex' }}>
-          <FullHeightFormItem
-            label="Description"
-            name="detail"
-            rules={[
-              { required: true },
-              {
-                min: 100,
-                max: 1000,
-                message:
-                  'Description length must between 100 - 1000 characters.',
-              },
-            ]}
-          >
-            <Input.TextArea
-              placeholder="Course description"
-              style={{ height: '100%' }}
-            />
-          </FullHeightFormItem>
-        </Col>
-        <Col xs={24} md={8} style={{ display: 'flex' }}>
-          <FullHeightFormItemUpload label="Cover" name="cover">
-            <ImgCrop rotate>
-              <Upload
-                name="avatar"
-                listType="picture-card"
-                className="avatar-uploader"
-                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                onChange={handleChange}
-                fileList={fileList}
-                maxCount={1}
-              >
-                {fileList.length > 0 && !loading ? null : uploadButton}
-              </Upload>
-            </ImgCrop>
-          </FullHeightFormItemUpload>
-        </Col>
-      </Row>
-      <Row>
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
-            {course ? 'Update Course' : 'Create Course'}
-          </Button>
-        </Form.Item>
-      </Row>
-    </Form>
+        </Row>
+      </Form>
+      <Modal
+        visible={previewVisible}
+        title={previewTitle}
+        footer={null}
+        onCancel={handleCancel}
+      >
+        <img alt="example" style={{ width: '100%' }} src={previewImage} />
+      </Modal>
+    </>
   )
 }
