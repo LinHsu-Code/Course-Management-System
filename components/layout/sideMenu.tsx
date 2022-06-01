@@ -33,19 +33,23 @@ export default function SideMenu({
   rolePath,
   openKeys,
   selectedKeys,
+  setOpenKeys,
 }: {
   sideNav: DynamicNav[]
   rolePath: string[]
   openKeys: string[]
   selectedKeys: string[]
+  setOpenKeys: ([]) => void
 }) {
   return (
     <Menu
       theme="dark"
       mode="inline"
-      defaultOpenKeys={openKeys}
-      defaultSelectedKeys={selectedKeys}
-      style={{ borderRight: 0 }}
+      openKeys={openKeys}
+      selectedKeys={selectedKeys}
+      onOpenChange={(keys) => {
+        setOpenKeys([keys[1]])
+      }}
     >
       {renderSideMenu(sideNav, rolePath)}
     </Menu>

@@ -74,15 +74,10 @@ export default function CourseScheduleForm({
     } else {
       form.setFieldsValue(initialScheduleValue)
     }
-  }, [course])
+  }, [course, form])
 
   return (
-    <Form
-      form={form}
-      name="schedule"
-      onFinish={onFinish}
-      //validateMessages={validateMessages}
-    >
+    <Form form={form} name="schedule" onFinish={onFinish}>
       <Row gutter={[16, 24]}>
         <Col span={12}>
           <h2>Chapters</h2>

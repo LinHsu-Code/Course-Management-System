@@ -22,7 +22,12 @@ import {
   updateCourse,
 } from '../../lib/request'
 import { disabledDate } from '../../lib/util'
-import { CourseType, OptionValue, Course } from '../../lib/model'
+import {
+  CourseType,
+  OptionValue,
+  Course,
+  AddCourseRequest,
+} from '../../lib/model'
 import { ValidateMessages } from '../../lib/constants'
 import DebouncedSearchSelect from '../common/debouncedSearchSelect'
 import moment from 'moment'
@@ -135,30 +140,28 @@ export default function CourseDetailForm({
 
   useEffect(() => {
     if (course) {
+      const cover = course.cover
+        ? [
+            {
+              uid: '1',
+              name: 'cover',
+              url: course.cover,
+              response: { url: course.cover },
+            },
+          ]
+        : []
+      console.log('course.cover', !!course.cover)
+      console.log('cover:', cover)
       const values = {
         ...course,
         type: course.type.map((item) => item.id),
         teacherId: course.teacherName,
         startTime: moment(course.startTime, 'YYYY-MM-DD'),
-        cover: [
-          {
-            uid: '1',
-            name: 'cover',
-            url: course.cover,
-            response: { url: course.cover },
-          },
-        ],
+        cover,
       }
       form.setFieldsValue(values)
       setTeacherId(course.teacherId)
-      setFileList([
-        {
-          uid: '1',
-          name: 'cover',
-          url: course.cover,
-          response: { url: course.cover },
-        },
-      ])
+      setFileList(cover)
     } else {
       form.resetFields()
       setTeacherId(0)
@@ -212,23 +215,17 @@ export default function CourseDetailForm({
   )
 
   const onFinish = async (values: any) => {
-    const startTime = values.startTime.format('YYYY-MM-DD')
-    console.log('fileList:', fileList)
-    const params =
-      fileList.length > 0
-        ? {
-            ...values,
-            startTime,
-            durationUnit: unit,
-            teacherId,
-            cover: fileList[0].response.url,
-          }
-        : {
-            ...values,
-            startTime,
-            teacherId,
-            durationUnit: unit,
-          }
+    const params = {
+      ...values,
+      durationUnit: unit,
+      teacherId,
+      startTime: values.startTime.format('YYYY-MM-DD'),
+    }
+    if (fileList.length > 0) {
+      params.cover = fileList[0].response.url
+    } else {
+      params.cover = ''
+    }
     console.log(params)
     const res = course
       ? await updateCourse({ ...params, id: course.id })
@@ -313,7 +310,11 @@ export default function CourseDetailForm({
         </Row>
         <Row gutter={[16, 24]}>
           <Col xs={24} md={8}>
-            <Form.Item label="Start Date" name="startTime">
+            <Form.Item
+              label="Start Date"
+              name="startTime"
+              rules={[{ required: true }]}
+            >
               <DatePicker
                 disabledDate={disabledDate}
                 style={{ width: '100%' }}

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Layout, Menu, Row, Col, Avatar } from 'antd'
 import {
@@ -35,11 +35,11 @@ export default function DashboardLayout({
       ? router.pathname.split('/').slice(0, -1).join('/')
       : router.pathname,
   ]
-  const openKeys = [router.pathname.split('/').slice(2, 4).toString()]
   const nav = role ? ROUTES.get(role) : null
   const sideNav = nav ? nav[0].subNav : null
   const [collapsed, setCollapsed] = useState(false)
   const [logoutMenu, setLogoutMenu] = useState(false)
+  const [openKeys, setOpenKeys] = useState<string[]>([])
 
   const breadcrumbDate = nav
     ? page === '[id]'
@@ -54,6 +54,10 @@ export default function DashboardLayout({
       router.replace('/login', undefined, { shallow: true })
     }
   }
+
+  useEffect(() => {
+    setOpenKeys([router.pathname.split('/').slice(2, 4).toString()])
+  }, [router.pathname])
 
   return (
     <Layout className={styles.layout}>
@@ -77,6 +81,7 @@ export default function DashboardLayout({
             rolePath={rolePath}
             openKeys={openKeys}
             selectedKeys={selectedKeys}
+            setOpenKeys={setOpenKeys}
           />
         )}
       </Sider>
