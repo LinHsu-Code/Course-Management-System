@@ -34,7 +34,6 @@ export default function CourseScheduleForm({
   const [selectedWeekdays, setSelectedWeekdays] = useState<string[]>([])
 
   const onFinish = (formValues: CourseScheduleFormValues) => {
-    console.log(formValues)
     const formattedChapters = formValues.chapters.map((item, index) => ({
       ...item,
       order: index + 1,

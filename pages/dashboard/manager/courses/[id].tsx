@@ -10,7 +10,6 @@ import { CourseDetail } from '../../../../lib/model'
 import styles from './detail.module.scss'
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  console.log(context)
   const id = context.query.id as string
   return {
     props: { id },
@@ -27,7 +26,6 @@ export default function Page(props: { id: string }) {
     getCourse({ id: props.id }).then((res) => {
       if (res.data) {
         setCourse(res.data)
-        console.log(res.data)
         const sales = res.data.sales
         const info = [
           { label: 'Price', value: sales.price || 0 },

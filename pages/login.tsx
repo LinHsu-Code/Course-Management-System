@@ -14,7 +14,7 @@ export default function Page() {
       const { token, role, userId } = res.data
       localStorage.setItem('role', role)
       localStorage.setItem('token', token)
-      localStorage.setItem('userId', userId)
+      localStorage.setItem('userId', userId.toString())
       router.replace(`/dashboard/${role}`, undefined, { shallow: true })
     }
   }

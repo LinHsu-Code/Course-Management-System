@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Layout, Menu, Row, Col, Avatar } from 'antd'
+import { Layout, Menu, Row, Col, Avatar, Modal, Button, Tabs } from 'antd'
 import {
   LogoutOutlined,
   MenuUnfoldOutlined,
@@ -18,6 +18,7 @@ import Breadcrumb from './breadcrumb'
 import { Role } from '../../lib/model'
 
 const { Header, Content, Sider } = Layout
+const { TabPane } = Tabs
 
 export default function DashboardLayout({
   children,
@@ -40,6 +41,7 @@ export default function DashboardLayout({
   const [collapsed, setCollapsed] = useState(false)
   const [logoutMenu, setLogoutMenu] = useState(false)
   const [openKeys, setOpenKeys] = useState<string[]>([])
+  const [modal1Visible, setModal1Visible] = useState(false)
 
   const breadcrumbDate = nav
     ? page === '[id]'
@@ -96,7 +98,7 @@ export default function DashboardLayout({
               {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             </Col>
 
-            <Col>
+            <Col onClick={() => setModal1Visible(true)}>
               <Avatar icon={<BellOutlined />} className={styles.avatar} />
             </Col>
 
@@ -115,6 +117,33 @@ export default function DashboardLayout({
               )}
             </Col>
           </Row>
+          <Modal
+            closable={false}
+            style={{ top: 68, marginRight: 56, marginLeft: 'auto' }}
+            visible={modal1Visible}
+            onOk={() => setModal1Visible(false)}
+            onCancel={() => setModal1Visible(false)}
+            width={400}
+            footer={[
+              <Row key="footer" style={{ textAlign: 'center' }}>
+                <Col span={12} style={{ borderRight: '1px solid #f0f0f0' }}>
+                  <Button type="text">Mark all as read</Button>
+                </Col>
+                <Col span={12}>
+                  <Button style={{ border: 'none' }}>View history</Button>
+                </Col>
+              </Row>,
+            ]}
+          >
+            <Tabs defaultActiveKey="1" style={{ height: 500 }}>
+              <TabPane tab={`notification(0)`} key="1">
+                Content of Tab Pane 1
+              </TabPane>
+              <TabPane tab={`message(0)`} key="2">
+                Content of Tab Pane 2
+              </TabPane>
+            </Tabs>
+          </Modal>
         </Header>
 
         {breadcrumbDate && (

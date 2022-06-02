@@ -150,8 +150,6 @@ export default function CourseDetailForm({
             },
           ]
         : []
-      console.log('course.cover', !!course.cover)
-      console.log('cover:', cover)
       const values = {
         ...course,
         type: course.type.map((item) => item.id),
@@ -226,7 +224,6 @@ export default function CourseDetailForm({
     } else {
       params.cover = ''
     }
-    console.log(params)
     const res = course
       ? await updateCourse({ ...params, id: course.id })
       : await addCourse(params)
