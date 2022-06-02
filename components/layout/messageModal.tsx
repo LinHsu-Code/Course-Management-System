@@ -1,5 +1,7 @@
 import { Row, Col, Modal, Button, Tabs } from 'antd'
+import { useEffect } from 'react'
 import styled from 'styled-components'
+import { getMessages } from '../../lib/request'
 
 const { TabPane } = Tabs
 
@@ -22,6 +24,12 @@ export default function MessageModal({
   modal1Visible: boolean
   setModal1Visible: (modal1Visible: boolean) => void
 }) {
+  useEffect(() => {
+    getMessages({ page: 1, limit: 20, type: 'notification' }).then((res) =>
+      console.log(res)
+    )
+  }, [])
+
   return (
     <CustomModal
       closable={false}

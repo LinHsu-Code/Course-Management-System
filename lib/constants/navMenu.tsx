@@ -145,7 +145,7 @@ const STUDENT_ROUTES: DynamicNav = {
 }
 
 export const ROUTES: Map<Role, DynamicNav[]> = new Map([
-  [Role.manager, [MANAGER_ROUTES]],
-  [Role.teacher, [TEACHER_ROUTES]],
-  [Role.student, [STUDENT_ROUTES]],
+  ['manager', [MANAGER_ROUTES]],
+  ['teacher', [TEACHER_ROUTES]],
+  ['student', [STUDENT_ROUTES]],
 ])

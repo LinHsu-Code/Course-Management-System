@@ -18,11 +18,13 @@ export interface DynamicNav {
   subNav?: [DynamicNav, ...DynamicNav[]]
 }
 
-export enum Role {
-  manager = 'manager',
-  teacher = 'teacher',
-  student = 'student',
-}
+// export enum Role {
+//   manager = 'manager',
+//   teacher = 'teacher',
+//   student = 'student',
+// }
+
+export type Role = 'manager' | 'teacher' | 'student'
 
 export type BadgeStatus =
   | 'processing'
