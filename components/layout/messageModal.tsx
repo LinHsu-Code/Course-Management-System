@@ -34,11 +34,11 @@ export default function MessageModal({
         <Row key="footer" style={{ textAlign: 'center' }}>
           <Col
             span={12}
-            style={{ borderRight: '1px solid #f0f0f0', padding: 10 }}
+            style={{ borderRight: '1px solid #f0f0f0', padding: '10px 0' }}
           >
             <Button type="text">Mark all as read</Button>
           </Col>
-          <Col span={12}>
+          <Col span={12} style={{ padding: '10px 0' }}>
             <Button style={{ border: 'none' }}>View history</Button>
           </Col>
         </Row>,
