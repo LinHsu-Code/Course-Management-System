@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Layout, Menu, Row, Col, Avatar, Modal, Button, Tabs } from 'antd'
+import { Layout, Menu, Row, Col, Avatar } from 'antd'
 import {
   LogoutOutlined,
   MenuUnfoldOutlined,
@@ -16,9 +16,9 @@ import SideMenu from './sideMenu'
 import { bfsOne } from '../../lib/util'
 import Breadcrumb from './breadcrumb'
 import { Role } from '../../lib/model'
+import MessageModal from './messageModal'
 
 const { Header, Content, Sider } = Layout
-const { TabPane } = Tabs
 
 export default function DashboardLayout({
   children,
@@ -117,33 +117,11 @@ export default function DashboardLayout({
               )}
             </Col>
           </Row>
-          <Modal
-            closable={false}
-            style={{ top: 68, marginRight: 56, marginLeft: 'auto' }}
-            visible={modal1Visible}
-            onOk={() => setModal1Visible(false)}
-            onCancel={() => setModal1Visible(false)}
-            width={400}
-            footer={[
-              <Row key="footer" style={{ textAlign: 'center' }}>
-                <Col span={12} style={{ borderRight: '1px solid #f0f0f0' }}>
-                  <Button type="text">Mark all as read</Button>
-                </Col>
-                <Col span={12}>
-                  <Button style={{ border: 'none' }}>View history</Button>
-                </Col>
-              </Row>,
-            ]}
-          >
-            <Tabs defaultActiveKey="1" style={{ height: 500 }}>
-              <TabPane tab={`notification(0)`} key="1">
-                Content of Tab Pane 1
-              </TabPane>
-              <TabPane tab={`message(0)`} key="2">
-                Content of Tab Pane 2
-              </TabPane>
-            </Tabs>
-          </Modal>
+
+          <MessageModal
+            modal1Visible={modal1Visible}
+            setModal1Visible={setModal1Visible}
+          />
         </Header>
 
         {breadcrumbDate && (
