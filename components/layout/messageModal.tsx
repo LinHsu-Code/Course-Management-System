@@ -1,7 +1,6 @@
 import { Row, Col, Modal, Button, Tabs } from 'antd'
-import { useEffect } from 'react'
 import styled from 'styled-components'
-import { getMessages } from '../../lib/request'
+import MessageList from '../message/messageList'
 
 const { TabPane } = Tabs
 
@@ -10,7 +9,10 @@ const CustomModal = styled(Modal)`
     border-radius: 4px;
   }
   .ant-modal-body {
-    padding: 12px 24px;
+    padding: 0px;
+  }
+  .ant-tabs-nav {
+    padding: 10px 24px 0px 24px;
   }
   .ant-modal-footer {
     padding: 0;
@@ -24,12 +26,6 @@ export default function MessageModal({
   modal1Visible: boolean
   setModal1Visible: (modal1Visible: boolean) => void
 }) {
-  useEffect(() => {
-    getMessages({ page: 1, limit: 20, type: 'notification' }).then((res) =>
-      console.log(res)
-    )
-  }, [])
-
   return (
     <CustomModal
       closable={false}
@@ -52,12 +48,12 @@ export default function MessageModal({
         </Row>,
       ]}
     >
-      <Tabs defaultActiveKey="1" style={{ height: 500 }}>
-        <TabPane tab={`notification(0)`} key="1">
-          Content of Tab Pane 1
+      <Tabs defaultActiveKey="notification">
+        <TabPane tab={`notification(0)`} key="notification">
+          <MessageList messageType="notification" />
         </TabPane>
-        <TabPane tab={`message(0)`} key="2">
-          Content of Tab Pane 2
+        <TabPane tab={`message(0)`} key="message">
+          <MessageList messageType="message" />
         </TabPane>
       </Tabs>
     </CustomModal>

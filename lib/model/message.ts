@@ -1,8 +1,8 @@
 import { Response, Paginator, Role } from './common'
 
-export type Type = 'notification' | 'message'
+export type MessageType = 'notification' | 'message'
 
-export type Status = 0 | 1
+export type MessageStatus = 0 | 1
 
 export interface From {
   id: number
@@ -14,8 +14,8 @@ export interface Message {
   createdAt: Date
   id: number
   content: string
-  status: Status
-  type: Type
+  status: MessageStatus
+  type: MessageType
   from: From
 }
 
@@ -24,7 +24,7 @@ export interface GetMessageRequest {
   userId?: number
   limit?: number
   page?: number
-  type?: Type
+  type?: MessageType
 }
 
 export interface GetMessageResponseData {
