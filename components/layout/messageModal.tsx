@@ -2,6 +2,7 @@ import { Row, Col, Modal, Button, Tabs } from 'antd'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
+import { MessageTypes } from '../../lib/constants'
 import { MessageType, MessageCount } from '../../lib/model'
 import { getMessageStatics } from '../../lib/request'
 import MessageList from '../message/messageList'
@@ -92,30 +93,19 @@ export default function MessageModal({
       ]}
     >
       <Tabs
-        defaultActiveKey="notification"
+        defaultActiveKey={MessageTypes[0]}
         onChange={(key) => setMessageType(key as MessageType)}
       >
-        <TabPane
-          tab={`notification(${unReadCount.notification})`}
-          key="notification"
-        >
-          <MessageList
-            messageType="notification"
-            activeMarkAsRead={activeMarkAsRead.notification}
-            //activeMarkAsRead={activeMarkAsRead}
-            setUnReadCount={setUnReadCount}
-            unReadCount={unReadCount}
-          />
-        </TabPane>
-        <TabPane tab={`message(${unReadCount.message})`} key="message">
-          <MessageList
-            messageType="message"
-            activeMarkAsRead={activeMarkAsRead.message}
-            //activeMarkAsRead={activeMarkAsRead}
-            setUnReadCount={setUnReadCount}
-            unReadCount={unReadCount}
-          />
-        </TabPane>
+        {MessageTypes.map((item) => (
+          <TabPane tab={`${item}(${unReadCount[item]})`} key={item}>
+            <MessageList
+              messageType={item}
+              activeMarkAsRead={activeMarkAsRead[item]}
+              setUnReadCount={setUnReadCount}
+              unReadCount={unReadCount[item]}
+            />
+          </TabPane>
+        ))}
       </Tabs>
     </CustomModal>
   )

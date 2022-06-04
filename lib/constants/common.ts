@@ -1,4 +1,4 @@
-import { Weekday } from '../model'
+import { MessageType, Weekday } from '../model'
 
 export const COUNTRY_LIST: string[] = [
   'China',
@@ -62,3 +62,5 @@ export const ValidateMessages = {
     range: "'${name}' must be between ${min} and ${max} characters",
   },
 }
+
+export const MessageTypes: MessageType[] = ['notification', 'message']

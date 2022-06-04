@@ -1,4 +1,4 @@
-import { List, Skeleton, Divider, Avatar, message, Space } from 'antd'
+import { List, Skeleton, Divider, Avatar } from 'antd'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Message, MessageType, MessageCount } from '../../lib/model'
 import { UserOutlined } from '@ant-design/icons'
@@ -35,7 +35,7 @@ export default function MessageList({
 }: {
   messageType: MessageType
   activeMarkAsRead: number
-  unReadCount: MessageCount
+  unReadCount: number
   setUnReadCount: Dispatch<SetStateAction<MessageCount>>
 }) {
   const [loading, setLoading] = useState(false)
@@ -106,7 +106,6 @@ export default function MessageList({
   // }, [activeMarkAsRead])
 
   const handleMarkMessageAsRead = useCallback(() => {
-    console.log(11111111111111)
     getMessageStatics({}).then((res) => {
       if (res.data) {
         getMessages({
@@ -115,12 +114,10 @@ export default function MessageList({
           limit: res.data.receive[messageType].unread,
         }).then((res) => {
           if (res.data) {
-            console.log(res.data)
             const ids = res.data.messages
               .filter((item) => item.status === 0)
               .map((item) => item.id)
 
-            console.log(ids)
             if (ids.length) {
               markMessageAsRead({ ids, status: 1 }).then((res) => {
                 if (res.data) {
@@ -136,10 +133,7 @@ export default function MessageList({
   }, [messageType, setUnReadCount])
 
   useEffect(() => {
-    console.log('useEffect,activeMarkAsRead')
-
     if (activeMarkAsRead) {
-      console.log('activeMarkAsRead:', activeMarkAsRead)
       handleMarkMessageAsRead()
     }
   }, [activeMarkAsRead, handleMarkMessageAsRead])
@@ -179,10 +173,10 @@ export default function MessageList({
                     }
                     setData(data)
 
-                    setUnReadCount({
-                      ...unReadCount,
-                      [messageType]: unReadCount[messageType] - 1,
-                    })
+                    setUnReadCount((pre) => ({
+                      ...pre,
+                      [messageType]: unReadCount - 1,
+                    }))
                   }
                 })
               }}
