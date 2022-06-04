@@ -1,9 +1,19 @@
 import { List, Skeleton, Divider, Avatar, message, Space } from 'antd'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { Message, MessageType } from '../../lib/model'
+import { Message, MessageType, MessageCount } from '../../lib/model'
 import { UserOutlined } from '@ant-design/icons'
-import { useCallback, useEffect, useState } from 'react'
-import { getMessages, markMessageAsRead } from '../../lib/request'
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react'
+import {
+  getMessages,
+  getMessageStatics,
+  markMessageAsRead,
+} from '../../lib/request'
 import { formatDistanceToNow } from 'date-fns'
 import styled from 'styled-components'
 
@@ -25,16 +35,8 @@ export default function MessageList({
 }: {
   messageType: MessageType
   activeMarkAsRead: number
-  unReadCount: {
-    [key in MessageType]: number
-  }
-  setUnReadCount: ({
-    notification,
-    message,
-  }: {
-    notification: number
-    message: number
-  }) => void
+  unReadCount: MessageCount
+  setUnReadCount: Dispatch<SetStateAction<MessageCount>>
 }) {
   const [loading, setLoading] = useState(false)
   const [hasMore, setHasMore] = useState<boolean>(true)
@@ -74,30 +76,70 @@ export default function MessageList({
     loadMoreData()
   }, [])
 
+  // const handleMarkMessageAsRead = () => {
+  //   getMessages({ status: 0,
+  //     type: messageType,
+  //     limit: unReadCount}).then((res) => {
+  //     if (res.data) {
+  //       console.log(res.data)
+  //       const ids = res.data.messages
+  //         .filter((item) => item.status === 0)
+  //         .map((item) => item.id)
+
+  //       console.log(ids)
+  //       if (ids.length) {
+  //         markMessageAsRead({ ids, status: 1 }).then((res) => {
+  //           if (res.data) {
+  //             setData((pre) => pre.map((item) => ({ ...item, status: 1 })))
+  //             setUnReadCount((pre) => ({ ...pre, [messageType]: 0 }))
+  //           }
+  //         })
+  //       }
+  //     }
+  //   })
+  // }
+
+  // useEffect(() => {
+  //   if (activeMarkAsRead) {
+  //     handleMarkMessageAsRead()
+  //   }
+  // }, [activeMarkAsRead])
+
   const handleMarkMessageAsRead = useCallback(() => {
     console.log(11111111111111)
-    // const ids = getUnreadIds()
-    let ids: number[] = []
-    getMessages({ type: messageType }).then((res) => {
+    getMessageStatics({}).then((res) => {
       if (res.data) {
-        console.log(res.data)
-        ids = res.data.messages
-          .filter((item) => item.status === 0)
-          .map((item) => item.id)
+        getMessages({
+          status: 0,
+          type: messageType,
+          limit: res.data.receive[messageType].unread,
+        }).then((res) => {
+          if (res.data) {
+            console.log(res.data)
+            const ids = res.data.messages
+              .filter((item) => item.status === 0)
+              .map((item) => item.id)
+
+            console.log(ids)
+            if (ids.length) {
+              markMessageAsRead({ ids, status: 1 }).then((res) => {
+                if (res.data) {
+                  setData((pre) => pre.map((item) => ({ ...item, status: 1 })))
+                  setUnReadCount((pre) => ({ ...pre, [messageType]: 0 }))
+                }
+              })
+            }
+          }
+        })
       }
     })
-    if (ids.length) {
-      markMessageAsRead({ ids, status: 1 }).then((res) => {
-        if (res.data) {
-          setData((pre) => pre.map((item) => ({ ...item, status: 1 })))
-          setUnReadCount({ ...unReadCount, [messageType]: 0 })
-        }
-      })
-    }
-  }, [messageType])
+  }, [messageType, setUnReadCount])
 
   useEffect(() => {
+    console.log('useEffect,activeMarkAsRead')
+
     if (activeMarkAsRead) {
+      console.log('activeMarkAsRead:', activeMarkAsRead)
       handleMarkMessageAsRead()
     }
   }, [activeMarkAsRead, handleMarkMessageAsRead])
@@ -131,14 +173,11 @@ export default function MessageList({
                 }
                 markMessageAsRead({ ids: [item.id], status: 1 }).then((res) => {
                   if (res.data) {
-                    const newDate = [...data]
-                    const target = newDate.findIndex(
-                      (msg) => item.id === msg.id
-                    )
+                    const target = data.findIndex((msg) => item.id === msg.id)
                     if (target !== -1) {
-                      newDate[target].status = 1
+                      data[target].status = 1
                     }
-                    setData(newDate)
+                    setData(data)
 
                     setUnReadCount({
                       ...unReadCount,

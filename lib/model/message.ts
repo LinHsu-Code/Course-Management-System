@@ -55,3 +55,7 @@ export interface MessageStatics {
 }
 
 export type GetMessageStaticsResponse = Response<MessageStaticsData>
+
+export type MessageCount = {
+  [key in MessageType]: number
+}

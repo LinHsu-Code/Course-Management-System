@@ -9,12 +9,11 @@ import {
 } from '../model'
 
 const getMessages = (params: GetMessageRequest): Promise<GetMessageResponse> =>
-  getInstance('/message', params).then((res) => showMessage(res, false))
+  getInstance('/message', params)
 
 const markMessageAsRead = (
   params: MarkMessageAsReadRequest
-): Promise<MarkMessageAsReadResponse> =>
-  putInstance('/message', params).then((res) => showMessage(res))
+): Promise<MarkMessageAsReadResponse> => putInstance('/message', params)
 
 const getMessageStatics = (
   params: GetMessageStaticsRequest

@@ -2,7 +2,7 @@ import { Row, Col, Modal, Button, Tabs } from 'antd'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { MessageType } from '../../lib/model'
+import { MessageType, MessageCount } from '../../lib/model'
 import { getMessageStatics } from '../../lib/request'
 import MessageList from '../message/messageList'
 
@@ -30,18 +30,16 @@ export default function MessageModal({
   modal1Visible: boolean
   setModal1Visible: (modal1Visible: boolean) => void
 }) {
-  const [activeMarkAsRead, setActiveMarkAsRead] = useState<{
-    [key in MessageType]: number
-  }>({
+  const [activeMarkAsRead, setActiveMarkAsRead] = useState<MessageCount>({
     notification: 0,
     message: 0,
   })
-  const [unReadCount, setUnReadCount] = useState<{
-    [key in MessageType]: number
-  }>({
+
+  const [unReadCount, setUnReadCount] = useState<MessageCount>({
     notification: 0,
     message: 0,
   })
+
   const [messageType, setMessageType] = useState<MessageType>('notification')
 
   useEffect(() => {
@@ -104,6 +102,7 @@ export default function MessageModal({
           <MessageList
             messageType="notification"
             activeMarkAsRead={activeMarkAsRead.notification}
+            //activeMarkAsRead={activeMarkAsRead}
             setUnReadCount={setUnReadCount}
             unReadCount={unReadCount}
           />
@@ -112,6 +111,7 @@ export default function MessageModal({
           <MessageList
             messageType="message"
             activeMarkAsRead={activeMarkAsRead.message}
+            //activeMarkAsRead={activeMarkAsRead}
             setUnReadCount={setUnReadCount}
             unReadCount={unReadCount}
           />
