@@ -1,14 +1,40 @@
-import { List, Skeleton, Divider, Avatar } from 'antd'
+import { List, Skeleton, Divider, Avatar, message, Space } from 'antd'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Message, MessageType } from '../../lib/model'
 import { UserOutlined } from '@ant-design/icons'
-import { useEffect, useState } from 'react'
-import { getMessages } from '../../lib/request'
+import { useCallback, useEffect, useState } from 'react'
+import { getMessages, markMessageAsRead } from '../../lib/request'
+import { formatDistanceToNow } from 'date-fns'
+import styled from 'styled-components'
+
+const CustomList = styled(List)`
+  .ant-list-item {
+    padding-left: 16px;
+    cursor: pointer;
+    &:hover {
+      background: #1890ff45;
+    }
+  }
+`
 
 export default function MessageList({
   messageType,
+  activeMarkAsRead,
+  unReadCount,
+  setUnReadCount,
 }: {
   messageType: MessageType
+  activeMarkAsRead: number
+  unReadCount: {
+    [key in MessageType]: number
+  }
+  setUnReadCount: ({
+    notification,
+    message,
+  }: {
+    notification: number
+    message: number
+  }) => void
 }) {
   const [loading, setLoading] = useState(false)
   const [hasMore, setHasMore] = useState<boolean>(true)
@@ -48,6 +74,34 @@ export default function MessageList({
     loadMoreData()
   }, [])
 
+  const handleMarkMessageAsRead = useCallback(() => {
+    console.log(11111111111111)
+    // const ids = getUnreadIds()
+    let ids: number[] = []
+    getMessages({ type: messageType }).then((res) => {
+      if (res.data) {
+        console.log(res.data)
+        ids = res.data.messages
+          .filter((item) => item.status === 0)
+          .map((item) => item.id)
+      }
+    })
+    if (ids.length) {
+      markMessageAsRead({ ids, status: 1 }).then((res) => {
+        if (res.data) {
+          setData((pre) => pre.map((item) => ({ ...item, status: 1 })))
+          setUnReadCount({ ...unReadCount, [messageType]: 0 })
+        }
+      })
+    }
+  }, [messageType])
+
+  useEffect(() => {
+    if (activeMarkAsRead) {
+      handleMarkMessageAsRead()
+    }
+  }, [activeMarkAsRead, handleMarkMessageAsRead])
+
   return (
     <div
       id={messageType}
@@ -55,7 +109,7 @@ export default function MessageList({
         height: 400,
         overflowX: 'hidden',
         overflowY: 'auto',
-        padding: '0 16px',
+        paddingRight: 16,
       }}
     >
       <InfiniteScroll
@@ -66,10 +120,34 @@ export default function MessageList({
         endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}
         scrollableTarget={messageType}
       >
-        <List
-          dataSource={data}
-          renderItem={(item) => (
-            <List.Item key={item.id}>
+        <CustomList>
+          {data.map((item) => (
+            <List.Item
+              key={item.id}
+              style={{ opacity: item.status ? 0.6 : 1 }}
+              onClick={() => {
+                if (item.status === 1) {
+                  return
+                }
+                markMessageAsRead({ ids: [item.id], status: 1 }).then((res) => {
+                  if (res.data) {
+                    const newDate = [...data]
+                    const target = newDate.findIndex(
+                      (msg) => item.id === msg.id
+                    )
+                    if (target !== -1) {
+                      newDate[target].status = 1
+                    }
+                    setData(newDate)
+
+                    setUnReadCount({
+                      ...unReadCount,
+                      [messageType]: unReadCount[messageType] - 1,
+                    })
+                  }
+                })
+              }}
+            >
               <List.Item.Meta
                 avatar={<Avatar icon={<UserOutlined />} />}
                 title={item.from.nickname}
@@ -77,8 +155,8 @@ export default function MessageList({
               />
               {/* <div>Content</div> */}
             </List.Item>
-          )}
-        />
+          ))}
+        </CustomList>
       </InfiniteScroll>
     </div>
   )

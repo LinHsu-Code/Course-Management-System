@@ -1,7 +1,24 @@
-import { getInstance, showMessage } from './common'
-import { GetMessageRequest, GetMessageResponse } from '../model'
+import { getInstance, putInstance, showMessage } from './common'
+import {
+  GetMessageRequest,
+  GetMessageResponse,
+  MarkMessageAsReadRequest,
+  MarkMessageAsReadResponse,
+  GetMessageStaticsRequest,
+  GetMessageStaticsResponse,
+} from '../model'
 
 const getMessages = (params: GetMessageRequest): Promise<GetMessageResponse> =>
   getInstance('/message', params).then((res) => showMessage(res, false))
 
-export { getMessages }
+const markMessageAsRead = (
+  params: MarkMessageAsReadRequest
+): Promise<MarkMessageAsReadResponse> =>
+  putInstance('/message', params).then((res) => showMessage(res))
+
+const getMessageStatics = (
+  params: GetMessageStaticsRequest
+): Promise<GetMessageStaticsResponse> =>
+  getInstance('/message/statistics', params)
+
+export { getMessages, markMessageAsRead, getMessageStatics }

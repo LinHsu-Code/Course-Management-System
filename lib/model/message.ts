@@ -34,3 +34,24 @@ export interface GetMessageResponseData {
 }
 
 export type GetMessageResponse = Response<GetMessageResponseData>
+export interface MarkMessageAsReadRequest {
+  ids: number[]
+  status: 1
+}
+
+export type MarkMessageAsReadResponse = Response<boolean>
+
+export type GetMessageStaticsRequest = {
+  userId?: number
+}
+export interface MessageStaticsData {
+  sent: { [key in MessageType]: MessageStatics }
+  receive: { [key in MessageType]: MessageStatics }
+}
+export interface MessageStatics {
+  total: number
+  unread: number
+  read: number
+}
+
+export type GetMessageStaticsResponse = Response<MessageStaticsData>
