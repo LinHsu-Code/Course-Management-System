@@ -1,10 +1,10 @@
-import { Row, Col, Modal, Button, Tabs } from 'antd'
+import { Row, Col, Modal, Button, Tabs, notification } from 'antd'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { MessageTypes } from '../../lib/constants'
-import { MessageType, MessageCount } from '../../lib/model'
-import { getMessageStatics } from '../../lib/request'
+import { MessageType, MessageCount, Message } from '../../lib/model'
+import { getMessageStatics, subscribeMessage } from '../../lib/request'
 import MessageList from '../message/messageList'
 
 const { TabPane } = Tabs
@@ -35,13 +35,19 @@ export default function MessageModal({
     notification: 0,
     message: 0,
   })
-
   const [unReadCount, setUnReadCount] = useState<MessageCount>({
     notification: 0,
     message: 0,
   })
-
   const [messageType, setMessageType] = useState<MessageType>('notification')
+  //const [newMessage, setNewMessage] = useState<Message | null>(null)
+  const [newMessage, setNewMessage] = useState<{
+    notification: Message | null
+    message: Message | null
+  }>({
+    notification: null,
+    message: null,
+  })
 
   useEffect(() => {
     getMessageStatics({}).then((res) => {
@@ -52,6 +58,28 @@ export default function MessageModal({
         })
       }
     })
+
+    const sse = subscribeMessage()
+
+    sse.onmessage = (event) => {
+      const data = JSON.parse(event.data)
+      if (data.type !== 'heartbeat') {
+        const message = data.content as Message
+        notification.info({
+          message: `You have a ${message.type} from ${message.from.nickname}`,
+          description: message.content,
+        })
+
+        setNewMessage((pre) => ({
+          ...pre,
+          [message.type]: message,
+        }))
+        setUnReadCount((pre) => ({
+          ...pre,
+          [message.type]: pre[message.type] + 1,
+        }))
+      }
+    }
   }, [])
 
   return (
@@ -103,6 +131,7 @@ export default function MessageModal({
               activeMarkAsRead={activeMarkAsRead[item]}
               setUnReadCount={setUnReadCount}
               unReadCount={unReadCount[item]}
+              newMessage={newMessage[item]}
             />
           </TabPane>
         ))}

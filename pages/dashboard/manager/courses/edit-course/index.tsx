@@ -32,7 +32,7 @@ export default function Page() {
       </Head>
       <Row gutter={[16, 24]} style={{ paddingBottom: 16 }}>
         <Col span={12}>
-          <Input.Group compact size="large" style={{ display: 'flex' }}>
+          <Input.Group compact style={{ display: 'flex' }}>
             <Select
               defaultValue="uid"
               onChange={(value: CourseSearchBy) => setSearchBy(value)}

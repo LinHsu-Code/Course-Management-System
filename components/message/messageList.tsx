@@ -1,7 +1,7 @@
 import { List, Skeleton, Divider, Avatar } from 'antd'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Message, MessageType, MessageCount } from '../../lib/model'
-import { UserOutlined } from '@ant-design/icons'
+import { CodeSandboxCircleFilled, UserOutlined } from '@ant-design/icons'
 import {
   Dispatch,
   SetStateAction,
@@ -32,11 +32,13 @@ export default function MessageList({
   activeMarkAsRead,
   unReadCount,
   setUnReadCount,
+  newMessage,
 }: {
   messageType: MessageType
   activeMarkAsRead: number
   unReadCount: number
   setUnReadCount: Dispatch<SetStateAction<MessageCount>>
+  newMessage: Message | null
 }) {
   const [loading, setLoading] = useState(false)
   const [hasMore, setHasMore] = useState<boolean>(true)
@@ -44,6 +46,7 @@ export default function MessageList({
   const [data, setData] = useState<Message[]>([])
 
   const loadMoreData = (
+    isRest: boolean = false,
     page: number = nextPage,
     type: MessageType = messageType,
     limit: number = 20
@@ -59,12 +62,16 @@ export default function MessageList({
     })
       .then((res) => {
         if (res.data) {
-          setData([...data, ...res.data.messages])
+          if (isRest) {
+            setData(res.data.messages)
+          } else {
+            setData([...data, ...res.data.messages])
+          }
           setLoading(false)
-          if (res.data.total <= nextPage * 20) {
+          if (res.data.total <= page * 20) {
             setHasMore(false)
           }
-          setNextPage(nextPage + 1)
+          setNextPage(page + 1)
         }
       })
       .catch(() => {
@@ -75,6 +82,20 @@ export default function MessageList({
   useEffect(() => {
     loadMoreData()
   }, [])
+
+  // list didn't re-render after data changed
+  // infinite scroll => same message => same key error
+  // useEffect(() => {
+  //   if (newMessage) {
+  //     setData((pre) => [...pre, newMessage])
+  //   }
+  // }, [newMessage])
+
+  useEffect(() => {
+    if (newMessage) {
+      loadMoreData(true, 1)
+    }
+  }, [newMessage])
 
   // const handleMarkMessageAsRead = () => {
   //   getMessages({ status: 0,
