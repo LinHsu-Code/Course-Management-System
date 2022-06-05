@@ -1,7 +1,7 @@
-import { List, Skeleton, Divider, Avatar, Typography } from 'antd'
+import { List, Skeleton, Divider, Avatar, Typography, Row, Col } from 'antd'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Message, MessageType, MessageHistory } from '../../lib/model'
-import { UserOutlined } from '@ant-design/icons'
+import { AlertOutlined, MessageOutlined, UserOutlined } from '@ant-design/icons'
 import { useEffect, useState } from 'react'
 import { getMessages, markMessageAsRead } from '../../lib/request'
 import { formatDistanceToNow } from 'date-fns'
@@ -94,7 +94,7 @@ export default function MessageHistoryList({
         endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}
         scrollableTarget="scrollableDiv"
       >
-        <List>
+        <List itemLayout="vertical">
           {Object.entries(data).map(([date, messages]: [string, Message[]]) => (
             <div key={`Date:${date}`}>
               <Title level={4}>{date}</Title>
@@ -102,6 +102,7 @@ export default function MessageHistoryList({
                 <List.Item
                   key={item.id}
                   style={{ opacity: item.status ? 0.6 : 1 }}
+                  actions={[<div key="time">{item.createdAt}</div>]}
                   onClick={() => {
                     if (item.status === 1) {
                       return
@@ -125,17 +126,21 @@ export default function MessageHistoryList({
                 >
                   <List.Item.Meta
                     avatar={<Avatar icon={<UserOutlined />} />}
-                    title={item.from.nickname}
-                    description={
-                      <div>
-                        <div style={{ marginTop: 5 }}>{item.content}</div>
-                        <div style={{ marginTop: 5 }}>
-                          {formatDistanceToNow(new Date(item.createdAt), {
-                            addSuffix: true,
-                          })}
-                        </div>
-                      </div>
+                    title={
+                      <Row>
+                        <Col style={{ marginRight: 'auto' }}>
+                          {item.from.nickname}
+                        </Col>
+                        <Col>
+                          {item.type === 'notification' ? (
+                            <AlertOutlined />
+                          ) : (
+                            <MessageOutlined />
+                          )}
+                        </Col>
+                      </Row>
                     }
+                    description={item.content}
                   />
                 </List.Item>
               ))}
