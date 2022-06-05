@@ -19,7 +19,7 @@ import styled from 'styled-components'
 
 const CustomList = styled(List)`
   .ant-list-item {
-    padding-left: 16px;
+    padding: 10px 16px;
     cursor: pointer;
     &:hover {
       background: #1890ff45;
@@ -46,7 +46,7 @@ export default function MessageList({
   const [data, setData] = useState<Message[]>([])
 
   const loadMoreData = (
-    isRest: boolean = false,
+    isReset: boolean = false,
     page: number = nextPage,
     type: MessageType = messageType,
     limit: number = 20
@@ -62,7 +62,7 @@ export default function MessageList({
     })
       .then((res) => {
         if (res.data) {
-          if (isRest) {
+          if (isReset) {
             setData(res.data.messages)
           } else {
             setData([...data, ...res.data.messages])
@@ -205,9 +205,17 @@ export default function MessageList({
               <List.Item.Meta
                 avatar={<Avatar icon={<UserOutlined />} />}
                 title={item.from.nickname}
-                description={item.content}
+                description={
+                  <div>
+                    <div style={{ marginTop: 5 }}>{item.content}</div>
+                    <div style={{ marginTop: 5 }}>
+                      {formatDistanceToNow(new Date(item.createdAt), {
+                        addSuffix: true,
+                      })}
+                    </div>
+                  </div>
+                }
               />
-              {/* <div>Content</div> */}
             </List.Item>
           ))}
         </CustomList>
