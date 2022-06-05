@@ -4,21 +4,9 @@ import { Message, MessageType, MessageHistory } from '../../lib/model'
 import { AlertOutlined, MessageOutlined, UserOutlined } from '@ant-design/icons'
 import { useEffect, useState } from 'react'
 import { getMessages, markMessageAsRead } from '../../lib/request'
-import { formatDistanceToNow } from 'date-fns'
-import styled from 'styled-components'
 import { format } from 'date-fns'
 
 const { Title } = Typography
-
-const CustomList = styled(List)`
-  .ant-list-item {
-    padding: 10px 16px;
-    cursor: pointer;
-    &:hover {
-      background: #1890ff45;
-    }
-  }
-`
 
 export default function MessageHistoryList({
   messageType,
@@ -110,15 +98,17 @@ export default function MessageHistoryList({
                     markMessageAsRead({ ids: [item.id], status: 1 }).then(
                       (res) => {
                         if (res.data) {
-                          // const target = data.findIndex((msg) => item.id === msg.id)
-                          // if (target !== -1) {
-                          //   data[target].status = 1
-                          // }
-                          // setData(data)
-                          // setUnReadCount((pre) => ({
-                          //   ...pre,
-                          //   [messageType]: unReadCount - 1,
-                          // }))
+                          const dayMessages = Object.entries(data)
+                          for (let i = 0; i < dayMessages.length; i++) {
+                            const targetIndex = dayMessages[i][1].findIndex(
+                              (msg) => item.id === msg.id
+                            )
+                            if (targetIndex !== -1) {
+                              data[dayMessages[i][0]][targetIndex].status = 1
+                              setData({ ...data })
+                              break
+                            }
+                          }
                         }
                       }
                     )

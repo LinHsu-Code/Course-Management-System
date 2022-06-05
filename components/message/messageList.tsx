@@ -188,11 +188,13 @@ export default function MessageList({
                 }
                 markMessageAsRead({ ids: [item.id], status: 1 }).then((res) => {
                   if (res.data) {
-                    const target = data.findIndex((msg) => item.id === msg.id)
-                    if (target !== -1) {
-                      data[target].status = 1
+                    const targetIndex = data.findIndex(
+                      (msg) => item.id === msg.id
+                    )
+                    if (targetIndex !== -1) {
+                      data[targetIndex].status = 1
                     }
-                    setData(data)
+                    setData([...data])
 
                     setUnReadCount((pre) => ({
                       ...pre,

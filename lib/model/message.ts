@@ -60,5 +60,4 @@ export type MessageCount = {
   [key in MessageType]: number
 }
 
-//export type MessageHistory = [string, Message[]][]
 export type MessageHistory = { [key: string]: Message[] }
