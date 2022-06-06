@@ -9,7 +9,6 @@ import { MessageCount, Role } from '../lib/model'
 export const siteTitle = 'custom-title'
 
 function MyApp({ Component, pageProps }: AppProps) {
-  console.log(pageProps)
   const [loading, setLoading] = useState(true)
   const [unReadCount, setUnReadCount] = useState<MessageCount>({
     notification: 0,
@@ -35,7 +34,11 @@ function MyApp({ Component, pageProps }: AppProps) {
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
       {/message$/.test(path) ? (
-        <Component {...pageProps} setUnReadCount={setUnReadCount} />
+        <Component
+          {...pageProps}
+          unReadCount={unReadCount}
+          setUnReadCount={setUnReadCount}
+        />
       ) : (
         <Component {...pageProps} />
       )}

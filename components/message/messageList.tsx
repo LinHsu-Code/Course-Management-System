@@ -79,9 +79,10 @@ export default function MessageList({
       })
   }
 
-  useEffect(() => {
-    loadMoreData()
-  }, [])
+  // why don't need this effect
+  // useEffect(() => {
+  //   loadMoreData()
+  // }, [])
 
   // list didn't re-render after data changed
   // infinite scroll => same message => same key error
@@ -93,9 +94,13 @@ export default function MessageList({
 
   useEffect(() => {
     if (newMessage) {
-      loadMoreData(true, 1)
+      setUnReadCount((pre) => ({ ...pre, [messageType]: pre[messageType] + 1 }))
     }
-  }, [newMessage])
+  }, [messageType, newMessage, setUnReadCount])
+
+  useEffect(() => {
+    loadMoreData(true, 1)
+  }, [unReadCount])
 
   // const handleMarkMessageAsRead = () => {
   //   getMessages({ status: 0,
@@ -188,14 +193,6 @@ export default function MessageList({
                 }
                 markMessageAsRead({ ids: [item.id], status: 1 }).then((res) => {
                   if (res.data) {
-                    const targetIndex = data.findIndex(
-                      (msg) => item.id === msg.id
-                    )
-                    if (targetIndex !== -1) {
-                      data[targetIndex].status = 1
-                    }
-                    setData([...data])
-
                     setUnReadCount((pre) => ({
                       ...pre,
                       [messageType]: unReadCount - 1,

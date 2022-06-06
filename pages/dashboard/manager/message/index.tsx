@@ -8,8 +8,10 @@ import { MessageTypes } from '../../../../lib/constants'
 const { Title } = Typography
 
 export default function Page({
+  unReadCount,
   setUnReadCount,
 }: {
+  unReadCount: MessageCount
   setUnReadCount: Dispatch<SetStateAction<MessageCount>>
 }) {
   const [messageType, setMessageType] = useState<MessageType | ''>('')
@@ -43,6 +45,11 @@ export default function Page({
         <Row>
           <MessageHistoryList
             messageType={messageType}
+            unReadCount={
+              messageType === ''
+                ? unReadCount.notification + unReadCount.notification
+                : unReadCount[messageType]
+            }
             setUnReadCount={setUnReadCount}
           />
         </Row>

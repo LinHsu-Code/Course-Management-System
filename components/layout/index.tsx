@@ -104,7 +104,7 @@ export default function DashboardLayout({
 
             <Col onClick={() => setModal1Visible(true)}>
               <Badge
-                count={unReadCount.message + unReadCount.notification}
+                count={unReadCount.notification + unReadCount.message}
                 offset={[-30, 18]}
                 size="small"
               >

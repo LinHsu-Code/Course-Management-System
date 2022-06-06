@@ -15,9 +15,11 @@ const { Title } = Typography
 
 export default function MessageHistoryList({
   messageType,
+  unReadCount,
   setUnReadCount,
 }: {
   messageType: MessageType | ''
+  unReadCount: number
   setUnReadCount: Dispatch<SetStateAction<MessageCount>>
 }) {
   const [loading, setLoading] = useState(false)
@@ -73,7 +75,7 @@ export default function MessageHistoryList({
 
   useEffect(() => {
     loadMoreData(true, 1)
-  }, [messageType])
+  }, [messageType, unReadCount])
 
   return (
     <div
@@ -105,17 +107,6 @@ export default function MessageHistoryList({
                     markMessageAsRead({ ids: [item.id], status: 1 }).then(
                       (res) => {
                         if (res.data) {
-                          const dayMessages = Object.entries(data)
-                          for (let i = 0; i < dayMessages.length; i++) {
-                            const targetIndex = dayMessages[i][1].findIndex(
-                              (msg) => item.id === msg.id
-                            )
-                            if (targetIndex !== -1) {
-                              data[dayMessages[i][0]][targetIndex].status = 1
-                              setData({ ...data })
-                              break
-                            }
-                          }
                           setUnReadCount((pre) => ({
                             ...pre,
                             [item.type]: pre[item.type] - 1,
