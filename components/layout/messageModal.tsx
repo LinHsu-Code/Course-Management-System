@@ -39,10 +39,6 @@ export default function MessageModal({
     notification: 0,
     message: 0,
   })
-  // const [unReadCount, setUnReadCount] = useState<MessageCount>({
-  //   notification: 0,
-  //   message: 0,
-  // })
   const [messageType, setMessageType] = useState<MessageType>('notification')
   const [newMessage, setNewMessage] = useState<{
     notification: Message | null

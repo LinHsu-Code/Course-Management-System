@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Layout, Menu, Row, Col, Avatar } from 'antd'
+import { Layout, Menu, Row, Col, Avatar, Badge } from 'antd'
 import {
   LogoutOutlined,
   MenuUnfoldOutlined,
@@ -103,10 +103,13 @@ export default function DashboardLayout({
             </Col>
 
             <Col onClick={() => setModal1Visible(true)}>
-              <Avatar icon={<BellOutlined />} className={styles.avatar} />
-              <span style={{ color: 'white' }}>
-                {unReadCount.message + unReadCount.notification}
-              </span>
+              <Badge
+                count={unReadCount.message + unReadCount.notification}
+                offset={[-30, 18]}
+                size="small"
+              >
+                <BellOutlined className={styles.messageBell} />
+              </Badge>
             </Col>
 
             <Col
