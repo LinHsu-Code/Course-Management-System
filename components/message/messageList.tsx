@@ -1,7 +1,7 @@
 import { List, Skeleton, Divider, Avatar } from 'antd'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Message, MessageType, MessageCount } from '../../lib/model'
-import { CodeSandboxCircleFilled, UserOutlined } from '@ant-design/icons'
+import { UserOutlined } from '@ant-design/icons'
 import {
   Dispatch,
   SetStateAction,

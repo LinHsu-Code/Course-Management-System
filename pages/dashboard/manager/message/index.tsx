@@ -1,13 +1,17 @@
 import Head from 'next/head'
 import MessageHistoryList from '../../../../components/message/messageHistoryList'
 import { Row, Col, Select, Typography } from 'antd'
-import { MessageType } from '../../../../lib/model'
-import { useState } from 'react'
+import { MessageCount, MessageType } from '../../../../lib/model'
+import { Dispatch, SetStateAction, useState } from 'react'
 import { MessageTypes } from '../../../../lib/constants'
 
 const { Title } = Typography
 
-export default function Page() {
+export default function Page({
+  setUnReadCount,
+}: {
+  setUnReadCount: Dispatch<SetStateAction<MessageCount>>
+}) {
   const [messageType, setMessageType] = useState<MessageType | ''>('')
   return (
     <>
@@ -37,7 +41,10 @@ export default function Page() {
           </Col>
         </Row>
         <Row>
-          <MessageHistoryList messageType={messageType} />
+          <MessageHistoryList
+            messageType={messageType}
+            setUnReadCount={setUnReadCount}
+          />
         </Row>
       </div>
     </>

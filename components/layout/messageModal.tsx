@@ -1,6 +1,6 @@
 import { Row, Col, Modal, Button, Tabs, notification } from 'antd'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { MessageTypes } from '../../lib/constants'
 import { MessageType, MessageCount, Message } from '../../lib/model'
@@ -27,20 +27,23 @@ const CustomModal = styled(Modal)`
 export default function MessageModal({
   modal1Visible,
   setModal1Visible,
+  unReadCount,
+  setUnReadCount,
 }: {
   modal1Visible: boolean
   setModal1Visible: (modal1Visible: boolean) => void
+  unReadCount: MessageCount
+  setUnReadCount: Dispatch<SetStateAction<MessageCount>>
 }) {
   const [activeMarkAsRead, setActiveMarkAsRead] = useState<MessageCount>({
     notification: 0,
     message: 0,
   })
-  const [unReadCount, setUnReadCount] = useState<MessageCount>({
-    notification: 0,
-    message: 0,
-  })
+  // const [unReadCount, setUnReadCount] = useState<MessageCount>({
+  //   notification: 0,
+  //   message: 0,
+  // })
   const [messageType, setMessageType] = useState<MessageType>('notification')
-  //const [newMessage, setNewMessage] = useState<Message | null>(null)
   const [newMessage, setNewMessage] = useState<{
     notification: Message | null
     message: Message | null

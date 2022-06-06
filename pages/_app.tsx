@@ -4,12 +4,17 @@ import type { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import DashboardLayout from '../components/layout'
-import { Role } from '../lib/model'
+import { MessageCount, Role } from '../lib/model'
 
 export const siteTitle = 'custom-title'
 
 function MyApp({ Component, pageProps }: AppProps) {
+  console.log(pageProps)
   const [loading, setLoading] = useState(true)
+  const [unReadCount, setUnReadCount] = useState<MessageCount>({
+    notification: 0,
+    message: 0,
+  })
   const router = useRouter()
   const path = router.pathname
   const content = (
@@ -29,7 +34,11 @@ function MyApp({ Component, pageProps }: AppProps) {
         <meta name="og:title" content={siteTitle} />
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
-      <Component {...pageProps} />
+      {/message$/.test(path) ? (
+        <Component {...pageProps} setUnReadCount={setUnReadCount} />
+      ) : (
+        <Component {...pageProps} />
+      )}
     </>
   )
 
@@ -62,7 +71,9 @@ function MyApp({ Component, pageProps }: AppProps) {
   return loading ? (
     <div>loading...</div>
   ) : /dashboard/.test(path) ? (
-    <DashboardLayout>{content}</DashboardLayout>
+    <DashboardLayout unReadCount={unReadCount} setUnReadCount={setUnReadCount}>
+      {content}
+    </DashboardLayout>
   ) : (
     content
   )

@@ -1,8 +1,13 @@
 import { List, Skeleton, Divider, Avatar, Typography, Row, Col } from 'antd'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { Message, MessageType, MessageHistory } from '../../lib/model'
+import {
+  Message,
+  MessageType,
+  MessageHistory,
+  MessageCount,
+} from '../../lib/model'
 import { AlertOutlined, MessageOutlined, UserOutlined } from '@ant-design/icons'
-import { useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { getMessages, markMessageAsRead } from '../../lib/request'
 import { format } from 'date-fns'
 
@@ -10,8 +15,10 @@ const { Title } = Typography
 
 export default function MessageHistoryList({
   messageType,
+  setUnReadCount,
 }: {
   messageType: MessageType | ''
+  setUnReadCount: Dispatch<SetStateAction<MessageCount>>
 }) {
   const [loading, setLoading] = useState(false)
   const [hasMore, setHasMore] = useState<boolean>(true)
@@ -109,6 +116,10 @@ export default function MessageHistoryList({
                               break
                             }
                           }
+                          setUnReadCount((pre) => ({
+                            ...pre,
+                            [item.type]: pre[item.type] - 1,
+                          }))
                         }
                       }
                     )

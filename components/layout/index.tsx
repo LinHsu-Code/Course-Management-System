@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Layout, Menu, Row, Col, Avatar } from 'antd'
 import {
@@ -15,15 +15,19 @@ import { ROUTES } from '../../lib/constants'
 import SideMenu from './sideMenu'
 import { bfsOne } from '../../lib/util'
 import Breadcrumb from './breadcrumb'
-import { Role } from '../../lib/model'
+import { MessageCount, Role } from '../../lib/model'
 import MessageModal from './messageModal'
 
 const { Header, Content, Sider } = Layout
 
 export default function DashboardLayout({
   children,
+  unReadCount,
+  setUnReadCount,
 }: {
   children: React.ReactNode
+  unReadCount: MessageCount
+  setUnReadCount: Dispatch<SetStateAction<MessageCount>>
 }) {
   const router = useRouter()
   const paths = router.pathname.split('/')
@@ -100,6 +104,9 @@ export default function DashboardLayout({
 
             <Col onClick={() => setModal1Visible(true)}>
               <Avatar icon={<BellOutlined />} className={styles.avatar} />
+              <span style={{ color: 'white' }}>
+                {unReadCount.message + unReadCount.notification}
+              </span>
             </Col>
 
             <Col
@@ -121,6 +128,8 @@ export default function DashboardLayout({
           <MessageModal
             modal1Visible={modal1Visible}
             setModal1Visible={setModal1Visible}
+            unReadCount={unReadCount}
+            setUnReadCount={setUnReadCount}
           />
         </Header>
 
