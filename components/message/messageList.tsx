@@ -45,12 +45,7 @@ export default function MessageList({
   const [nextPage, setNextPage] = useState<number>(1)
   const [data, setData] = useState<Message[]>([])
 
-  const loadMoreData = (
-    isReset: boolean = false,
-    page: number = nextPage,
-    type: MessageType = messageType,
-    limit: number = 20
-  ) => {
+  const loadMoreData = useCallback((isReset, page, type, limit) => {
     if (loading) {
       return
     }
@@ -65,7 +60,7 @@ export default function MessageList({
           if (isReset) {
             setData(res.data.messages)
           } else {
-            setData([...data, ...res.data.messages])
+            setData((pre) => [...pre, ...res.data.messages])
           }
           setLoading(false)
           if (res.data.total <= page * 20) {
@@ -77,20 +72,7 @@ export default function MessageList({
       .catch(() => {
         setLoading(false)
       })
-  }
-
-  // why don't need this effect
-  // useEffect(() => {
-  //   loadMoreData()
-  // }, [])
-
-  // list didn't re-render after data changed
-  // infinite scroll => same message => same key error
-  // useEffect(() => {
-  //   if (newMessage) {
-  //     setData((pre) => [...pre, newMessage])
-  //   }
-  // }, [newMessage])
+  }, [])
 
   useEffect(() => {
     if (newMessage) {
@@ -99,37 +81,8 @@ export default function MessageList({
   }, [messageType, newMessage, setUnReadCount])
 
   useEffect(() => {
-    loadMoreData(true, 1)
-  }, [unReadCount])
-
-  // const handleMarkMessageAsRead = () => {
-  //   getMessages({ status: 0,
-  //     type: messageType,
-  //     limit: unReadCount}).then((res) => {
-  //     if (res.data) {
-  //       console.log(res.data)
-  //       const ids = res.data.messages
-  //         .filter((item) => item.status === 0)
-  //         .map((item) => item.id)
-
-  //       console.log(ids)
-  //       if (ids.length) {
-  //         markMessageAsRead({ ids, status: 1 }).then((res) => {
-  //           if (res.data) {
-  //             setData((pre) => pre.map((item) => ({ ...item, status: 1 })))
-  //             setUnReadCount((pre) => ({ ...pre, [messageType]: 0 }))
-  //           }
-  //         })
-  //       }
-  //     }
-  //   })
-  // }
-
-  // useEffect(() => {
-  //   if (activeMarkAsRead) {
-  //     handleMarkMessageAsRead()
-  //   }
-  // }, [activeMarkAsRead])
+    loadMoreData(true, 1, messageType, 20)
+  }, [loadMoreData, messageType, unReadCount])
 
   const handleMarkMessageAsRead = useCallback(() => {
     getMessageStatics({}).then((res) => {
@@ -176,7 +129,7 @@ export default function MessageList({
     >
       <InfiniteScroll
         dataLength={data.length}
-        next={loadMoreData}
+        next={() => loadMoreData(false, nextPage, messageType, 20)}
         hasMore={hasMore}
         loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
         endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}
