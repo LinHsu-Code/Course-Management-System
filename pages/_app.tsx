@@ -2,18 +2,17 @@ import '../styles/globals.scss'
 import Head from 'next/head'
 import type { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useEffect, useReducer, useState } from 'react'
 import DashboardLayout from '../components/layout'
-import { MessageCount, Role } from '../lib/model'
+import { Role } from '../lib/model'
+import MessageContext from '../providers/messageContext'
+import { messageReducer, store } from '../providers/messageReducer'
 
 export const siteTitle = 'custom-title'
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [loading, setLoading] = useState(true)
-  const [unReadCount, setUnReadCount] = useState<MessageCount>({
-    notification: 0,
-    message: 0,
-  })
+  const [state, dispatch] = useReducer(messageReducer, store)
   const router = useRouter()
   const path = router.pathname
   const content = (
@@ -33,15 +32,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <meta name="og:title" content={siteTitle} />
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
-      {/message$/.test(path) ? (
-        <Component
-          {...pageProps}
-          unReadCount={unReadCount}
-          setUnReadCount={setUnReadCount}
-        />
-      ) : (
-        <Component {...pageProps} />
-      )}
+      <Component {...pageProps} />
     </>
   )
 
@@ -74,9 +65,14 @@ function MyApp({ Component, pageProps }: AppProps) {
   return loading ? (
     <div>loading...</div>
   ) : /dashboard/.test(path) ? (
-    <DashboardLayout unReadCount={unReadCount} setUnReadCount={setUnReadCount}>
-      {content}
-    </DashboardLayout>
+    <MessageContext.Provider
+      value={{
+        state,
+        dispatch,
+      }}
+    >
+      <DashboardLayout>{content}</DashboardLayout>
+    </MessageContext.Provider>
   ) : (
     content
   )

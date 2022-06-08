@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Layout, Menu, Row, Col, Avatar, Badge } from 'antd'
 import {
@@ -15,19 +15,16 @@ import { ROUTES } from '../../lib/constants'
 import SideMenu from './sideMenu'
 import { bfsOne } from '../../lib/util'
 import Breadcrumb from './breadcrumb'
-import { MessageCount, Role } from '../../lib/model'
+import { Role } from '../../lib/model'
 import MessageModal from './messageModal'
+import MessageContext from '../../providers/messageContext'
 
 const { Header, Content, Sider } = Layout
 
 export default function DashboardLayout({
   children,
-  unReadCount,
-  setUnReadCount,
 }: {
   children: React.ReactNode
-  unReadCount: MessageCount
-  setUnReadCount: Dispatch<SetStateAction<MessageCount>>
 }) {
   const router = useRouter()
   const paths = router.pathname.split('/')
@@ -46,6 +43,10 @@ export default function DashboardLayout({
   const [logoutMenu, setLogoutMenu] = useState(false)
   const [openKeys, setOpenKeys] = useState<string[]>([])
   const [modal1Visible, setModal1Visible] = useState(false)
+
+  const {
+    state: { unread },
+  } = useContext(MessageContext)
 
   const breadcrumbDate = nav
     ? page === '[id]'
@@ -104,7 +105,7 @@ export default function DashboardLayout({
 
             <Col onClick={() => setModal1Visible(true)}>
               <Badge
-                count={unReadCount.notification + unReadCount.message}
+                count={unread.notification + unread.message}
                 offset={[-30, 18]}
                 size="small"
               >
@@ -131,8 +132,6 @@ export default function DashboardLayout({
           <MessageModal
             modal1Visible={modal1Visible}
             setModal1Visible={setModal1Visible}
-            unReadCount={unReadCount}
-            setUnReadCount={setUnReadCount}
           />
         </Header>
 

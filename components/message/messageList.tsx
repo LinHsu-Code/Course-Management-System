@@ -1,14 +1,8 @@
 import { List, Skeleton, Divider, Avatar } from 'antd'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { Message, MessageType, MessageCount } from '../../lib/model'
+import { Message, MessageType } from '../../lib/model'
 import { UserOutlined } from '@ant-design/icons'
-import {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react'
+import { useCallback, useContext, useEffect, useState } from 'react'
 import {
   getMessages,
   getMessageStatics,
@@ -16,6 +10,7 @@ import {
 } from '../../lib/request'
 import { formatDistanceToNow } from 'date-fns'
 import styled from 'styled-components'
+import MessageContext from '../../providers/messageContext'
 
 const CustomList = styled(List)`
   .ant-list-item {
@@ -30,20 +25,18 @@ const CustomList = styled(List)`
 export default function MessageList({
   messageType,
   activeMarkAsRead,
-  unReadCount,
-  setUnReadCount,
-  newMessage,
 }: {
   messageType: MessageType
   activeMarkAsRead: number
-  unReadCount: number
-  setUnReadCount: Dispatch<SetStateAction<MessageCount>>
-  newMessage: Message | null
 }) {
   const [loading, setLoading] = useState(false)
   const [hasMore, setHasMore] = useState<boolean>(true)
   const [nextPage, setNextPage] = useState<number>(1)
   const [data, setData] = useState<Message[]>([])
+  const {
+    state: { newMessage, markedIds },
+    dispatch,
+  } = useContext(MessageContext)
 
   const loadMoreData = useCallback((isReset, page, type, limit) => {
     if (loading) {
@@ -75,14 +68,35 @@ export default function MessageList({
   }, [])
 
   useEffect(() => {
-    if (newMessage) {
-      setUnReadCount((pre) => ({ ...pre, [messageType]: pre[messageType] + 1 }))
+    if (newMessage && newMessage.type === messageType)
+      setData((pre) => [newMessage, ...pre])
+  }, [newMessage, messageType])
+
+  useEffect(() => {
+    if (
+      markedIds &&
+      markedIds.page &&
+      markedIds.page.messageType === messageType
+    ) {
+      setData((pre) => {
+        const newData = [...pre]
+        markedIds.page.ids.forEach((id) => {
+          for (let message of newData) {
+            if (message.id === id) {
+              message.status = 1
+              break
+            }
+          }
+        })
+        return [...newData]
+      })
+      dispatch({ type: 'RESET_MARK_AS_READ' })
     }
-  }, [messageType, newMessage, setUnReadCount])
+  }, [dispatch, markedIds, messageType])
 
   useEffect(() => {
     loadMoreData(true, 1, messageType, 20)
-  }, [loadMoreData, messageType, unReadCount])
+  }, [loadMoreData, messageType])
 
   const handleMarkMessageAsRead = useCallback(() => {
     getMessageStatics({}).then((res) => {
@@ -101,7 +115,21 @@ export default function MessageList({
               markMessageAsRead({ ids, status: 1 }).then((res) => {
                 if (res.data) {
                   setData((pre) => pre.map((item) => ({ ...item, status: 1 })))
-                  setUnReadCount((pre) => ({ ...pre, [messageType]: 0 }))
+
+                  dispatch({
+                    type: 'MARK_AS_READ',
+                    payload: {
+                      modal: { ids, messageType },
+                    },
+                  })
+
+                  dispatch({
+                    type: 'UNREAD_COUNT_DECREMENT',
+                    payload: {
+                      messageType,
+                      count: ids.length,
+                    },
+                  })
                 }
               })
             }
@@ -109,7 +137,7 @@ export default function MessageList({
         })
       }
     })
-  }, [messageType, setUnReadCount])
+  }, [messageType])
 
   useEffect(() => {
     if (activeMarkAsRead) {
@@ -146,10 +174,28 @@ export default function MessageList({
                 }
                 markMessageAsRead({ ids: [item.id], status: 1 }).then((res) => {
                   if (res.data) {
-                    setUnReadCount((pre) => ({
-                      ...pre,
-                      [messageType]: unReadCount - 1,
-                    }))
+                    const targetIndex = data.findIndex(
+                      (msg) => item.id === msg.id
+                    )
+                    if (targetIndex !== -1) {
+                      data[targetIndex].status = 1
+                    }
+                    setData([...data])
+
+                    dispatch({
+                      type: 'MARK_AS_READ',
+                      payload: {
+                        modal: { ids: [item.id], messageType },
+                      },
+                    })
+
+                    dispatch({
+                      type: 'UNREAD_COUNT_DECREMENT',
+                      payload: {
+                        messageType,
+                        count: 1,
+                      },
+                    })
                   }
                 })
               }}

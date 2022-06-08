@@ -1,31 +1,27 @@
 import { List, Skeleton, Divider, Avatar, Typography, Row, Col } from 'antd'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import {
-  Message,
-  MessageType,
-  MessageHistory,
-  MessageCount,
-} from '../../lib/model'
+import { Message, MessageType, MessageHistory } from '../../lib/model'
 import { AlertOutlined, MessageOutlined, UserOutlined } from '@ant-design/icons'
-import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { getMessages, markMessageAsRead } from '../../lib/request'
 import { format } from 'date-fns'
+import MessageContext from '../../providers/messageContext'
 
 const { Title } = Typography
 
 export default function MessageHistoryList({
   messageType,
-  unReadCount,
-  setUnReadCount,
 }: {
   messageType: MessageType | ''
-  unReadCount: number
-  setUnReadCount: Dispatch<SetStateAction<MessageCount>>
 }) {
   const [loading, setLoading] = useState(false)
   const [hasMore, setHasMore] = useState<boolean>(true)
   const [nextPage, setNextPage] = useState<number>(1)
   const [data, setData] = useState<MessageHistory>({})
+  const {
+    state: { newMessage, markedIds },
+    dispatch,
+  } = useContext(MessageContext)
 
   const loadMoreData = (
     isReset: boolean = false,
@@ -75,7 +71,50 @@ export default function MessageHistoryList({
 
   useEffect(() => {
     loadMoreData(true, 1)
-  }, [messageType, unReadCount])
+  }, [messageType])
+
+  const [lastNewMessageId, setLastNewMessageId] = useState(0)
+  useEffect(() => {
+    if (
+      newMessage &&
+      newMessage.id !== lastNewMessageId &&
+      (!messageType || newMessage.type === messageType)
+    ) {
+      const key: string = format(new Date(newMessage.createdAt), 'yyyy-MM-dd')
+      setData((pre) => {
+        return { ...pre, [key]: [newMessage, ...pre[key]] }
+      })
+      setLastNewMessageId(newMessage.id)
+    }
+  }, [newMessage, messageType, lastNewMessageId])
+
+  useEffect(() => {
+    if (
+      markedIds &&
+      markedIds.modal &&
+      (!messageType || markedIds.modal.messageType === messageType)
+    ) {
+      setData((pre) => {
+        const newData = { ...pre }
+        markedIds.modal.ids.forEach((id) => {
+          let flag = false
+          for (let data in newData) {
+            if (flag) {
+              break
+            }
+            for (let message of newData[data])
+              if (message.id === id) {
+                message.status = 1
+                flag = true
+                break
+              }
+          }
+        })
+        return { ...newData }
+      })
+      dispatch({ type: 'RESET_MARK_AS_READ' })
+    }
+  }, [dispatch, markedIds, messageType])
 
   return (
     <div
@@ -107,10 +146,32 @@ export default function MessageHistoryList({
                     markMessageAsRead({ ids: [item.id], status: 1 }).then(
                       (res) => {
                         if (res.data) {
-                          setUnReadCount((pre) => ({
-                            ...pre,
-                            [item.type]: pre[item.type] - 1,
-                          }))
+                          const dayMessages = Object.entries(data)
+                          for (let i = 0; i < dayMessages.length; i++) {
+                            const targetIndex = dayMessages[i][1].findIndex(
+                              (msg) => item.id === msg.id
+                            )
+                            if (targetIndex !== -1) {
+                              data[dayMessages[i][0]][targetIndex].status = 1
+                              setData({ ...data })
+                              break
+                            }
+                          }
+
+                          dispatch({
+                            type: 'MARK_AS_READ',
+                            payload: {
+                              page: { ids: [item.id], messageType: item.type },
+                            },
+                          })
+
+                          dispatch({
+                            type: 'UNREAD_COUNT_DECREMENT',
+                            payload: {
+                              messageType: item.type,
+                              count: 1,
+                            },
+                          })
                         }
                       }
                     )

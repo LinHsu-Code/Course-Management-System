@@ -1,10 +1,11 @@
 import { Row, Col, Modal, Button, Tabs, notification } from 'antd'
 import Link from 'next/link'
-import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { MessageTypes } from '../../lib/constants'
 import { MessageType, MessageCount, Message } from '../../lib/model'
 import { getMessageStatics, subscribeMessage } from '../../lib/request'
+import MessageContext from '../../providers/messageContext'
 import MessageList from '../message/messageList'
 
 const { TabPane } = Tabs
@@ -27,33 +28,36 @@ const CustomModal = styled(Modal)`
 export default function MessageModal({
   modal1Visible,
   setModal1Visible,
-  unReadCount,
-  setUnReadCount,
 }: {
   modal1Visible: boolean
   setModal1Visible: (modal1Visible: boolean) => void
-  unReadCount: MessageCount
-  setUnReadCount: Dispatch<SetStateAction<MessageCount>>
 }) {
   const [activeMarkAsRead, setActiveMarkAsRead] = useState<MessageCount>({
     notification: 0,
     message: 0,
   })
   const [messageType, setMessageType] = useState<MessageType>('notification')
-  const [newMessage, setNewMessage] = useState<{
-    notification: Message | null
-    message: Message | null
-  }>({
-    notification: null,
-    message: null,
-  })
+  const {
+    state: { unread },
+    dispatch,
+  } = useContext(MessageContext)
 
   useEffect(() => {
     getMessageStatics({}).then((res) => {
       if (res.data) {
-        setUnReadCount({
-          notification: res.data.receive.notification.unread,
-          message: res.data.receive.message.unread,
+        dispatch({
+          type: 'UNREAD_COUNT_INCREMENT',
+          payload: {
+            messageType: 'notification',
+            count: res.data.receive.notification.unread,
+          },
+        })
+        dispatch({
+          type: 'UNREAD_COUNT_INCREMENT',
+          payload: {
+            messageType: 'message',
+            count: res.data.receive.message.unread,
+          },
         })
       }
     })
@@ -69,14 +73,20 @@ export default function MessageModal({
           description: message.content,
         })
 
-        setNewMessage((pre) => ({
-          ...pre,
-          [message.type]: message,
-        }))
-        setUnReadCount((pre) => ({
-          ...pre,
-          [message.type]: pre[message.type] + 1,
-        }))
+        dispatch({
+          type: 'RECEIVE_NEW_MESSAGE',
+          payload: {
+            message,
+          },
+        })
+
+        dispatch({
+          type: 'UNREAD_COUNT_INCREMENT',
+          payload: {
+            messageType: message.type,
+            count: 1,
+          },
+        })
       }
     }
   }, [])
@@ -103,7 +113,7 @@ export default function MessageModal({
                   [messageType]: activeMarkAsRead[messageType] + 1,
                 })
               }
-              disabled={!unReadCount[messageType]}
+              disabled={!unread[messageType]}
             >
               Mark all as read
             </Button>
@@ -124,13 +134,10 @@ export default function MessageModal({
         onChange={(key) => setMessageType(key as MessageType)}
       >
         {MessageTypes.map((item) => (
-          <TabPane tab={`${item}(${unReadCount[item]})`} key={item}>
+          <TabPane tab={`${item}(${unread[item]})`} key={item}>
             <MessageList
               messageType={item}
               activeMarkAsRead={activeMarkAsRead[item]}
-              setUnReadCount={setUnReadCount}
-              unReadCount={unReadCount[item]}
-              newMessage={newMessage[item]}
             />
           </TabPane>
         ))}
