@@ -6,13 +6,16 @@ import { useEffect, useReducer, useState } from 'react'
 import DashboardLayout from '../components/layout'
 import { Role } from '../lib/model'
 import MessageContext from '../providers/messageContext'
-import { messageReducer, store } from '../providers/messageReducer'
+import {
+  messageReducer,
+  initialMessageState,
+} from '../providers/messageReducer'
 
 export const siteTitle = 'custom-title'
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [loading, setLoading] = useState(true)
-  const [state, dispatch] = useReducer(messageReducer, store)
+  const [state, dispatch] = useReducer(messageReducer, initialMessageState)
   const router = useRouter()
   const path = router.pathname
   const content = (

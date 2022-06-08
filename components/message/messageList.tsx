@@ -11,6 +11,7 @@ import {
 import { formatDistanceToNow } from 'date-fns'
 import styled from 'styled-components'
 import MessageContext from '../../providers/messageContext'
+import { ActionType } from '../../providers/messageReducer'
 
 const CustomList = styled(List)`
   .ant-list-item {
@@ -34,7 +35,7 @@ export default function MessageList({
   const [nextPage, setNextPage] = useState<number>(1)
   const [data, setData] = useState<Message[]>([])
   const {
-    state: { newMessage, markedIds },
+    state: { newMessage, markedIdsFromPage },
     dispatch,
   } = useContext(MessageContext)
 
@@ -73,14 +74,10 @@ export default function MessageList({
   }, [newMessage, messageType])
 
   useEffect(() => {
-    if (
-      markedIds &&
-      markedIds.page &&
-      markedIds.page.messageType === messageType
-    ) {
+    if (markedIdsFromPage && markedIdsFromPage.messageType === messageType) {
       setData((pre) => {
         const newData = [...pre]
-        markedIds.page.ids.forEach((id) => {
+        markedIdsFromPage.ids.forEach((id) => {
           for (let message of newData) {
             if (message.id === id) {
               message.status = 1
@@ -90,9 +87,9 @@ export default function MessageList({
         })
         return [...newData]
       })
-      dispatch({ type: 'RESET_MARK_AS_READ' })
+      dispatch({ type: ActionType.ResetMarkAsReadFromPage })
     }
-  }, [dispatch, markedIds, messageType])
+  }, [dispatch, markedIdsFromPage, messageType])
 
   useEffect(() => {
     loadMoreData(true, 1, messageType, 20)
@@ -117,14 +114,15 @@ export default function MessageList({
                   setData((pre) => pre.map((item) => ({ ...item, status: 1 })))
 
                   dispatch({
-                    type: 'MARK_AS_READ',
+                    type: ActionType.MarkAsReadFromModal,
                     payload: {
-                      modal: { ids, messageType },
+                      ids,
+                      messageType,
                     },
                   })
 
                   dispatch({
-                    type: 'UNREAD_COUNT_DECREMENT',
+                    type: ActionType.DecreaseUnreadCount,
                     payload: {
                       messageType,
                       count: ids.length,
@@ -183,14 +181,15 @@ export default function MessageList({
                     setData([...data])
 
                     dispatch({
-                      type: 'MARK_AS_READ',
+                      type: ActionType.MarkAsReadFromModal,
                       payload: {
-                        modal: { ids: [item.id], messageType },
+                        ids: [item.id],
+                        messageType,
                       },
                     })
 
                     dispatch({
-                      type: 'UNREAD_COUNT_DECREMENT',
+                      type: ActionType.DecreaseUnreadCount,
                       payload: {
                         messageType,
                         count: 1,

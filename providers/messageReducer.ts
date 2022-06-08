@@ -1,58 +1,85 @@
 import { Message, MessageType, MessageCount } from '../lib/model'
 
-export type MessageLocation = 'modal' | 'page'
-
-export type MessageStore = {
+export type MessageState = {
   unread: MessageCount
   newMessage: Message | null
-  markedIds:
-    | { [key in MessageLocation]: { ids: number[]; messageType: MessageType } }
-    | null
+  markedIdsFromModal: { ids: number[]; messageType: MessageType } | null
+  markedIdsFromPage: { ids: number[]; messageType: MessageType } | null
 }
 
-export type ActionType =
-  | 'UNREAD_COUNT_INCREMENT'
-  | 'UNREAD_COUNT_DECREMENT'
-  | 'RECEIVE_NEW_MESSAGE'
-  | 'MARK_AS_READ'
+export enum ActionType {
+  IncreaseUnreadCount,
+  DecreaseUnreadCount,
+  ReceiveNewMessage,
+  MarkAsReadFromModal,
+  MarkAsReadFromPage,
+  ResetMarkAsReadFromModal,
+  ResetMarkAsReadFromPage,
+}
+
+interface IncreaseUnreadCount {
+  type: ActionType.IncreaseUnreadCount
+  payload: {
+    count: number
+    messageType: MessageType
+  }
+}
+
+interface DecreaseUnreadCount {
+  type: ActionType.DecreaseUnreadCount
+  payload: {
+    count: number
+    messageType: MessageType
+  }
+}
+
+interface ReceiveNewMessage {
+  type: ActionType.ReceiveNewMessage
+  payload: {
+    message: Message
+  }
+}
+
+interface MarkAsReadFromModal {
+  type: ActionType.MarkAsReadFromModal
+  payload: { ids: number[]; messageType: MessageType }
+}
+
+interface MarkAsReadFromPage {
+  type: ActionType.MarkAsReadFromPage
+  payload: { ids: number[]; messageType: MessageType }
+}
+
+interface ResetMarkAsReadFromModal {
+  type: ActionType.ResetMarkAsReadFromModal
+}
+
+interface ResetMarkAsReadFromPage {
+  type: ActionType.ResetMarkAsReadFromPage
+}
 
 export type MessageAction =
-  | {
-      type: 'UNREAD_COUNT_INCREMENT' | 'UNREAD_COUNT_DECREMENT'
-      payload: {
-        count: number
-        messageType: MessageType
-      }
-    }
-  | {
-      type: 'RECEIVE_NEW_MESSAGE'
-      payload: {
-        message: Message
-      }
-    }
-  | {
-      type: 'MARK_AS_READ'
-      payload:
-        | {
-            modal: { ids: number[]; messageType: MessageType }
-          }
-        | {
-            page: { ids: number[]; messageType: MessageType }
-          }
-    }
-  | {
-      type: 'RESET_MARK_AS_READ'
-    }
+  | IncreaseUnreadCount
+  | DecreaseUnreadCount
+  | ReceiveNewMessage
+  | MarkAsReadFromModal
+  | MarkAsReadFromPage
+  | ResetMarkAsReadFromModal
+  | ResetMarkAsReadFromPage
 
-export const store: MessageStore = {
+export const initialMessageState: MessageState = {
   unread: { notification: 0, message: 0 },
   newMessage: null,
-  markedIds: null,
+  markedIdsFromModal: null,
+  markedIdsFromPage: null,
 }
 
-export function messageReducer(state: MessageStore, action: MessageAction) {
+export function messageReducer(
+  state: MessageState,
+  action: MessageAction
+): MessageState {
   switch (action.type) {
-    case 'UNREAD_COUNT_INCREMENT':
+    case ActionType.IncreaseUnreadCount:
       return {
         ...state,
         unread: {
@@ -61,7 +88,7 @@ export function messageReducer(state: MessageStore, action: MessageAction) {
             state.unread[action.payload.messageType] + action.payload.count,
         },
       }
-    case 'UNREAD_COUNT_DECREMENT':
+    case ActionType.DecreaseUnreadCount:
       return {
         ...state,
         unread: {
@@ -70,20 +97,30 @@ export function messageReducer(state: MessageStore, action: MessageAction) {
             state.unread[action.payload.messageType] - action.payload.count,
         },
       }
-    case 'RECEIVE_NEW_MESSAGE':
+    case ActionType.ReceiveNewMessage:
       return {
         ...state,
         newMessage: action.payload.message,
       }
-    case 'MARK_AS_READ':
+    case ActionType.MarkAsReadFromModal:
       return {
         ...state,
-        markedIds: { ...state.markedIds, ...action.payload },
+        markedIdsFromModal: action.payload,
       }
-    case 'RESET_MARK_AS_READ':
+    case ActionType.MarkAsReadFromPage:
       return {
         ...state,
-        markedIds: null,
+        markedIdsFromPage: action.payload,
+      }
+    case ActionType.ResetMarkAsReadFromModal:
+      return {
+        ...state,
+        markedIdsFromModal: null,
+      }
+    case ActionType.ResetMarkAsReadFromPage:
+      return {
+        ...state,
+        markedIdsFromPage: null,
       }
     default:
       throw new Error('No Action')

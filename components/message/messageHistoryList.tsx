@@ -6,6 +6,7 @@ import { useContext, useEffect, useState } from 'react'
 import { getMessages, markMessageAsRead } from '../../lib/request'
 import { format } from 'date-fns'
 import MessageContext from '../../providers/messageContext'
+import { ActionType } from '../../providers/messageReducer'
 
 const { Title } = Typography
 
@@ -19,7 +20,7 @@ export default function MessageHistoryList({
   const [nextPage, setNextPage] = useState<number>(1)
   const [data, setData] = useState<MessageHistory>({})
   const {
-    state: { newMessage, markedIds },
+    state: { newMessage, markedIdsFromModal },
     dispatch,
   } = useContext(MessageContext)
 
@@ -90,13 +91,12 @@ export default function MessageHistoryList({
 
   useEffect(() => {
     if (
-      markedIds &&
-      markedIds.modal &&
-      (!messageType || markedIds.modal.messageType === messageType)
+      markedIdsFromModal &&
+      (!messageType || markedIdsFromModal.messageType === messageType)
     ) {
       setData((pre) => {
         const newData = { ...pre }
-        markedIds.modal.ids.forEach((id) => {
+        markedIdsFromModal.ids.forEach((id) => {
           let flag = false
           for (let data in newData) {
             if (flag) {
@@ -112,9 +112,9 @@ export default function MessageHistoryList({
         })
         return { ...newData }
       })
-      dispatch({ type: 'RESET_MARK_AS_READ' })
+      dispatch({ type: ActionType.ResetMarkAsReadFromModal })
     }
-  }, [dispatch, markedIds, messageType])
+  }, [dispatch, markedIdsFromModal, messageType])
 
   return (
     <div
@@ -159,14 +159,15 @@ export default function MessageHistoryList({
                           }
 
                           dispatch({
-                            type: 'MARK_AS_READ',
+                            type: ActionType.MarkAsReadFromPage,
                             payload: {
-                              page: { ids: [item.id], messageType: item.type },
+                              ids: [item.id],
+                              messageType: item.type,
                             },
                           })
 
                           dispatch({
-                            type: 'UNREAD_COUNT_DECREMENT',
+                            type: ActionType.DecreaseUnreadCount,
                             payload: {
                               messageType: item.type,
                               count: 1,

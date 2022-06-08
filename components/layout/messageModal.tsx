@@ -6,6 +6,7 @@ import { MessageTypes } from '../../lib/constants'
 import { MessageType, MessageCount, Message } from '../../lib/model'
 import { getMessageStatics, subscribeMessage } from '../../lib/request'
 import MessageContext from '../../providers/messageContext'
+import { ActionType } from '../../providers/messageReducer'
 import MessageList from '../message/messageList'
 
 const { TabPane } = Tabs
@@ -46,14 +47,14 @@ export default function MessageModal({
     getMessageStatics({}).then((res) => {
       if (res.data) {
         dispatch({
-          type: 'UNREAD_COUNT_INCREMENT',
+          type: ActionType.IncreaseUnreadCount,
           payload: {
             messageType: 'notification',
             count: res.data.receive.notification.unread,
           },
         })
         dispatch({
-          type: 'UNREAD_COUNT_INCREMENT',
+          type: ActionType.IncreaseUnreadCount,
           payload: {
             messageType: 'message',
             count: res.data.receive.message.unread,
@@ -74,14 +75,14 @@ export default function MessageModal({
         })
 
         dispatch({
-          type: 'RECEIVE_NEW_MESSAGE',
+          type: ActionType.ReceiveNewMessage,
           payload: {
             message,
           },
         })
 
         dispatch({
-          type: 'UNREAD_COUNT_INCREMENT',
+          type: ActionType.IncreaseUnreadCount,
           payload: {
             messageType: message.type,
             count: 1,
