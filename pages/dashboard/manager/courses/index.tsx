@@ -29,7 +29,7 @@ export default function Page() {
     getCourses({ page: 1, limit: 20 }).then((res) => {
       if (res.data) {
         setCourses(res.data.courses)
-        if (res.data.total <= paginator.page * paginator.limit) {
+        if (res.data.total <= 20) {
           setHasMore(false)
         }
       }

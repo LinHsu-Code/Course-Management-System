@@ -39,34 +39,33 @@ export default function MessageList({
     dispatch,
   } = useContext(MessageContext)
 
-  const loadMoreData = useCallback((isReset, page, type, limit) => {
-    if (loading) {
-      return
-    }
-    setLoading(true)
-    return getMessages({
-      page,
-      limit,
-      type,
-    })
-      .then((res) => {
-        if (res.data) {
-          if (isReset) {
-            setData(res.data.messages)
-          } else {
+  const loadMoreData = useCallback(
+    (page, limit, type) => {
+      if (loading) {
+        return
+      }
+      setLoading(true)
+      getMessages({
+        page,
+        limit,
+        type,
+      })
+        .then((res) => {
+          if (res.data) {
             setData((pre) => [...pre, ...res.data.messages])
+            setLoading(false)
+            if (res.data.total <= page * 20) {
+              setHasMore(false)
+            }
+            setNextPage(page + 1)
           }
+        })
+        .catch(() => {
           setLoading(false)
-          if (res.data.total <= page * 20) {
-            setHasMore(false)
-          }
-          setNextPage(page + 1)
-        }
-      })
-      .catch(() => {
-        setLoading(false)
-      })
-  }, [])
+        })
+    },
+    [loading]
+  )
 
   useEffect(() => {
     if (newMessage && newMessage.type === messageType)
@@ -92,8 +91,20 @@ export default function MessageList({
   }, [dispatch, markedIdsFromPage, messageType])
 
   useEffect(() => {
-    loadMoreData(true, 1, messageType, 20)
-  }, [loadMoreData, messageType])
+    getMessages({
+      page: 1,
+      limit: 20,
+      type: messageType,
+    }).then((res) => {
+      if (res.data) {
+        setData(res.data.messages)
+        if (res.data.total <= 20) {
+          setHasMore(false)
+        }
+        setNextPage(2)
+      }
+    })
+  }, [messageType])
 
   const handleMarkMessageAsRead = useCallback(() => {
     getMessageStatics({}).then((res) => {
@@ -135,7 +146,7 @@ export default function MessageList({
         })
       }
     })
-  }, [messageType])
+  }, [dispatch, messageType])
 
   useEffect(() => {
     if (activeMarkAsRead) {
@@ -155,7 +166,7 @@ export default function MessageList({
     >
       <InfiniteScroll
         dataLength={data.length}
-        next={() => loadMoreData(false, nextPage, messageType, 20)}
+        next={() => loadMoreData(nextPage, 20, messageType)}
         hasMore={hasMore}
         loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
         endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}

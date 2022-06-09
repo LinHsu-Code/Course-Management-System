@@ -16,14 +16,14 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 }
 
-export default function Page(props: { id: string }) {
+export default function Page({ id }: { id: string }) {
   const [course, setCourse] = useState<CourseDetail | null>(null)
   const [info, setInfo] = useState<{ label: string; value: string | number }[]>(
     []
   )
 
   useEffect(() => {
-    getCourse({ id: props.id }).then((res) => {
+    getCourse({ id }).then((res) => {
       if (res.data) {
         setCourse(res.data)
         const sales = res.data.sales
@@ -36,7 +36,7 @@ export default function Page(props: { id: string }) {
         setInfo(info)
       }
     })
-  }, [])
+  }, [id])
 
   return (
     <>

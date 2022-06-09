@@ -23,7 +23,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 }
 
-export default function Page(props: { id: string }) {
+export default function Page({ id }: { id: string }) {
   const [info, setInfo] = useState<
     { label: string; value: string | number | null; span: number }[]
   >([])
@@ -64,7 +64,7 @@ export default function Page(props: { id: string }) {
 
   useEffect(() => {
     ;(async () => {
-      const { data: student } = await getStudent(props.id)
+      const { data: student } = await getStudent(id)
       const info = [
         { label: 'Name', value: student.name, span: 1 },
         { label: 'Age', value: student.age, span: 1 },
@@ -89,7 +89,7 @@ export default function Page(props: { id: string }) {
       setAbout(about)
       setStudent(student)
     })()
-  }, [])
+  }, [id])
 
   return (
     <>

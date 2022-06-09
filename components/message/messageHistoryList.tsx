@@ -25,7 +25,6 @@ export default function MessageHistoryList({
   } = useContext(MessageContext)
 
   const loadMoreData = (
-    isReset: boolean = false,
     page: number = nextPage,
     type = messageType,
     limit: number = 20
@@ -47,7 +46,7 @@ export default function MessageHistoryList({
     getMessages(params)
       .then((res) => {
         if (res.data) {
-          const initialData = isReset ? {} : data
+          const initialData = data
           const formateData = res.data.messages.reduce((acc, cur) => {
             const key: string = format(new Date(cur.createdAt), 'yyyy-MM-dd')
             if (!acc[key]) {
@@ -71,7 +70,35 @@ export default function MessageHistoryList({
   }
 
   useEffect(() => {
-    loadMoreData(true, 1)
+    const params = messageType
+      ? {
+          page: 1,
+          limit: 20,
+          type: messageType,
+        }
+      : {
+          page: 1,
+          limit: 20,
+        }
+    getMessages(params).then((res) => {
+      if (res.data) {
+        const initialData = {} as MessageHistory
+        const formateData = res.data.messages.reduce((acc, cur) => {
+          const key: string = format(new Date(cur.createdAt), 'yyyy-MM-dd')
+          if (!acc[key]) {
+            acc[key] = [cur]
+          } else {
+            acc[key].push(cur)
+          }
+          return acc
+        }, initialData)
+        setData(formateData)
+        if (res.data.total <= 20) {
+          setHasMore(false)
+        }
+        setNextPage(2)
+      }
+    })
   }, [messageType])
 
   const [lastNewMessageId, setLastNewMessageId] = useState(0)

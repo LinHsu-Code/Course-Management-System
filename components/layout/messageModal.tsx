@@ -90,7 +90,10 @@ export default function MessageModal({
         })
       }
     }
-  }, [])
+    return () => {
+      sse.close()
+    }
+  }, [dispatch])
 
   return (
     <CustomModal
