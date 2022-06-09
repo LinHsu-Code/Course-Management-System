@@ -5,9 +5,9 @@ import {
   deleteInstance,
   showMessage,
 } from './common'
-import { GetOverviewResponse } from '../../lib/model'
+import { GetStatisticsOverviewResponse } from '../../lib/model'
 
-const getOverview = (): Promise<GetOverviewResponse> =>
+const getStatisticsOverview = (): Promise<GetStatisticsOverviewResponse> =>
   getInstance('/statistics/overview')
 
-export { getOverview }
+export { getStatisticsOverview }

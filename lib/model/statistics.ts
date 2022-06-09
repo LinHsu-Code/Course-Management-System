@@ -1,11 +1,9 @@
 import { Response } from './common'
-
-export interface Overview {
+export interface StatisticsOverview {
   course: OverviewDetail
   student: OverviewDetailWithGender
   teacher: OverviewDetailWithGender
 }
-
 export interface OverviewDetail {
   lastMonthAdded: number
   total: number
@@ -21,4 +19,4 @@ export interface Gender {
   female: number
 }
 
-export type GetOverviewResponse = Response<Overview>
+export type GetStatisticsOverviewResponse = Response<StatisticsOverview>

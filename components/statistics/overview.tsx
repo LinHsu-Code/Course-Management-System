@@ -4,7 +4,6 @@ import { Row, Col, Card, Progress } from 'antd'
 const OverviewIconCol = styled(Col)`
   display: flex;
   align-items: center;
-  justify-content: center;
   font-size: 32px;
   .anticon {
     background: #fff;
@@ -26,7 +25,7 @@ const OverviewCol = styled(Col)`
   }
 `
 export interface OverviewProps {
-  style: React.CSSProperties
+  backgroundColor: string
   icon: JSX.Element
   title: string
   data: number
@@ -35,7 +34,7 @@ export interface OverviewProps {
 }
 
 const Overview = ({
-  style,
+  backgroundColor,
   icon,
   title,
   data,
@@ -43,21 +42,20 @@ const Overview = ({
   dataDescription,
 }: OverviewProps) => {
   return (
-    <Card style={{ borderRadius: 5, cursor: 'pointer', ...style }}>
+    <Card style={{ borderRadius: 5, cursor: 'pointer', backgroundColor }}>
       <Row>
         <OverviewIconCol>{icon}</OverviewIconCol>
         <OverviewCol offset={1} flex={1}>
           <h3>{title}</h3>
-
           <h2>{data}</h2>
           <Progress
-            percent={100 - percentage}
+            percent={percentage}
             size="small"
             showInfo={false}
-            strokeColor="white"
-            trailColor="lightgreen"
+            strokeColor="lightgreen"
+            trailColor="white"
           />
-          <p>{`${percentage}% ${dataDescription}`}</p>
+          <p>{`${percentage.toFixed(1)}% ${dataDescription}`}</p>
         </OverviewCol>
       </Row>
     </Card>
