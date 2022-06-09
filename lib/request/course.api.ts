@@ -16,51 +16,35 @@ import {
   GetCourseScheduleResponse,
 } from '../../lib/model'
 
-const getCourses = (params: GetCoursesRequest): Promise<GetCoursesResponse> => {
-  return getInstance('/courses', params).then((res) => showMessage(res, false))
-}
+const getCourses = (params: GetCoursesRequest): Promise<GetCoursesResponse> =>
+  getInstance('/courses', params)
 
-const getCourse = (params: GetCourseRequest): Promise<GetCourseResponse> => {
-  return getInstance('/courses/detail', params).then((res) =>
-    showMessage(res, false)
-  )
-}
+const getCourse = (params: GetCourseRequest): Promise<GetCourseResponse> =>
+  getInstance('/courses/detail', params)
 
-const getCourseTypes = (): Promise<GetCourseTypesResponse> => {
-  return getInstance('/courses/type').then((res) => showMessage(res, false))
-}
+const getCourseTypes = (): Promise<GetCourseTypesResponse> =>
+  getInstance('/courses/type')
 
-const generateCourseCode = (): Promise<GenerateCourseCodeResponse> => {
-  return getInstance('/courses/code').then((res) => showMessage(res, false))
-}
+const generateCourseCode = (): Promise<GenerateCourseCodeResponse> =>
+  getInstance('/courses/code')
 
-const addCourse = (
-  formValues: AddCourseRequest
-): Promise<AddCourseResponse> => {
-  return postInstance('/courses', formValues).then((res) => showMessage(res))
-}
+const addCourse = (formValues: AddCourseRequest): Promise<AddCourseResponse> =>
+  postInstance('/courses', formValues).then((res) => showMessage(res))
 
 const updateCourseSchedule = (
   formValues: UpdateCourseScheduleRequest
-): Promise<UpdateCourseScheduleResponse> => {
-  return putInstance('/courses/schedule', formValues).then((res) =>
-    showMessage(res)
-  )
-}
+): Promise<UpdateCourseScheduleResponse> =>
+  putInstance('/courses/schedule', formValues).then((res) => showMessage(res))
 
 const updateCourse = (
   formValues: UpdateCourseRequest
-): Promise<UpdateCourseResponse> => {
-  return putInstance('/courses', formValues).then((res) => showMessage(res))
-}
+): Promise<UpdateCourseResponse> =>
+  putInstance('/courses', formValues).then((res) => showMessage(res))
 
 const getCourseSchedule = (
   params: GetCourseScheduleRequest
-): Promise<GetCourseScheduleResponse> => {
-  return getInstance('/courses/schedule', params).then((res) =>
-    showMessage(res, false)
-  )
-}
+): Promise<GetCourseScheduleResponse> =>
+  getInstance('/courses/schedule', params)
 
 export {
   getCourses,

@@ -20,29 +20,24 @@ import {
 
 const getStudents = (
   params: GetStudentsRequest
-): Promise<GetStudentsResponse> => {
-  return getInstance('/students', params).then((res) => showMessage(res, false))
-}
+): Promise<GetStudentsResponse> => getInstance('/students', params)
 
 const addStudent = (
   formValues: AddStudentRequest
-): Promise<AddStudentsResponse> => {
-  return postInstance('/students', formValues).then((res) => showMessage(res))
-}
+): Promise<AddStudentsResponse> =>
+  postInstance('/students', formValues).then((res) => showMessage(res))
 
 const editStudent = (
   formValues: EditStudentRequest
-): Promise<EditStudentsResponse> => {
-  return putInstance('/students', formValues).then((res) => showMessage(res))
-}
+): Promise<EditStudentsResponse> =>
+  putInstance('/students', formValues).then((res) => showMessage(res))
 
 const deleteStudent = (
   id: DeleteStudentRequest
-): Promise<DeleteStudentResponse> => {
-  return deleteInstance('/students', id).then((res) => showMessage(res))
-}
+): Promise<DeleteStudentResponse> =>
+  deleteInstance('/students', id).then((res) => showMessage(res))
 
-const getStudent = (id: GetStudentRequest): Promise<GetStudentResponse> => {
-  return getInstance(`/students/${id}`).then((res) => showMessage(res, false))
-}
+const getStudent = (id: GetStudentRequest): Promise<GetStudentResponse> =>
+  getInstance(`/students/${id}`)
+
 export { getStudents, addStudent, deleteStudent, editStudent, getStudent }

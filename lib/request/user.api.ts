@@ -10,8 +10,6 @@ const login = (formValues: LoginRequest): Promise<LoginResponse> => {
   )
 }
 
-const logout = (): Promise<LogoutResponse> => {
-  return postInstance('/logout').then((res) => showMessage(res, false))
-}
+const logout = (): Promise<LogoutResponse> => postInstance('/logout')
 
 export { login, logout }

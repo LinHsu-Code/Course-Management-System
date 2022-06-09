@@ -9,8 +9,6 @@ import { GetTeachersRequest, GetTeachersResponse } from '../../lib/model'
 
 const getTeachers = (
   params: GetTeachersRequest
-): Promise<GetTeachersResponse> => {
-  return getInstance('/teachers', params).then((res) => showMessage(res, false))
-}
+): Promise<GetTeachersResponse> => getInstance('/teachers', params)
 
 export { getTeachers }
