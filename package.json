@@ -16,6 +16,8 @@
     "axios": "^0.26.1",
     "crypto-js": "^4.1.1",
     "date-fns": "^2.28.0",
+    "highcharts": "^10.1.0",
+    "highcharts-react-official": "^3.1.0",
     "lodash": "^4.17.21",
     "next": "12.1.4",
     "next-plugin-antd-less": "^1.8.0",
