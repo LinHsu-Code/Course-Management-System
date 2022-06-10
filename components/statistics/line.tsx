@@ -1,7 +1,12 @@
 import HighchartsReact from 'highcharts-react-official'
 import Highcharts from 'highcharts/highmaps'
-import { useEffect, useRef, useState } from 'react'
+import HighchartsExporting from 'highcharts/modules/exporting'
+import { useEffect, useState } from 'react'
 import { Statistics } from '../../lib/model'
+
+if (typeof Highcharts === 'object') {
+  HighchartsExporting(Highcharts)
+}
 
 export default function Line({
   data,
@@ -44,36 +49,21 @@ export default function Line({
       enabled: false,
     },
   })
-  const charRef = useRef(null)
-
-  //   useEffect(() => {
-  //     const { chart } = charRef.current
-  //     const timer = setTimeout(() => {
-  //       chart.reflow()
-  //     }, 30)
-
-  //     return () => {
-  //       clearTimeout(timer)
-  //     }
-  //   }, [])
 
   useEffect(() => {
     if (!data) {
       return
     }
-    const series = Object.entries(data)
-      .filter(([_, data]) => !!data && !!data.length)
-      .map(([title, data]) => ({
-        name: title,
-        data: new Array(12).fill(0).map((_, index) => {
-          const month = index + 1
-          const name = month > 9 ? month + '' : '0' + month
-          const target = data
-            ? data.find((item) => item.name.split('-')[1] === name)
-            : null
-          return (target && target.amount) || 0
-        }),
-      }))
+
+    const series = Object.entries(data).map(([title, data]) => ({
+      name: title,
+      data: data
+        ? data.reduce((acc, curr) => {
+            acc[Number(curr.name.split('-')[1]) - 1] += curr.amount
+            return acc
+          }, new Array(12).fill(0))
+        : new Array(12).fill(0),
+    }))
 
     setOptions({
       series,
@@ -84,7 +74,6 @@ export default function Line({
     <HighchartsReact
       highcharts={Highcharts}
       options={options}
-      ref={charRef}
     ></HighchartsReact>
   )
 }

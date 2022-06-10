@@ -15,6 +15,7 @@ export enum ActionType {
   MarkAsReadFromPage,
   ResetMarkAsReadFromModal,
   ResetMarkAsReadFromPage,
+  ResetNewMessage,
 }
 
 interface IncreaseUnreadCount {
@@ -58,6 +59,10 @@ interface ResetMarkAsReadFromPage {
   type: ActionType.ResetMarkAsReadFromPage
 }
 
+interface ResetNewMessage {
+  type: ActionType.ResetNewMessage
+}
+
 export type MessageAction =
   | IncreaseUnreadCount
   | DecreaseUnreadCount
@@ -66,6 +71,7 @@ export type MessageAction =
   | MarkAsReadFromPage
   | ResetMarkAsReadFromModal
   | ResetMarkAsReadFromPage
+  | ResetNewMessage
 
 export const initialMessageState: MessageState = {
   unread: { notification: 0, message: 0 },
@@ -121,6 +127,11 @@ export function messageReducer(
       return {
         ...state,
         markedIdsFromPage: null,
+      }
+    case ActionType.ResetNewMessage:
+      return {
+        ...state,
+        newMessage: null,
       }
     default:
       throw new Error('No Action')

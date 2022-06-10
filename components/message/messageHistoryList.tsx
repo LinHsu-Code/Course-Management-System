@@ -101,20 +101,15 @@ export default function MessageHistoryList({
     })
   }, [messageType])
 
-  const [lastNewMessageId, setLastNewMessageId] = useState(0)
   useEffect(() => {
-    if (
-      newMessage &&
-      newMessage.id !== lastNewMessageId &&
-      (!messageType || newMessage.type === messageType)
-    ) {
+    if (newMessage && (!messageType || newMessage.type === messageType)) {
       const key: string = format(new Date(newMessage.createdAt), 'yyyy-MM-dd')
       setData((pre) => {
         return { ...pre, [key]: [newMessage, ...pre[key]] }
       })
-      setLastNewMessageId(newMessage.id)
+      dispatch({ type: ActionType.ResetNewMessage })
     }
-  }, [newMessage, messageType, lastNewMessageId])
+  }, [newMessage, messageType, dispatch])
 
   useEffect(() => {
     if (

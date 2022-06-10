@@ -34,12 +34,12 @@ export default function Bar({
       text: 'Student VS Teacher',
     },
     subtitle: {
-      text: 'Comparing what students are interested in and teachers’ skills',
+      text: `Comparing what students are interested in and teachers' skills`,
     },
     yAxis: {
       min: 0,
       title: {
-        text: 'Interested VS Skills',
+        text: 'Interests VS Skills',
       },
     },
     legend: {
@@ -48,6 +48,15 @@ export default function Bar({
     credits: {
       enabled: false,
     },
+
+    // tooltip: {
+    //   formatter: function () {
+    //     return '<b>' + this.x + '</b><br/>' +
+    //       this.series.name + ': ' + this.y + '<br/>' +
+    //       'Total: ' + this.point.stackTotal;
+    //   }
+    // },
+
     tooltip: {
       formatter: function () {
         return this.series.name === 'Interest'
@@ -55,12 +64,13 @@ export default function Bar({
           : `<b>${this.x}</b><br/>${this.series.name}: ${this.y}<br/>total: ${this.point.stackTotal}`
       },
     },
+
     plotOptions: {
       column: {
         stacking: 'normal',
-        dataLabels: {
-          enabled: true,
-        },
+        // dataLabels: {
+        //   enabled: true,
+        // },
       },
     },
     exporting: {
