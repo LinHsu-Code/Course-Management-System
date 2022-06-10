@@ -2,7 +2,7 @@ import HighchartsReact from 'highcharts-react-official'
 import Highcharts from 'highcharts/highmaps'
 import { useEffect, useState } from 'react'
 import { Statistics } from '../../lib/model'
-import { getWorld } from '../../lib/request'
+import { getWorldMap } from '../../lib/request'
 
 export default function Map({
   data,
@@ -11,12 +11,12 @@ export default function Map({
   data: Statistics[] | null
   title: string
 }) {
+  const [worldMap, setWorldMap] = useState<any>(null)
   const [options, setOptions] = useState<any>({
     colorAxis: {
       min: 0,
       stops: [
         [0, '#fff'],
-        [0.5, Highcharts.getOptions().colors[0]],
         [1, '#1890ff'],
       ],
     },
@@ -29,32 +29,26 @@ export default function Map({
       enabled: false,
     },
     exporting: {
-      enabled: false,
+      enabled: true,
     },
   })
-  const [world, setWorld] = useState<any>(null)
 
   useEffect(() => {
-    ;(async () => {
-      const res = await getWorld()
-      setWorld(res.data)
-      setOptions({
-        series: [{ mapData: res.data }],
-      })
-    })()
+    getWorldMap().then((res) => {
+      setWorldMap(res.data)
+      console.log(res)
+    })
   }, [])
 
   useEffect(() => {
-    if (!data || !world) {
+    if (!data || !worldMap) {
       return
     }
-
-    const mapSource = data.map((item) => {
-      const target = world.features.find(
-        (feature) =>
+    const mapData = data.map((item) => {
+      const target = worldMap.features.find(
+        (feature: any) =>
           item.name.toLowerCase() === feature.properties.name.toLowerCase()
       )
-
       return !!target
         ? {
             'hc-key': target.properties['hc-key'],
@@ -64,14 +58,12 @@ export default function Map({
     })
     const options = {
       title: {
-        text: `<span style="text-transform: capitalize">${title
-          .split(/(?=[A-Z])/)
-          .join(' ')}</span>`,
+        text: title.split('').join(' ').toUpperCase(),
       },
       series: [
         {
-          data: mapSource,
-          mapData: world,
+          data: mapData,
+          mapData: worldMap,
           name: 'Total',
           states: {
             hover: {
@@ -82,7 +74,7 @@ export default function Map({
       ],
     }
     setOptions(options)
-  }, [data, world])
+  }, [data, title, worldMap])
 
   return (
     <HighchartsReact

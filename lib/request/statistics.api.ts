@@ -25,7 +25,7 @@ const getTeacherStatistics = (): Promise<GetTeacherStatisticsResponse> =>
 const getCourseStatistics = (): Promise<GetCourseStatisticsResponse> =>
   getInstance('/statistics/course')
 
-const getWorld = async () => {
+const getWorldMap = async () => {
   return await axios.get(
     'https://code.highcharts.com/mapdata/custom/world-palestine-highres.geo.json'
   )
@@ -36,5 +36,5 @@ export {
   getStudentStatistics,
   getTeacherStatistics,
   getCourseStatistics,
-  getWorld,
+  getWorldMap,
 }

@@ -21,6 +21,9 @@ import {
   getCourseStatistics,
 } from '../../../lib/request'
 import Map from '../../../components/statistics/map'
+import Pie from '../../../components/statistics/pie'
+import Line from '../../../components/statistics/line'
+import Bar from '../../../components/statistics/bar'
 
 const overviewBackground = ['#1890ff', '#673bb7', '#ffaa16']
 
@@ -43,6 +46,12 @@ export default function Page() {
   const [courseStatistics, setCourseStatistics] =
     useState<CourseStatistics | null>(null)
   const [distributionRole, setDistributionRole] = useState<string>('student')
+  const [selectedType, setSelectedType] = useState<string>('student_type')
+
+  console.log('overview:', overview)
+  console.log('studentStatistics:', studentStatistics)
+  console.log('teacherStatistics:', teacherStatistics)
+  console.log('courseStatistics:', courseStatistics)
 
   useEffect(() => {
     getStatisticsOverview().then((res) => {
@@ -72,7 +81,7 @@ export default function Page() {
       <Head>
         <title>{'CMS DashBoard: Manager'}</title>
       </Head>
-      <Row gutter={[6, 16]}>
+      <Row gutter={[6, 16]} style={{ marginBottom: 16 }}>
         {overview &&
           entries(overview).map((item, index) => {
             const [key, value] = item
@@ -94,7 +103,7 @@ export default function Page() {
           })}
       </Row>
 
-      <Row gutter={[6, 16]}>
+      <Row gutter={[6, 16]} style={{ marginBottom: 16 }}>
         <Col span={24} xl={{ span: 12 }}>
           <Card
             title="Distribution"
@@ -116,6 +125,82 @@ export default function Page() {
                   : teacherStatistics?.country || null
               }
               title={distributionRole}
+            />
+          </Card>
+        </Col>
+
+        <Col span={24} xl={{ span: 12 }}>
+          <Card
+            title="Types"
+            extra={
+              <Select
+                defaultValue={selectedType}
+                bordered={false}
+                onSelect={setSelectedType}
+              >
+                <Select.Option value="student_type">Student Type</Select.Option>
+                <Select.Option value="course_type">Course Type</Select.Option>
+                <Select.Option value="gender">Gender</Select.Option>
+              </Select>
+            }
+          >
+            {selectedType === 'student_type' && studentStatistics ? (
+              <Pie data={studentStatistics.type} title={selectedType} />
+            ) : selectedType === 'course_type' && courseStatistics ? (
+              <Pie data={courseStatistics.type} title={selectedType} />
+            ) : (
+              overview && (
+                <Row gutter={6}>
+                  <Col span={12}>
+                    <Pie
+                      data={Object.entries(overview.student.gender).map(
+                        ([name, amount]) => ({
+                          name,
+                          amount,
+                        })
+                      )}
+                      title="student gender"
+                    />
+                  </Col>
+
+                  <Col span={12}>
+                    <Pie
+                      data={Object.entries(overview.teacher.gender).map(
+                        ([name, amount]) => ({
+                          name,
+                          amount,
+                        })
+                      )}
+                      title="teacher gender"
+                    />
+                  </Col>
+                </Row>
+              )
+            )}
+          </Card>
+        </Col>
+      </Row>
+
+      <Row gutter={[6, 16]} style={{ marginBottom: 16 }}>
+        <Col span={24} xl={{ span: 12 }}>
+          <Card title="Increment">
+            <Line
+              data={{
+                student: studentStatistics?.createdAt || null,
+                teacher: teacherStatistics?.createdAt || null,
+                course: courseStatistics?.createdAt || null,
+              }}
+            />
+          </Card>
+        </Col>
+
+        <Col span={24} xl={{ span: 12 }}>
+          <Card title="Languages">
+            <Bar
+              data={{
+                interest: studentStatistics?.interest || null,
+                teacher: teacherStatistics?.skills || null,
+              }}
             />
           </Card>
         </Col>
