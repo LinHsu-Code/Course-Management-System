@@ -3,27 +3,15 @@ import Highcharts from 'highcharts/highmaps'
 import { useEffect, useState } from 'react'
 import { Statistics, StatisticsWithSkill } from '../../lib/model'
 import { uniq } from 'lodash'
-
-export enum SkillDes {
-  'Know' = 1,
-  'Practiced',
-  'Comprehend',
-  'Expert',
-  'Master',
-}
-
-export const skillDes = new Array(5)
-  .fill(0)
-  .map((_, index) => SkillDes[index + 1])
+import { SkillLevels } from '../../lib/constants'
 
 export default function Bar({
-  data,
+  studentInterests,
+  teacherSkills,
 }: {
-  data: {
-    interest: Statistics[] | null
-    teacher: {
-      [key: string]: StatisticsWithSkill[]
-    } | null
+  studentInterests: Statistics[]
+  teacherSkills: {
+    [key: string]: StatisticsWithSkill[]
   }
 }) {
   const [options, setOptions] = useState<any>({
@@ -49,19 +37,13 @@ export default function Bar({
       enabled: false,
     },
 
-    // tooltip: {
-    //   formatter: function () {
-    //     return '<b>' + this.x + '</b><br/>' +
-    //       this.series.name + ': ' + this.y + '<br/>' +
-    //       'Total: ' + this.point.stackTotal;
-    //   }
-    // },
-
     tooltip: {
       formatter: function () {
-        return this.series.name === 'Interest'
-          ? `${this.series.name}: ${this.y}`
-          : `<b>${this.x}</b><br/>${this.series.name}: ${this.y}<br/>total: ${this.point.stackTotal}`
+        return (this as any).series.name === 'Interest'
+          ? `${(this as any).series.name}: ${(this as any).y}`
+          : `<b>${(this as any).x}</b><br/>${(this as any).series.name}: ${
+              (this as any).y
+            }<br/>total: ${(this as any).point.stackTotal}`
       },
     },
 
@@ -79,37 +61,28 @@ export default function Bar({
   })
 
   useEffect(() => {
-    if (!data || Object.values(data).some((item) => !item)) {
-      return
+    const categories: string[] = uniq([
+      ...studentInterests.map(({ name }) => name),
+      ...Object.keys(teacherSkills),
+    ])
+
+    const interestSeries = {
+      name: 'Interest',
+      stack: 'interest',
+      data: categories.map(
+        (language) =>
+          studentInterests.find((item) => item.name === language)?.amount || 0
+      ),
     }
 
-    const { interest, teacher } = data
-    const xCategories: string[] = uniq([
-      ...interest.map(({ name }) => name),
-      ...Object.keys(teacher),
-    ])
-    const interestItem: ISeriesItem = xCategories.reduce(
-      (acc, language) => {
-        const target = interest.find((item) => item.name === language)
-
-        acc.data.push(target ? target.amount : 0)
-        return acc
-      },
-      { name: 'Interest', stack: 'interest', data: [] }
-    )
-    const levels = uniq(
-      Object.values(teacher)
-        .flat()
-        .map((item) => item.level)
-    ).sort()
-    const teacherBar: ISeriesItem[] = levels.map((level) => ({
-      name: SkillDes[level],
-      data: xCategories.map(
-        (lan) =>
-          teacher[lan]?.find((item: Statistic) => item.level === level)
+    const skillSeries = SkillLevels.map((level, index) => ({
+      name: level,
+      stack: 'teacher',
+      data: categories.map(
+        (language) =>
+          teacherSkills[language]?.find((item) => item.level === index + 1)
             ?.amount || 0
       ),
-      stack: 'teacher',
     }))
 
     setOptions({
@@ -122,11 +95,11 @@ export default function Bar({
             fontFamily: 'Verdana, sans-serif',
           },
         },
-        categories: xCategories,
+        categories: categories,
       },
-      series: [...teacherBar, interestItem],
+      series: [interestSeries, ...skillSeries],
     })
-  }, [data])
+  }, [studentInterests, teacherSkills])
 
   return (
     <HighchartsReact

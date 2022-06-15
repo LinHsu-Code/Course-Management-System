@@ -64,3 +64,11 @@ export const ValidateMessages = {
 }
 
 export const MessageTypes: MessageType[] = ['notification', 'message']
+
+export const SkillLevels = [
+  'Know',
+  'Practiced',
+  'Comprehend',
+  'Expert',
+  'Master',
+]

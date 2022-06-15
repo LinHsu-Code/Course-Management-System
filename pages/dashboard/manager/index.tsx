@@ -24,6 +24,7 @@ import Map from '../../../components/statistics/map'
 import Pie from '../../../components/statistics/pie'
 import Line from '../../../components/statistics/line'
 import Bar from '../../../components/statistics/bar'
+import Heat from '../../../components/statistics/heat'
 
 const overviewBackground = ['#1890ff', '#673bb7', '#ffaa16']
 
@@ -48,10 +49,10 @@ export default function Page() {
   const [distributionRole, setDistributionRole] = useState<string>('student')
   const [selectedType, setSelectedType] = useState<string>('student_type')
 
-  console.log('overview:', overview)
-  console.log('studentStatistics:', studentStatistics)
-  console.log('teacherStatistics:', teacherStatistics)
-  console.log('courseStatistics:', courseStatistics)
+  // console.log('overview:', overview)
+  // console.log('studentStatistics:', studentStatistics)
+  // console.log('teacherStatistics:', teacherStatistics)
+  // console.log('courseStatistics:', courseStatistics)
 
   useEffect(() => {
     getStatisticsOverview().then((res) => {
@@ -196,12 +197,25 @@ export default function Page() {
 
         <Col span={24} xl={{ span: 12 }}>
           <Card title="Languages">
-            <Bar
-              data={{
-                interest: studentStatistics?.interest || null,
-                teacher: teacherStatistics?.skills || null,
-              }}
-            />
+            {studentStatistics && teacherStatistics && (
+              <Bar
+                studentInterests={studentStatistics.interest}
+                teacherSkills={teacherStatistics.skills}
+              />
+            )}
+          </Card>
+        </Col>
+      </Row>
+
+      <Row gutter={[6, 16]}>
+        <Col span={24}>
+          <Card title="Course Schedule">
+            {courseStatistics && (
+              <Heat
+                data={courseStatistics.classTime}
+                title="Course schedule per weekday"
+              />
+            )}
           </Card>
         </Col>
       </Row>
