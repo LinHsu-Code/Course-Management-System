@@ -4,6 +4,11 @@ import { useEffect, useState } from 'react'
 import { Statistics } from '../../lib/model'
 import { getWorldMap } from '../../lib/request'
 
+if (typeof Highcharts === 'object') {
+  require('highcharts/modules/map')(Highcharts)
+  require('highcharts/modules/exporting')(Highcharts)
+}
+
 export default function Map({
   data,
   title,

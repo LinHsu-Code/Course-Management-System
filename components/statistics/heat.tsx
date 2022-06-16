@@ -2,12 +2,12 @@ import Highcharts, { Point } from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import { zip } from 'lodash'
 import { useEffect, useState } from 'react'
-import { Weekdays } from '../../lib/constants'
-import { StatisticsWithClassTime } from '../../lib/model'
+import { Weekdays, WeekdaysToIndex } from '../../lib/constants'
+import { StatisticsWithClassTime, Weekday } from '../../lib/model'
 
 if (typeof Highcharts === 'object') {
   require('highcharts/modules/heatmap')(Highcharts)
-  require('highcharts/modules/exporting')(Highcharts)
+  //require('highcharts/modules/exporting')(Highcharts)
 }
 
 function getPointCategoryName(point: Point, dimension: 'x' | 'y') {
@@ -30,7 +30,8 @@ export default function Heat({
       plotBorderWidth: 1,
     },
     xAxis: {
-      categories: [...Weekdays, '<b>TOTAL</b>'],
+      //categories: [...Weekdays, '<b>TOTAL</b>'],
+      categories: Weekdays,
     },
     accessibility: {
       point: {
@@ -89,50 +90,49 @@ export default function Heat({
   })
 
   useEffect(() => {
-    const yCategories = data.map((item) => item.name).concat(`<b>TOTAL</b>`)
-    console.log('data:', data)
-    const rowData = data.map((item) => {
-      const ary = new Array(7).fill(0)
-      const courses = item.courses
-        .map((course) => course.classTime)
-        .flat()
-        .map((item) => item?.split(' ')[0])
-      courses.forEach((weekday) => {
-        const index = Weekdays.findIndex((item) => item === weekday)
+    const yCategories = data.map((item) => item.name)
 
-        ary[index] += 1
+    var init = Array(data.length)
+      .fill(0)
+      .map(() => Array(7).fill(0))
+
+    const twoDimensionalHeatData = data.reduce((acc, curr, i) => {
+      acc[i] = new Array(7).fill(0)
+      curr.courses.forEach((course) => {
+        course.classTime?.forEach((classTime) => {
+          const j = WeekdaysToIndex[classTime.split(' ')[0] as Weekday]
+          acc[i][j]++
+        })
       })
-      return ary.concat(ary.reduce((acc, cur) => acc + cur))
+      return acc
+    }, init)
+
+    // const yCategories = data.map((item) => item.name).concat(`<b>TOTAL</b>`)
+
+    // var init = Array(data.length + 1)
+    //   .fill(0)
+    //   .map(() => Array(8).fill(0))
+
+    // const twoDimensionalHeatData = data.reduce((acc, curr, i) => {
+    //   acc[i] = new Array(8).fill(0)
+    //   curr.courses.forEach((course) => {
+    //     course.classTime?.forEach((classTime) => {
+    //       const j = WeekdaysToIndex[classTime.split(' ')[0] as Weekday]
+    //       acc[i][j]++
+    //       acc[i][7]++
+    //       acc[data.length][j]++
+    //       acc[data.length][7]++
+    //     })
+    //   })
+    //   return acc
+    // }, init)
+
+    const HeatDataWithIndex: number[][] = []
+    zip(...twoDimensionalHeatData).forEach((item, i) => {
+      item.forEach((n, j) => {
+        HeatDataWithIndex.push([i, j, n as number])
+      })
     })
-    console.log('rowData:', rowData)
-    console.log('rowData zip:', zip(...rowData))
-    console.log(
-      'rowData before flat:',
-      zip(...rowData).map((columnAry, index) => {
-        const len = columnAry.length
-        const result = []
-        let i = 0
-        for (i = 0; i < len; i++) {
-          result.push([index, i, columnAry[i]])
-        }
-        result.push([index, i, result.reduce((acc, cur) => acc + cur[2], 0)])
-        return result
-      })
-    )
-    const sourceData = zip(...rowData)
-      .map((columnAry, index) => {
-        const len = columnAry.length
-        const result = []
-        let i = 0
-        for (i = 0; i < len; i++) {
-          result.push([index, i, columnAry[i]])
-        }
-        result.push([index, i, result.reduce((acc, cur) => acc + cur[2], 0)])
-        return result
-      })
-      .flat()
-
-    console.log('sourceData:', sourceData)
 
     setOptions({
       title: {
@@ -146,7 +146,7 @@ export default function Heat({
       series: [
         {
           borderWidth: 1,
-          data: sourceData,
+          data: HeatDataWithIndex,
           dataLabels: {
             enabled: true,
             color: '#000000',
