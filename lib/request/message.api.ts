@@ -1,4 +1,4 @@
-import { getInstance, putInstance, showMessage } from './common'
+import { getInstance, putInstance, postInstance, showMessage } from './common'
 import {
   GetMessageRequest,
   GetMessageResponse,
@@ -6,6 +6,8 @@ import {
   MarkMessageAsReadResponse,
   GetMessageStaticsRequest,
   GetMessageStaticsResponse,
+  PostMessageRequest,
+  PostMessageResponse,
 } from '../model'
 
 const getMessages = (params: GetMessageRequest): Promise<GetMessageResponse> =>
@@ -28,4 +30,15 @@ const subscribeMessage = (): EventSource => {
   )
 }
 
-export { getMessages, markMessageAsRead, getMessageStatics, subscribeMessage }
+const postMessage = (
+  params: PostMessageRequest
+): Promise<PostMessageResponse> =>
+  postInstance('/message', params).then((res) => showMessage(res))
+
+export {
+  getMessages,
+  markMessageAsRead,
+  getMessageStatics,
+  subscribeMessage,
+  postMessage,
+}

@@ -61,3 +61,20 @@ export type MessageCount = {
 }
 
 export type MessageHistory = { [key: string]: Message[] }
+
+export interface PostMessageRequest {
+  from: number
+  to: number
+  content: string
+  alertAt: string
+}
+
+export interface PostMessageData extends PostMessageRequest {
+  status: number
+  type: string
+  createdAt: Date
+  updatedAt: Date
+  id: number
+}
+
+export type PostMessageResponse = Response<PostMessageData>
