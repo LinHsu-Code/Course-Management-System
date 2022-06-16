@@ -1,8 +1,8 @@
 import Head from 'next/head'
-import { Badge, Calendar, Card, Descriptions, Modal, Tag } from 'antd'
+import { Badge, Calendar, Card, Descriptions, Modal, Tag, Tooltip } from 'antd'
 import styles from './index.module.scss'
 import { useEffect, useState } from 'react'
-import { CourseWithSchedule } from '../../../../lib/model'
+import { Course, CourseWithSchedule } from '../../../../lib/model'
 import { getClassSchedule } from '../../../../lib/request'
 import type { Moment } from 'moment'
 import {
@@ -17,8 +17,28 @@ import {
   format,
   isSameDay,
 } from 'date-fns'
-import { ClockCircleOutlined } from '@ant-design/icons'
+import { ClockCircleOutlined, NotificationFilled } from '@ant-design/icons'
 import { PROGRAM_LANGUAGE_COLORS } from '../../../../lib/constants'
+
+const getCurrentChapterInfo = (course: CourseWithSchedule) => {
+  if (course.schedule.status === 2) {
+    return null
+  }
+  let index = 0
+  if (course.schedule.current !== 0) {
+    index = course.schedule.chapters.findIndex(
+      (item) => item.id === course.schedule.current
+    )
+  }
+
+  return course.schedule.chapters
+    ? {
+        chapterNO: index + 1,
+        chapterName: course.schedule.chapters[index].name,
+        chapterContent: course.schedule.chapters[index].content,
+      }
+    : null
+}
 
 export default function Page() {
   const [classSchedule, setClassSchedule] = useState<
@@ -28,6 +48,12 @@ export default function Page() {
   const [classInfo, setClassInfo] = useState<{
     course: CourseWithSchedule
     time: string | null
+    currentChapterInfo: {
+      chapterNO: number
+      chapterName: string
+      chapterContent: string
+    } | null
+    isFutureClass: boolean
   } | null>(null)
 
   useEffect(() => {
@@ -49,20 +75,20 @@ export default function Page() {
       return null
     }
 
-    const currentDate = currentCellDate.toDate()
-    const currentWeekday = format(currentDate, 'EEEE')
+    const cellDay = currentCellDate.toDate()
+    const currentWeekday = format(cellDay, 'EEEE')
+    const currentDay = new Date()
 
     const addFns = [addYears, addMonths, addDays, addWeeks, addHours]
 
     const listData = classSchedule.map((course) => {
-      const theDayBeforeStart = subDays(new Date(course.startTime), 1)
-      const theDayAfterEnd = addDays(
-        addFns[course.durationUnit - 1](
-          new Date(course.startTime),
-          course.duration
-        ),
-        1
+      const startDay = new Date(course.startTime)
+      const endDay = addFns[course.durationUnit - 1](
+        new Date(course.startTime),
+        course.duration
       )
+      const theDayBeforeStart = subDays(startDay, 1)
+      const theDayAfterEnd = addDays(endDay, 1)
 
       const sameWeekdayTime =
         course.schedule.classTime
@@ -71,12 +97,20 @@ export default function Page() {
 
       const hasCourse =
         course.durationUnit === 5
-          ? isSameDay(new Date(course.startTime), currentDate)
-          : isBefore(theDayBeforeStart, currentDate) &&
-            isAfter(theDayAfterEnd, currentDate) &&
+          ? isSameDay(startDay, cellDay)
+          : isBefore(theDayBeforeStart, cellDay) &&
+            isAfter(theDayAfterEnd, cellDay) &&
             sameWeekdayTime
 
-      return hasCourse ? { course, time: sameWeekdayTime } : null
+      return hasCourse
+        ? {
+            course,
+            time: sameWeekdayTime,
+            currentChapterInfo: getCurrentChapterInfo(course),
+            isFutureClass:
+              isAfter(cellDay, currentDay) || isSameDay(cellDay, currentDay),
+          }
+        : null
     })
 
     return (
@@ -112,15 +146,11 @@ export default function Page() {
           onCancel={() => setClassInfo(null)}
         >
           <Descriptions>
-            <Descriptions.Item span={8} label="Course Name">
+            <Descriptions.Item span={8} label="Class Name">
               {classInfo?.course.name}
             </Descriptions.Item>
-            <Descriptions.Item span={8} label="Chapter N.O">
-              {/* {classInfo?.course.schedule.chapters.findIndex(
-              (item) => item.id === classInfo?.class.chapter?.id
-            ) + 1} */}
-            </Descriptions.Item>
-            <Descriptions.Item span={8} label="Course Type">
+
+            <Descriptions.Item span={8} label="Class Type">
               {classInfo?.course.type.map((item, index) => (
                 <Tag
                   color={
@@ -134,32 +164,46 @@ export default function Page() {
                 </Tag>
               ))}
             </Descriptions.Item>
+
             <Descriptions.Item span={8} label="Teacher Name">
               {classInfo?.course.teacherName}
             </Descriptions.Item>
-            <Descriptions.Item span={8} label="Class Time">
-              {classInfo?.course.schedule.classTime}
 
-              {/* <Tooltip title="Remend me">
-                <NotificationFilled
-                  style={{
-                    color: '#1890ff',
-                    marginLeft: 10,
-                    cursor: 'pointer',
-                  }}
-                  onClick={() => {
-                    // TODO: class system;
-                    setclassInfo(null)
-                  }}
-                />
-              </Tooltip> */}
+            <Descriptions.Item span={8} label="Class Time">
+              {classInfo?.time}
+              {classInfo?.isFutureClass && (
+                <Tooltip title="Remend me">
+                  <NotificationFilled
+                    style={{
+                      color: '#1890ff',
+                      marginLeft: 10,
+                      cursor: 'pointer',
+                    }}
+                    onClick={() => {
+                      setClassInfo(null)
+                    }}
+                  />
+                </Tooltip>
+              )}
             </Descriptions.Item>
-            <Descriptions.Item span={8} label="Chapter Name">
-              {/* {classInfo?.class.chapter?.name} */}
-            </Descriptions.Item>
-            <Descriptions.Item span={12} label="Chapter Content">
-              {/* {notifyInfo?.class.chapter?.content} */}
-            </Descriptions.Item>
+            {classInfo?.course.status === 2 ? (
+              <Descriptions.Item span={8} label="Class Status">
+                <Badge status="success" text="Finished" />
+              </Descriptions.Item>
+            ) : (
+              <>
+                <Descriptions.Item span={8} label="Chapter N.O">
+                  {classInfo?.currentChapterInfo?.chapterNO}
+                </Descriptions.Item>
+
+                <Descriptions.Item span={8} label="Chapter Name">
+                  {classInfo?.currentChapterInfo?.chapterName}
+                </Descriptions.Item>
+                <Descriptions.Item span={12} label="Chapter Content">
+                  {classInfo?.currentChapterInfo?.chapterContent}
+                </Descriptions.Item>
+              </>
+            )}
           </Descriptions>
         </Modal>
       </div>
