@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import { Badge, Calendar, Card, Descriptions, Modal } from 'antd'
+import { Badge, Calendar, Card, Descriptions, Modal, Tag } from 'antd'
 import styles from './index.module.scss'
 import { useEffect, useState } from 'react'
 import { CourseWithSchedule } from '../../../../lib/model'
@@ -18,6 +18,7 @@ import {
   isSameDay,
 } from 'date-fns'
 import { ClockCircleOutlined } from '@ant-design/icons'
+import { PROGRAM_LANGUAGE_COLORS } from '../../../../lib/constants'
 
 export default function Page() {
   const [classSchedule, setClassSchedule] = useState<
@@ -120,7 +121,18 @@ export default function Page() {
             ) + 1} */}
             </Descriptions.Item>
             <Descriptions.Item span={8} label="Course Type">
-              {classInfo?.course.type[0]?.name}
+              {classInfo?.course.type.map((item, index) => (
+                <Tag
+                  color={
+                    PROGRAM_LANGUAGE_COLORS[
+                      index % PROGRAM_LANGUAGE_COLORS.length
+                    ]
+                  }
+                  key={item.name}
+                >
+                  {item.name}
+                </Tag>
+              ))}
             </Descriptions.Item>
             <Descriptions.Item span={8} label="Teacher Name">
               {classInfo?.course.teacherName}

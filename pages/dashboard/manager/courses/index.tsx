@@ -13,6 +13,7 @@ export default function Page() {
   const [paginator, setPaginator] = useState<Paginator>({ page: 1, limit: 20 })
   const [hasMore, setHasMore] = useState(true)
   const [courses, setCourses] = useState<Course[]>([])
+  const [userRole, setUserRole] = useState<string>('')
 
   const AppendCourses = (paginator: Paginator) => {
     getCourses(paginator).then((res) => {
@@ -34,6 +35,7 @@ export default function Page() {
         }
       }
     })
+    setUserRole(localStorage.getItem('role') || '')
   }, [])
 
   return (
@@ -64,7 +66,7 @@ export default function Page() {
                 <CourseCard course={course}>
                   <Row>
                     <Link
-                      href={`/dashboard/manager/courses/${course.id}`}
+                      href={`/dashboard/${userRole}/courses/${course.id}`}
                       passHref
                     >
                       <Button type="primary">Read More</Button>
