@@ -119,14 +119,16 @@ export default function Page() {
               </Select>
             }
           >
-            <Map
-              data={
-                distributionRole === 'student'
-                  ? studentStatistics?.country || null
-                  : teacherStatistics?.country || null
-              }
-              title={distributionRole}
-            />
+            {studentStatistics && teacherStatistics && (
+              <Map
+                data={
+                  distributionRole === 'student'
+                    ? studentStatistics.country
+                    : teacherStatistics.country
+                }
+                title={distributionRole}
+              />
+            )}
           </Card>
         </Col>
 

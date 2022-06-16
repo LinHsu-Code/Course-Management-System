@@ -1,12 +1,7 @@
 import HighchartsReact from 'highcharts-react-official'
 import Highcharts from 'highcharts/highmaps'
-import HighchartsExporting from 'highcharts/modules/exporting'
 import { useEffect, useState } from 'react'
 import { Statistics } from '../../lib/model'
-
-if (typeof Highcharts === 'object') {
-  HighchartsExporting(Highcharts)
-}
 
 export default function Line({
   data,
