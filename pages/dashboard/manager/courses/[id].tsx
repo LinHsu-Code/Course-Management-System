@@ -41,7 +41,7 @@ export default function Page({ id }: { id: string }) {
   return (
     <>
       <Head>
-        <title>{'CMS DashBoard: Manager-Course-Detail'}</title>
+        <title>{'CMS DashBoard: Course-Detail'}</title>
       </Head>
 
       <Row gutter={[6, 16]} wrap={false}>

@@ -39,7 +39,7 @@ export default function Page() {
   return (
     <>
       <Head>
-        <title>{'CMS DashBoard: Manager-Course List'}</title>
+        <title>{'CMS DashBoard: Course List'}</title>
       </Head>
 
       <InfiniteScroll

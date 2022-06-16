@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import { Badge, Calendar, Card } from 'antd'
+import { Badge, Calendar, Card, Descriptions, Modal } from 'antd'
 import styles from './index.module.scss'
 import { useEffect, useState } from 'react'
 import { CourseWithSchedule } from '../../../../lib/model'
@@ -103,6 +103,53 @@ export default function Page() {
             monthCellRender={monthCellRender}
           />
         </Card>
+
+        <Modal
+          title="Class Info"
+          visible={!!classInfo}
+          footer={null}
+          onCancel={() => setClassInfo(null)}
+        >
+          <Descriptions>
+            <Descriptions.Item span={8} label="Course Name">
+              {classInfo?.course.name}
+            </Descriptions.Item>
+            <Descriptions.Item span={8} label="Chapter N.O">
+              {/* {classInfo?.course.schedule.chapters.findIndex(
+              (item) => item.id === classInfo?.class.chapter?.id
+            ) + 1} */}
+            </Descriptions.Item>
+            <Descriptions.Item span={8} label="Course Type">
+              {classInfo?.course.type[0]?.name}
+            </Descriptions.Item>
+            <Descriptions.Item span={8} label="Teacher Name">
+              {classInfo?.course.teacherName}
+            </Descriptions.Item>
+            <Descriptions.Item span={8} label="Class Time">
+              {classInfo?.course.schedule.classTime}
+
+              {/* <Tooltip title="Remend me">
+                <NotificationFilled
+                  style={{
+                    color: '#1890ff',
+                    marginLeft: 10,
+                    cursor: 'pointer',
+                  }}
+                  onClick={() => {
+                    // TODO: class system;
+                    setclassInfo(null)
+                  }}
+                />
+              </Tooltip> */}
+            </Descriptions.Item>
+            <Descriptions.Item span={8} label="Chapter Name">
+              {/* {classInfo?.class.chapter?.name} */}
+            </Descriptions.Item>
+            <Descriptions.Item span={12} label="Chapter Content">
+              {/* {notifyInfo?.class.chapter?.content} */}
+            </Descriptions.Item>
+          </Descriptions>
+        </Modal>
       </div>
     </>
   )
