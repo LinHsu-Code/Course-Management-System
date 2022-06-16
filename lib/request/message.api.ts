@@ -32,8 +32,7 @@ const subscribeMessage = (): EventSource => {
 
 const postMessage = (
   params: PostMessageRequest
-): Promise<PostMessageResponse> =>
-  postInstance('/message', params).then((res) => showMessage(res))
+): Promise<PostMessageResponse> => postInstance('/message', params)
 
 export {
   getMessages,

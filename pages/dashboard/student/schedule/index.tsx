@@ -146,11 +146,11 @@ export default function Page() {
           onCancel={() => setClassInfo(null)}
         >
           <Descriptions>
-            <Descriptions.Item span={8} label="Class Name">
+            <Descriptions.Item span={3} label="Class Name">
               {classInfo?.course.name}
             </Descriptions.Item>
 
-            <Descriptions.Item span={8} label="Class Type">
+            <Descriptions.Item span={3} label="Class Type">
               {classInfo?.course.type.map((item, index) => (
                 <Tag
                   color={
@@ -165,11 +165,11 @@ export default function Page() {
               ))}
             </Descriptions.Item>
 
-            <Descriptions.Item span={8} label="Teacher Name">
+            <Descriptions.Item span={3} label="Teacher Name">
               {classInfo?.course.teacherName}
             </Descriptions.Item>
 
-            <Descriptions.Item span={8} label="Class Time">
+            <Descriptions.Item span={3} label="Class Time">
               {classInfo?.time}
               {classInfo?.isFutureClass && (
                 <Tooltip title="Remend me">
@@ -186,20 +186,22 @@ export default function Page() {
                 </Tooltip>
               )}
             </Descriptions.Item>
+
             {classInfo?.course.status === 2 ? (
-              <Descriptions.Item span={8} label="Class Status">
+              <Descriptions.Item span={3} label="Class Status">
                 <Badge status="success" text="Finished" />
               </Descriptions.Item>
             ) : (
               <>
-                <Descriptions.Item span={8} label="Chapter N.O">
+                <Descriptions.Item span={3} label="Chapter No.">
                   {classInfo?.currentChapterInfo?.chapterNO}
                 </Descriptions.Item>
 
-                <Descriptions.Item span={8} label="Chapter Name">
+                <Descriptions.Item span={3} label="Chapter Name">
                   {classInfo?.currentChapterInfo?.chapterName}
                 </Descriptions.Item>
-                <Descriptions.Item span={12} label="Chapter Content">
+
+                <Descriptions.Item span={3} label="Chapter Content">
                   {classInfo?.currentChapterInfo?.chapterContent}
                 </Descriptions.Item>
               </>
