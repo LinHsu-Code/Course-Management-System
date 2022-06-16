@@ -1,10 +1,4 @@
-import {
-  getInstance,
-  postInstance,
-  putInstance,
-  deleteInstance,
-  showMessage,
-} from './common'
+import { getInstance } from './common'
 import {
   GetCourseStatisticsResponse,
   GetStatisticsOverviewResponse,
