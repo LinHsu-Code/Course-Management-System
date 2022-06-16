@@ -4,86 +4,30 @@ import styles from './index.module.scss'
 import { useEffect, useState } from 'react'
 import { CourseWithSchedule } from '../../../../lib/model'
 import { getClassSchedule } from '../../../../lib/request'
-
-const getListData = (value) => {
-  let listData
-
-  switch (value.date()) {
-    case 8:
-      listData = [
-        {
-          type: 'warning',
-          content: 'This is warning event.',
-        },
-        {
-          type: 'success',
-          content: 'This is usual event.',
-        },
-      ]
-      break
-
-    case 10:
-      listData = [
-        {
-          type: 'warning',
-          content: 'This is warning event.',
-        },
-        {
-          type: 'success',
-          content: 'This is usual event.',
-        },
-        {
-          type: 'error',
-          content: 'This is error event.',
-        },
-      ]
-      break
-
-    case 15:
-      listData = [
-        {
-          type: 'warning',
-          content: 'This is warning event',
-        },
-        {
-          type: 'success',
-          content: 'This is very long usual event。。....',
-        },
-        {
-          type: 'error',
-          content: 'This is error event 1.',
-        },
-        {
-          type: 'error',
-          content: 'This is error event 2.',
-        },
-        {
-          type: 'error',
-          content: 'This is error event 3.',
-        },
-        {
-          type: 'error',
-          content: 'This is error event 4.',
-        },
-      ]
-      break
-
-    default:
-  }
-
-  return listData || []
-}
-
-const getMonthData = (value) => {
-  if (value.month() === 8) {
-    return 1394
-  }
-}
+import type { Moment } from 'moment'
+import {
+  isAfter,
+  isBefore,
+  subDays,
+  addYears,
+  addMonths,
+  addDays,
+  addWeeks,
+  addHours,
+  format,
+  isSameDay,
+} from 'date-fns'
+import { ClockCircleOutlined } from '@ant-design/icons'
 
 export default function Page() {
   const [classSchedule, setClassSchedule] = useState<
     CourseWithSchedule[] | null
   >(null)
+
+  const [classInfo, setClassInfo] = useState<{
+    course: CourseWithSchedule
+    time: string | null
+  } | null>(null)
 
   useEffect(() => {
     const userId = Number(localStorage.getItem('userId'))
@@ -95,28 +39,55 @@ export default function Page() {
     })
   }, [])
 
-  const monthCellRender = (value) => {
-    //console.log('month value:', value)
-    const num = getMonthData(value)
-    return num ? (
-      <div className={styles.notesMonth}>
-        <section>{num}</section>
-        <span>Backlog number</span>
-      </div>
-    ) : null
+  const monthCellRender = (value: Moment) => {
+    return <></>
   }
 
-  const dateCellRender = (value) => {
-    //console.log('date value:', value)
-    const listData = getListData(value)
+  const dateCellRender = (currentCellDate: Moment) => {
+    if (!classSchedule) {
+      return null
+    }
+
+    const currentDate = currentCellDate.toDate()
+    const currentWeekday = format(currentDate, 'EEEE')
+
+    const addFns = [addYears, addMonths, addDays, addWeeks, addHours]
+
+    const listData = classSchedule.map((course) => {
+      const theDayBeforeStart = subDays(new Date(course.startTime), 1)
+      const theDayAfterEnd = addDays(
+        addFns[course.durationUnit - 1](
+          new Date(course.startTime),
+          course.duration
+        ),
+        1
+      )
+
+      const sameWeekdayTime =
+        course.schedule.classTime
+          .find((item) => item.startsWith(currentWeekday))
+          ?.split(' ')[1] || null
+
+      const hasCourse =
+        course.durationUnit === 5
+          ? isSameDay(new Date(course.startTime), currentDate)
+          : isBefore(theDayBeforeStart, currentDate) &&
+            isAfter(theDayAfterEnd, currentDate) &&
+            sameWeekdayTime
+
+      return hasCourse ? { course, time: sameWeekdayTime } : null
+    })
+
     return (
-      <ul className={styles.events}>
-        {listData.map((item) => (
-          <li key={item.content}>
-            <Badge status={item.type} text={item.content} />
-          </li>
-        ))}
-      </ul>
+      <>
+        {listData.map((item, index) => {
+          return item ? (
+            <div key={index} onClick={() => setClassInfo(item)}>
+              <ClockCircleOutlined /> {`${item.time} ${item.course.name}`}
+            </div>
+          ) : null
+        })}
+      </>
     )
   }
 
