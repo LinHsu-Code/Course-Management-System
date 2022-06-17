@@ -15,10 +15,14 @@ import {
   addHours,
   format,
   isSameDay,
+  startOfMonth,
+  endOfMonth,
 } from 'date-fns'
 import { ClockCircleOutlined, NotificationFilled } from '@ant-design/icons'
 import { PROGRAM_LANGUAGE_COLORS } from '../../../../lib/constants'
 import { postMessage } from '../../../../lib/request'
+
+const addFns = [addYears, addMonths, addDays, addWeeks, addHours]
 
 const getCurrentChapterInfo = (course: CourseWithSchedule) => {
   if (course.schedule.status === 2) {
@@ -38,6 +42,34 @@ const getCurrentChapterInfo = (course: CourseWithSchedule) => {
         chapterContent: course.schedule.chapters[index].content,
       }
     : null
+}
+
+const countClassTimes = (
+  classTime: string[],
+  startOfCellMonth: Date,
+  endOfCellMonth: Date,
+  startDay: Date,
+  endDay: Date
+) => {
+  const startDayInThisMonth = isBefore(startDay, startOfCellMonth)
+    ? startOfCellMonth
+    : startDay
+  const endDayInThisMonth = isAfter(endDay, endOfCellMonth)
+    ? endOfCellMonth
+    : endDay
+
+  return classTime.reduce((acc, curr) => {
+    const weekday = curr.split(' ')[0]
+    let temp = startDayInThisMonth
+
+    while (isBefore(temp, endDayInThisMonth)) {
+      if (format(temp, 'EEEE') === weekday) {
+        acc++
+      }
+      temp = addDays(temp, 1)
+    }
+    return acc
+  }, 0)
 }
 
 export default function Page() {
@@ -62,13 +94,53 @@ export default function Page() {
     getClassSchedule({ userId }).then((res) => {
       if (res.data) {
         setClassSchedule(res.data)
-        console.log(res.data)
       }
     })
   }, [])
 
-  const monthCellRender = (value: Moment) => {
-    return <></>
+  const monthCellRender = (currentCellDate: Moment) => {
+    if (!classSchedule) {
+      return null
+    }
+
+    const startOfCellMonth = startOfMonth(currentCellDate.toDate())
+    const endOfCellMonth = endOfMonth(currentCellDate.toDate())
+
+    const listData = classSchedule.map((course) => {
+      const startDay = new Date(course.startTime)
+      const endDay = addFns[course.durationUnit - 1](
+        new Date(course.startTime),
+        course.duration
+      )
+
+      const notInThisMonth =
+        isBefore(endDay, startOfCellMonth) || isAfter(startDay, endOfCellMonth)
+
+      return notInThisMonth
+        ? null
+        : {
+            courseName: course.name,
+            courseTimes: countClassTimes(
+              course.schedule.classTime,
+              startOfCellMonth,
+              endOfCellMonth,
+              startDay,
+              endDay
+            ),
+          }
+    })
+    return (
+      <>
+        {listData.map((item, index) => {
+          return item ? (
+            <div key={index}>
+              <b>{item.courseName} </b>
+              {`${item.courseTimes} lessons`}
+            </div>
+          ) : null
+        })}
+      </>
+    )
   }
 
   const dateCellRender = (currentCellDate: Moment) => {
@@ -79,8 +151,6 @@ export default function Page() {
     const cellDay = currentCellDate.toDate()
     const currentWeekday = format(cellDay, 'EEEE')
     const currentDay = new Date()
-
-    const addFns = [addYears, addMonths, addDays, addWeeks, addHours]
 
     const listData = classSchedule.map((course) => {
       const startDay = new Date(course.startTime)

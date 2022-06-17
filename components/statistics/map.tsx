@@ -36,7 +36,6 @@ export default function Map({
   useEffect(() => {
     getWorldMap().then((res) => {
       setWorldMap(res.data)
-      console.log(res)
     })
   }, [])
 
