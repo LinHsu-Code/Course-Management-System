@@ -1,8 +1,7 @@
 import Head from 'next/head'
 import { Badge, Calendar, Card, Descriptions, Modal, Tag, Tooltip } from 'antd'
-import styles from './index.module.scss'
 import { useEffect, useState } from 'react'
-import { Course, CourseWithSchedule } from '../../../../lib/model'
+import { CourseWithSchedule } from '../../../../lib/model'
 import { getClassSchedule } from '../../../../lib/request'
 import type { Moment } from 'moment'
 import {
@@ -19,6 +18,7 @@ import {
 } from 'date-fns'
 import { ClockCircleOutlined, NotificationFilled } from '@ant-design/icons'
 import { PROGRAM_LANGUAGE_COLORS } from '../../../../lib/constants'
+import { postMessage } from '../../../../lib/request'
 
 const getCurrentChapterInfo = (course: CourseWithSchedule) => {
   if (course.schedule.status === 2) {
@@ -48,6 +48,7 @@ export default function Page() {
   const [classInfo, setClassInfo] = useState<{
     course: CourseWithSchedule
     time: string | null
+    day: string
     currentChapterInfo: {
       chapterNO: number
       chapterName: string
@@ -105,6 +106,7 @@ export default function Page() {
       return hasCourse
         ? {
             course,
+            day: format(cellDay, 'yyyy-MM-dd'),
             time: sameWeekdayTime,
             currentChapterInfo: getCurrentChapterInfo(course),
             isFutureClass:
@@ -172,7 +174,7 @@ export default function Page() {
             <Descriptions.Item span={3} label="Class Time">
               {classInfo?.time}
               {classInfo?.isFutureClass && (
-                <Tooltip title="Remend me">
+                <Tooltip title="Remind Me">
                   <NotificationFilled
                     style={{
                       color: '#1890ff',
@@ -180,6 +182,13 @@ export default function Page() {
                       cursor: 'pointer',
                     }}
                     onClick={() => {
+                      const userId = Number(localStorage.getItem('userId'))
+                      postMessage({
+                        from: userId,
+                        to: userId,
+                        content: `You have a ${classInfo?.course.name} course at ${classInfo?.time} ${classInfo?.day}`,
+                        alertAt: '',
+                      })
                       setClassInfo(null)
                     }}
                   />
