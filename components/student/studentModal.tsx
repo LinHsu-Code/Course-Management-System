@@ -1,37 +1,51 @@
 import { Modal, Select, Form, Input } from 'antd'
+import { Dispatch, SetStateAction } from 'react'
 import { COUNTRY_LIST } from '../../lib/constants'
-import { EditStudentRequest } from '../../lib/model'
+import { EditStudentRequest, Student } from '../../lib/model'
 import { addStudent, editStudent } from '../../lib/request'
 
-export default function StudentModal(props: any) {
+export default function StudentModal({
+  editContent,
+  setIsModalVisible,
+  setData,
+}: {
+  editContent: {}
+  setIsModalVisible: Dispatch<SetStateAction<boolean>>
+  setData: Dispatch<SetStateAction<Student[]>>
+}) {
   const [form] = Form.useForm()
 
   const handleOk = async () => {
     const formData: EditStudentRequest = form.getFieldsValue(true)
     const res =
-      Object.keys(props.editContent).length === 0
+      Object.keys(editContent).length === 0
         ? await addStudent(formData)
         : await editStudent(formData)
 
     if (res.data) {
-      props.fetchStudents(props.queryParams)
+      setData((prev) => {
+        const index = prev.findIndex((item) => item.id === formData.id)
+        if (index !== -1) {
+          prev[index] = res.data
+        }
+        return [...prev]
+      })
+      // fetchStudents(queryParams)
       handleClose()
     }
   }
 
   const handleClose = () => {
-    props.setIsModalVisible(false)
+    setIsModalVisible(false)
   }
 
   return (
     <Modal
       title={
-        Object.keys(props.editContent).length === 0
-          ? 'Add Student'
-          : 'Edit Student'
+        Object.keys(editContent).length === 0 ? 'Add Student' : 'Edit Student'
       }
       cancelText="Cancel"
-      okText={Object.keys(props.editContent).length === 0 ? 'Add' : 'Update'}
+      okText={Object.keys(editContent).length === 0 ? 'Add' : 'Update'}
       centered={true}
       visible
       onOk={() => handleOk()}
@@ -41,7 +55,7 @@ export default function StudentModal(props: any) {
       <Form
         name="student_modal"
         form={form}
-        initialValues={props.editContent}
+        initialValues={editContent}
         preserve={false}
         labelCol={{
           span: 6,

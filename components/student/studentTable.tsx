@@ -6,26 +6,38 @@ import { ColumnType } from 'antd/lib/table'
 import { deleteStudent } from '../../lib/request'
 import { COUNTRY_LIST, STUDENT_TYPE } from '../../lib/constants'
 import { useUserInfo } from '../../hooks/user'
+import { Dispatch, SetStateAction } from 'react'
 
-export default function StudentTable(props: any) {
+export default function StudentTable({
+  data,
+  total,
+  queryParams,
+  setData,
+  setQueryParams,
+  setEditContent,
+  setIsModalVisible,
+}: {
+  data: Student[]
+  total: number
+  queryParams: any
+  setData: Dispatch<SetStateAction<Student[]>>
+  setQueryParams: Dispatch<
+    SetStateAction<{ paginator: { page: number; limit: number }; queries: {} }>
+  >
+  setEditContent: Dispatch<SetStateAction<{}>>
+  setIsModalVisible: (param: boolean) => void
+}) {
   const userInfo = useUserInfo()
 
   const handleEditClick = async (record: Student) => {
-    props.setEditContent({
+    setEditContent({
       name: record.name,
       email: record.email,
       country: record.country,
       type: record.type?.id,
       id: record.id,
     })
-    props.setIsModalVisible(true)
-  }
-
-  const handleDelete = async (id: number) => {
-    const res = await deleteStudent(id)
-    if (res.data) {
-      props.fetchStudents(props.queryParams)
-    }
+    setIsModalVisible(true)
   }
 
   const columns: ColumnType<Student>[] = [
@@ -95,7 +107,13 @@ export default function StudentTable(props: any) {
           <a onClick={() => handleEditClick(record)}>Edit</a>
           <Popconfirm
             title="Are you sure to delete?"
-            onConfirm={() => handleDelete(record.id)}
+            onConfirm={() => {
+              deleteStudent(record.id).then((res) => {
+                if (res.data) {
+                  setData(data.filter((item) => item.id !== record.id))
+                }
+              })
+            }}
             okText="Confirm"
             cancelText="Cancel"
           >
@@ -113,15 +131,15 @@ export default function StudentTable(props: any) {
       pagination={{
         defaultPageSize: 20,
         defaultCurrent: 1,
-        current: props.queryParams.paginator.page,
-        total: props.total,
+        current: queryParams.paginator.page,
+        total: total,
         onChange: (page, limit) =>
-          props.setQueryParams({
+          setQueryParams((prev) => ({
+            ...prev,
             paginator: { page, limit },
-            queryName: props.queryParams.queryName,
-          }),
+          })),
       }}
-      dataSource={props.data}
+      dataSource={data}
     />
   )
 }
