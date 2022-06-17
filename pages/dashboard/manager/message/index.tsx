@@ -12,7 +12,7 @@ export default function Page() {
   return (
     <>
       <Head>
-        <title>{'CMS DashBoard: Manager-Message'}</title>
+        <title>{'CMS DashBoard: Message'}</title>
       </Head>
       <div>
         <Row align="middle">
