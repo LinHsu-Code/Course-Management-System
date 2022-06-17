@@ -2,6 +2,7 @@ import { Row, Col, Modal, Button, Tabs, notification } from 'antd'
 import Link from 'next/link'
 import { useContext, useEffect, useState } from 'react'
 import styled from 'styled-components'
+import { useUserInfo } from '../../hooks/user'
 import { MessageTypes } from '../../lib/constants'
 import { MessageType, MessageCount, Message } from '../../lib/model'
 import { getMessageStatics, subscribeMessage } from '../../lib/request'
@@ -43,6 +44,8 @@ export default function MessageModal({
     dispatch,
   } = useContext(MessageContext)
 
+  const userInfo = useUserInfo()
+
   useEffect(() => {
     getMessageStatics({}).then((res) => {
       if (res.data) {
@@ -63,7 +66,7 @@ export default function MessageModal({
       }
     })
 
-    const sse = subscribeMessage()
+    const sse = subscribeMessage(userInfo.userId)
 
     sse.onmessage = (event) => {
       const data = JSON.parse(event.data)
@@ -93,7 +96,7 @@ export default function MessageModal({
     return () => {
       sse.close()
     }
-  }, [dispatch])
+  }, [dispatch, userInfo.userId])
 
   return (
     <CustomModal
@@ -127,7 +130,9 @@ export default function MessageModal({
               style={{ border: 'none' }}
               onClick={() => setModal1Visible(false)}
             >
-              <Link href="/dashboard/manager/message">View history</Link>
+              <Link href={`/dashboard/${userInfo.role}/message`}>
+                View history
+              </Link>
             </Button>
           </Col>
         </Row>,

@@ -52,7 +52,7 @@ export default function Page() {
   return (
     <>
       <Head>
-        <title>{'CMS DashBoard: Manager'}</title>
+        <title>{'CMS DashBoard: Student List'}</title>
       </Head>
       <div style={{ overflowX: 'auto' }}>
         <Row style={{ justifyContent: 'space-between', marginBottom: 16 }}>

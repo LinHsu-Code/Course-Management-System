@@ -80,7 +80,7 @@ export default function Page() {
   return (
     <>
       <Head>
-        <title>{'CMS DashBoard: Manager'}</title>
+        <title>{'CMS DashBoard: Overview'}</title>
       </Head>
       <Row gutter={[6, 16]} style={{ marginBottom: 16 }}>
         {overview &&

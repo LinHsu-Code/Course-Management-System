@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { Course } from '../../lib/model'
 import styles from './courseCard.module.scss'
 import { HeartFilled, UserOutlined } from '@ant-design/icons'
+import { useUserInfo } from '../../hooks/user'
 
 export default function CourseCard({
   course,
@@ -12,6 +13,8 @@ export default function CourseCard({
   course: Course
   children: React.ReactNode
 }) {
+  const userInfo = useUserInfo()
+
   return (
     <Card
       cover={
@@ -55,11 +58,17 @@ export default function CourseCard({
         <Row className={styles.cardDescription} style={{ flexWrap: 'nowrap' }}>
           <Col>Teacher:</Col>
           <Col className={styles.cardInfo}>
-            <Link href={`/dashboard/manager/teachers/${course.teacherId}`}>
-              <a>
-                <strong>{course.teacherName}</strong>
-              </a>
-            </Link>
+            {userInfo.role === 'manager' ? (
+              <Link
+                href={`/dashboard/${userInfo.role}/teachers/${course.teacherId}`}
+              >
+                <a>
+                  <strong>{course.teacherName}</strong>
+                </a>
+              </Link>
+            ) : (
+              <strong>{course.teacherName}</strong>
+            )}
           </Col>
         </Row>
 

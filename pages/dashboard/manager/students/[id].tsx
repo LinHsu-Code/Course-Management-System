@@ -13,6 +13,7 @@ import {
 import DetailInfoCard from '../../../../components/common/detailInfoCard'
 import DetailAboutInfo from '../../../../components/common/detailAboutInfo'
 import { PROGRAM_LANGUAGE_COLORS } from '../../../../lib/constants'
+import { useUserInfo } from '../../../../hooks/user'
 
 const { TabPane } = Tabs
 
@@ -32,6 +33,8 @@ export default function Page({ id }: { id: string }) {
   )
   const [student, setStudent] = useState<StudentDetail | null>(null)
 
+  const userInfo = useUserInfo()
+
   const columns: ColumnType<StudentDetailCourse>[] = [
     {
       title: 'No.',
@@ -42,11 +45,7 @@ export default function Page({ id }: { id: string }) {
       title: 'Course Name',
       dataIndex: 'name',
       render: (value, record) => (
-        <Link
-          href={`/dashboard/${localStorage.getItem('role')}/courses/${
-            record.id
-          }`}
-        >
+        <Link href={`/dashboard/${userInfo.role}/courses/${record.id}`}>
           {value}
         </Link>
       ),

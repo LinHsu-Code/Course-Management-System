@@ -28,7 +28,7 @@ export default function Page() {
   return (
     <>
       <Head>
-        <title>{'CMS DashBoard: Manager-Edit Course'}</title>
+        <title>{'CMS DashBoard: Edit Course'}</title>
       </Head>
       <Row gutter={[16, 24]} style={{ paddingBottom: 16 }}>
         <Col span={12}>

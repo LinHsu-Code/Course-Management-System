@@ -5,6 +5,7 @@ import { Course } from '../../../../../lib/model'
 import CourseDetailForm from '../../../../../components/course/courseDetailForm'
 import CourseScheduleForm from '../../../../../components/course/courseScheduleForm'
 import { useRouter } from 'next/router'
+import { useUserInfo } from '../../../../../hooks/user'
 
 const { Step } = Steps
 
@@ -13,12 +14,14 @@ export default function Page() {
   const [minAvailableStep, setMinAvailableStep] = useState(0)
   const [course, setCourse] = useState<Course | null>(null)
 
+  const userInfo = useUserInfo()
+
   const router = useRouter()
 
   return (
     <>
       <Head>
-        <title>{'CMS DashBoard: Manager-Add Course'}</title>
+        <title>{'CMS DashBoard: Add Course'}</title>
       </Head>
 
       <Steps
@@ -63,7 +66,7 @@ export default function Page() {
               type="primary"
               key="detail"
               onClick={() =>
-                router.push(`/dashboard/manager/courses/${course?.id}`)
+                router.push(`/dashboard/${userInfo.role}/courses/${course?.id}`)
               }
             >
               Go Course

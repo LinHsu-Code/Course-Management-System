@@ -4,20 +4,20 @@ import type { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
 import { useEffect, useReducer, useState } from 'react'
 import DashboardLayout from '../components/layout'
-import { Role } from '../lib/model'
 import MessageContext from '../providers/messageContext'
 import {
   messageReducer,
   initialMessageState,
 } from '../providers/messageReducer'
 
-export const siteTitle = 'custom-title'
+export const siteTitle = 'Course Management System'
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [loading, setLoading] = useState(true)
   const [state, dispatch] = useReducer(messageReducer, initialMessageState)
   const router = useRouter()
   const path = router.pathname
+
   const content = (
     <>
       <Head>
@@ -42,7 +42,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
     ;(async () => {
       const path = router.pathname
-      const role = localStorage.getItem('role') as Role
+      const role = localStorage.getItem('role')
       const token = localStorage.getItem('token')
       let flag = true
       if (/dashboard/.test(path)) {

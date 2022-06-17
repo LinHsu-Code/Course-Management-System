@@ -8,12 +8,14 @@ import CourseCard from '../../../../components/course/courseCard'
 import { Course, Paginator } from '../../../../lib/model'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import BackTop from '../../../../components/common/backTop'
+import { useUserInfo } from '../../../../hooks/user'
 
 export default function Page() {
   const [paginator, setPaginator] = useState<Paginator>({ page: 1, limit: 20 })
   const [hasMore, setHasMore] = useState(true)
   const [courses, setCourses] = useState<Course[]>([])
-  const [userRole, setUserRole] = useState<string>('')
+
+  const userInfo = useUserInfo()
 
   const AppendCourses = (paginator: Paginator) => {
     getCourses(paginator).then((res) => {
@@ -35,7 +37,6 @@ export default function Page() {
         }
       }
     })
-    setUserRole(localStorage.getItem('role') || '')
   }, [])
 
   return (
@@ -66,7 +67,7 @@ export default function Page() {
                 <CourseCard course={course}>
                   <Row>
                     <Link
-                      href={`/dashboard/${userRole}/courses/${course.id}`}
+                      href={`/dashboard/${userInfo.role}/courses/${course.id}`}
                       passHref
                     >
                       <Button type="primary">Read More</Button>

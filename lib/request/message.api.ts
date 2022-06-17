@@ -22,8 +22,7 @@ const getMessageStatics = (
 ): Promise<GetMessageStaticsResponse> =>
   getInstance('/message/statistics', params)
 
-const subscribeMessage = (): EventSource => {
-  const userId = Number(localStorage.getItem('userId'))
+const subscribeMessage = (userId: number): EventSource => {
   return new EventSource(
     `${process.env.BASE_URL}/message/subscribe?userId=${userId}`,
     { withCredentials: true }

@@ -21,6 +21,7 @@ import {
 import { ClockCircleOutlined, NotificationFilled } from '@ant-design/icons'
 import { PROGRAM_LANGUAGE_COLORS } from '../../../../lib/constants'
 import { postMessage } from '../../../../lib/request'
+import { useUserInfo } from '../../../../hooks/user'
 
 const addFns = [addYears, addMonths, addDays, addWeeks, addHours]
 
@@ -89,14 +90,15 @@ export default function Page() {
     isFutureClass: boolean
   } | null>(null)
 
+  const userInfo = useUserInfo()
+
   useEffect(() => {
-    const userId = Number(localStorage.getItem('userId'))
-    getClassSchedule({ userId }).then((res) => {
+    getClassSchedule({ userId: userInfo.userId }).then((res) => {
       if (res.data) {
         setClassSchedule(res.data)
       }
     })
-  }, [])
+  }, [userInfo.userId])
 
   const monthCellRender = (currentCellDate: Moment) => {
     if (!classSchedule) {
@@ -252,10 +254,9 @@ export default function Page() {
                       cursor: 'pointer',
                     }}
                     onClick={() => {
-                      const userId = Number(localStorage.getItem('userId'))
                       postMessage({
-                        from: userId,
-                        to: userId,
+                        from: userInfo.userId,
+                        to: userInfo.userId,
                         content: `You have a ${classInfo?.course.name} course at ${classInfo?.time} ${classInfo?.day}`,
                         alertAt: '',
                       })

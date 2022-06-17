@@ -4,9 +4,9 @@ export default function Page() {
   return (
     <>
       <Head>
-        <title>{'CMS DashBoard: Manager-Teacher-Detail'}</title>
+        <title>{'CMS DashBoard: Teacher-Detail'}</title>
       </Head>
-      <div>Manager-Teacher-Detail</div>
+      <div>Teacher-Detail</div>
     </>
   )
 }

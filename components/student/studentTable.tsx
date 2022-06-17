@@ -5,8 +5,11 @@ import { Student, CourseType, StudentType } from '../../lib/model'
 import { ColumnType } from 'antd/lib/table'
 import { deleteStudent } from '../../lib/request'
 import { COUNTRY_LIST, STUDENT_TYPE } from '../../lib/constants'
+import { useUserInfo } from '../../hooks/user'
 
 export default function StudentTable(props: any) {
+  const userInfo = useUserInfo()
+
   const handleEditClick = async (record: Student) => {
     props.setEditContent({
       name: record.name,
@@ -41,7 +44,7 @@ export default function StudentTable(props: any) {
       sorter: (a: Student, b: Student) =>
         a.name.charCodeAt(0) - b.name.charCodeAt(0),
       render: (_value, record) => (
-        <Link href={`/dashboard/manager/students/${record.id}`}>
+        <Link href={`/dashboard/${userInfo.role}/students/${record.id}`}>
           <a>{record.name}</a>
         </Link>
       ),
