@@ -30,8 +30,8 @@ export default function Heat({
       plotBorderWidth: 1,
     },
     xAxis: {
-      //categories: [...Weekdays, '<b>TOTAL</b>'],
-      categories: Weekdays,
+      categories: [...Weekdays, '<b>TOTAL</b>'],
+      //categories: Weekdays,
     },
     accessibility: {
       point: {
@@ -74,7 +74,7 @@ export default function Heat({
             yAxis: {
               labels: {
                 formatter: function () {
-                  //console.log(this)
+                  console.log(this)
                   //return (this as any).value.charAt(0)
                   return (this as any).value.toString().charAt(0)
                 },
@@ -90,42 +90,44 @@ export default function Heat({
   })
 
   useEffect(() => {
-    const yCategories = data.map((item) => item.name)
+    // const yCategories = data.map((item) => item.name)
 
-    var init = Array(data.length)
-      .fill(0)
-      .map(() => Array(7).fill(0))
-
-    const twoDimensionalHeatData = data.reduce((acc, curr, i) => {
-      acc[i] = new Array(7).fill(0)
-      curr.courses.forEach((course) => {
-        course.classTime?.forEach((classTime) => {
-          const j = WeekdaysToIndex[classTime.split(' ')[0] as Weekday]
-          acc[i][j]++
-        })
-      })
-      return acc
-    }, init)
-
-    // const yCategories = data.map((item) => item.name).concat(`<b>TOTAL</b>`)
-
-    // var init = Array(data.length + 1)
+    // var init = Array(data.length)
     //   .fill(0)
-    //   .map(() => Array(8).fill(0))
+    //   .map(() => Array(7).fill(0))
 
     // const twoDimensionalHeatData = data.reduce((acc, curr, i) => {
-    //   acc[i] = new Array(8).fill(0)
+    //   acc[i] = new Array(7).fill(0)
     //   curr.courses.forEach((course) => {
     //     course.classTime?.forEach((classTime) => {
     //       const j = WeekdaysToIndex[classTime.split(' ')[0] as Weekday]
     //       acc[i][j]++
-    //       acc[i][7]++
-    //       acc[data.length][j]++
-    //       acc[data.length][7]++
     //     })
     //   })
     //   return acc
     // }, init)
+
+    // const yCategories = data.map((item) => item.name).concat(`<b>TOTAL</b>`)
+
+    const yCategories = [...data.map((item) => item.name), 'Total']
+
+    var init = Array(data.length + 1)
+      .fill(0)
+      .map(() => Array(8).fill(0))
+
+    const twoDimensionalHeatData = data.reduce((acc, curr, i) => {
+      acc[i] = new Array(8).fill(0)
+      curr.courses.forEach((course) => {
+        course.classTime?.forEach((classTime) => {
+          const j = WeekdaysToIndex[classTime.split(' ')[0] as Weekday]
+          acc[i][j]++
+          acc[i][7]++
+          acc[data.length][j]++
+          acc[data.length][7]++
+        })
+      })
+      return acc
+    }, init)
 
     const HeatDataWithIndex: number[][] = []
     zip(...twoDimensionalHeatData).forEach((item, i) => {

@@ -10,44 +10,15 @@ import { GetStudentsRequest, Student, Students } from '../../../../lib/model'
 import { useDataListLoad } from '../../../../hooks/dataListLoad'
 
 export default function Page() {
-  // const [queryParams, setQueryParams] = useState({
-  //   paginator: { page: 1, limit: 20 },
-  //   queryName: '',
-  // })
-  // const [total, setTotal] = useState(0)
-  // const [data, setData] = useState<Student[]>([])
-
-  const [query, setQuery] = useState<string>('')
-
   const { data, queryParams, setQueryParams, total, setTotal, setData } =
     useDataListLoad<GetStudentsRequest, Students, Student>(
       getStudents,
       'students',
       false
-      // { query }
     )
 
   const [editContent, setEditContent] = useState({})
   const [isModalVisible, setIsModalVisible] = useState(false)
-
-  // useEffect(() => {
-  //   fetchStudents(queryParams)
-  // }, [queryParams])
-
-  // const fetchStudents = (queryParams: {
-  //   paginator: { page: number; limit: number }
-  //   queryName: string
-  // }) => {
-  //   const params = queryParams.queryName
-  //     ? { ...queryParams.paginator, query: queryParams.queryName }
-  //     : { ...queryParams.paginator }
-  //   getStudents(params).then((res) => {
-  //     if (res.data) {
-  //       setTotal(res.data.total)
-  //       setData(res.data.students)
-  //     }
-  //   })
-  // }
 
   const handleAdd = () => {
     setEditContent({})
@@ -59,7 +30,6 @@ export default function Page() {
       paginator: { page: 1, limit: 20 },
       queries: { query: e.target.value },
     })
-    //setQuery(e.target.value)
   }
 
   return (
