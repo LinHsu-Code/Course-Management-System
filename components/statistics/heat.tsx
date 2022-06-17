@@ -7,7 +7,6 @@ import { StatisticsWithClassTime, Weekday } from '../../lib/model'
 
 if (typeof Highcharts === 'object') {
   require('highcharts/modules/heatmap')(Highcharts)
-  //require('highcharts/modules/exporting')(Highcharts)
 }
 
 function getPointCategoryName(point: Point, dimension: 'x' | 'y') {
@@ -30,8 +29,12 @@ export default function Heat({
       plotBorderWidth: 1,
     },
     xAxis: {
+<<<<<<< HEAD
       categories: [...Weekdays, '<b>TOTAL</b>'],
       //categories: Weekdays,
+=======
+      categories: Weekdays,
+>>>>>>> 700b112 (nit: remove some comments)
     },
     accessibility: {
       point: {
@@ -74,8 +77,11 @@ export default function Heat({
             yAxis: {
               labels: {
                 formatter: function () {
+<<<<<<< HEAD
                   console.log(this)
                   //return (this as any).value.charAt(0)
+=======
+>>>>>>> 700b112 (nit: remove some comments)
                   return (this as any).value.toString().charAt(0)
                 },
               },
@@ -92,6 +98,7 @@ export default function Heat({
   useEffect(() => {
     // const yCategories = data.map((item) => item.name)
 
+<<<<<<< HEAD
     // var init = Array(data.length)
     //   .fill(0)
     //   .map(() => Array(7).fill(0))
@@ -117,13 +124,24 @@ export default function Heat({
 
     const twoDimensionalHeatData = data.reduce((acc, curr, i) => {
       acc[i] = new Array(8).fill(0)
+=======
+    var init = Array(data.length)
+      .fill(0)
+      .map(() => Array(7).fill(0))
+
+    const twoDimensionalHeatData = data.reduce((acc, curr, i) => {
+      acc[i] = new Array(7).fill(0)
+>>>>>>> 700b112 (nit: remove some comments)
       curr.courses.forEach((course) => {
         course.classTime?.forEach((classTime) => {
           const j = WeekdaysToIndex[classTime.split(' ')[0] as Weekday]
           acc[i][j]++
+<<<<<<< HEAD
           acc[i][7]++
           acc[data.length][j]++
           acc[data.length][7]++
+=======
+>>>>>>> 700b112 (nit: remove some comments)
         })
       })
       return acc
