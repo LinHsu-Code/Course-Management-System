@@ -117,7 +117,7 @@ export default function MessageModal({
               onClick={() =>
                 setActiveMarkAsRead({
                   ...activeMarkAsRead,
-                  [messageType]: activeMarkAsRead[messageType] + 1,
+                  [messageType]: (activeMarkAsRead[messageType] + 1) % 10,
                 })
               }
               disabled={!unread[messageType]}

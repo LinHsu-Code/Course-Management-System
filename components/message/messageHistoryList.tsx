@@ -1,12 +1,19 @@
 import { List, Skeleton, Divider, Avatar, Typography, Row, Col } from 'antd'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { Message, MessageType, MessageHistory } from '../../lib/model'
+import {
+  Message,
+  MessageType,
+  MessageHistory,
+  GetMessageResponseData,
+  GetMessageRequest,
+} from '../../lib/model'
 import { AlertOutlined, MessageOutlined, UserOutlined } from '@ant-design/icons'
 import { useContext, useEffect, useState } from 'react'
 import { getMessages, markMessageAsRead } from '../../lib/request'
 import { format } from 'date-fns'
 import MessageContext from '../../providers/messageContext'
 import { ActionType } from '../../providers/messageReducer'
+import { useDataListLoad } from '../../hooks/dataListLoad'
 
 const { Title } = Typography
 
@@ -15,39 +22,47 @@ export default function MessageHistoryList({
 }: {
   messageType: MessageType | ''
 }) {
-  const [loading, setLoading] = useState(false)
-  const [hasMore, setHasMore] = useState<boolean>(true)
-  const [nextPage, setNextPage] = useState<number>(1)
   const [data, setData] = useState<MessageHistory>({})
+  const [previousType, setPreviousType] = useState<MessageType | '' | null>(
+    null
+  )
+
+  const {
+    setQueryParams,
+    hasMore,
+    data: messages,
+    setData: setMessages,
+  } = useDataListLoad<GetMessageRequest, GetMessageResponseData, Message>(
+    getMessages,
+    'messages',
+    undefined,
+    messageType ? { type: messageType } : undefined
+  )
+
   const {
     state: { newMessage, markedIdsFromModal },
     dispatch,
   } = useContext(MessageContext)
 
-  const loadMoreData = (
-    page: number = nextPage,
-    type = messageType,
-    limit: number = 20
-  ) => {
-    if (loading) {
+  useEffect(() => {
+    if (previousType === null) {
+      setPreviousType(messageType)
       return
     }
-    setLoading(true)
-    const params = type
-      ? {
-          page,
-          limit,
-          type,
-        }
-      : {
-          page,
-          limit,
-        }
-    getMessages(params)
-      .then((res) => {
-        if (res.data) {
-          const initialData = data
-          const formateData = res.data.messages.reduce((acc, cur) => {
+    if (previousType !== messageType) {
+      setMessages([])
+      setQueryParams({
+        paginator: { page: 1, limit: 20 },
+        queries: { type: messageType },
+      })
+    }
+  }, [messageType, setMessages, setQueryParams, previousType])
+
+  useEffect(() => {
+    messages.length === 0
+      ? setData({})
+      : setData(
+          messages.reduce((acc, cur) => {
             const key: string = format(new Date(cur.createdAt), 'yyyy-MM-dd')
             if (!acc[key]) {
               acc[key] = [cur]
@@ -55,51 +70,9 @@ export default function MessageHistoryList({
               acc[key].push(cur)
             }
             return acc
-          }, initialData)
-          setData(formateData)
-          setLoading(false)
-          if (res.data.total <= page * 20) {
-            setHasMore(false)
-          }
-          setNextPage(page + 1)
-        }
-      })
-      .catch(() => {
-        setLoading(false)
-      })
-  }
-
-  useEffect(() => {
-    const params = messageType
-      ? {
-          page: 1,
-          limit: 20,
-          type: messageType,
-        }
-      : {
-          page: 1,
-          limit: 20,
-        }
-    getMessages(params).then((res) => {
-      if (res.data) {
-        const initialData = {} as MessageHistory
-        const formateData = res.data.messages.reduce((acc, cur) => {
-          const key: string = format(new Date(cur.createdAt), 'yyyy-MM-dd')
-          if (!acc[key]) {
-            acc[key] = [cur]
-          } else {
-            acc[key].push(cur)
-          }
-          return acc
-        }, initialData)
-        setData(formateData)
-        if (res.data.total <= 20) {
-          setHasMore(false)
-        }
-        setNextPage(2)
-      }
-    })
-  }, [messageType])
+          }, {} as any)
+        )
+  }, [messages])
 
   useEffect(() => {
     if (newMessage && (!messageType || newMessage.type === messageType)) {
@@ -146,7 +119,12 @@ export default function MessageHistoryList({
     >
       <InfiniteScroll
         dataLength={Object.entries(data).length}
-        next={loadMoreData}
+        next={() => {
+          setQueryParams((prev) => ({
+            ...prev,
+            paginator: { ...prev.paginator, page: prev.paginator.page + 1 },
+          }))
+        }}
         hasMore={hasMore}
         loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
         endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}

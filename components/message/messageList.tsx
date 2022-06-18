@@ -1,6 +1,11 @@
 import { List, Skeleton, Divider, Avatar } from 'antd'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { Message, MessageType } from '../../lib/model'
+import {
+  GetMessageRequest,
+  GetMessageResponseData,
+  Message,
+  MessageType,
+} from '../../lib/model'
 import { UserOutlined } from '@ant-design/icons'
 import { useCallback, useContext, useEffect, useState } from 'react'
 import {
@@ -12,6 +17,7 @@ import { formatDistanceToNow } from 'date-fns'
 import styled from 'styled-components'
 import MessageContext from '../../providers/messageContext'
 import { ActionType } from '../../providers/messageReducer'
+import { useDataListLoad } from '../../hooks/dataListLoad'
 
 const CustomList = styled(List)`
   .ant-list-item {
@@ -30,47 +36,21 @@ export default function MessageList({
   messageType: MessageType
   activeMarkAsRead: number
 }) {
-  const [loading, setLoading] = useState(false)
-  const [hasMore, setHasMore] = useState<boolean>(true)
-  const [nextPage, setNextPage] = useState<number>(1)
-  const [data, setData] = useState<Message[]>([])
+  const { setQueryParams, hasMore, data, setData } = useDataListLoad<
+    GetMessageRequest,
+    GetMessageResponseData,
+    Message
+  >(getMessages, 'messages', undefined, { type: messageType })
+
   const {
     state: { newMessage, markedIdsFromPage },
     dispatch,
   } = useContext(MessageContext)
 
-  const loadMoreData = useCallback(
-    (page, limit, type) => {
-      if (loading) {
-        return
-      }
-      setLoading(true)
-      getMessages({
-        page,
-        limit,
-        type,
-      })
-        .then((res) => {
-          if (res.data) {
-            setData((pre) => [...pre, ...res.data.messages])
-            setLoading(false)
-            if (res.data.total <= page * 20) {
-              setHasMore(false)
-            }
-            setNextPage(page + 1)
-          }
-        })
-        .catch(() => {
-          setLoading(false)
-        })
-    },
-    [loading]
-  )
-
   useEffect(() => {
     if (newMessage && newMessage.type === messageType)
       setData((pre) => [newMessage, ...pre])
-  }, [newMessage, messageType])
+  }, [newMessage, messageType, setData])
 
   useEffect(() => {
     if (markedIdsFromPage && markedIdsFromPage.messageType === messageType) {
@@ -88,23 +68,7 @@ export default function MessageList({
       })
       dispatch({ type: ActionType.ResetMarkAsReadFromPage })
     }
-  }, [dispatch, markedIdsFromPage, messageType])
-
-  useEffect(() => {
-    getMessages({
-      page: 1,
-      limit: 20,
-      type: messageType,
-    }).then((res) => {
-      if (res.data) {
-        setData(res.data.messages)
-        if (res.data.total <= 20) {
-          setHasMore(false)
-        }
-        setNextPage(2)
-      }
-    })
-  }, [messageType])
+  }, [dispatch, markedIdsFromPage, messageType, setData])
 
   const handleMarkMessageAsRead = useCallback(() => {
     getMessageStatics({}).then((res) => {
@@ -146,7 +110,7 @@ export default function MessageList({
         })
       }
     })
-  }, [dispatch, messageType])
+  }, [dispatch, messageType, setData])
 
   useEffect(() => {
     if (activeMarkAsRead) {
@@ -166,7 +130,12 @@ export default function MessageList({
     >
       <InfiniteScroll
         dataLength={data.length}
-        next={() => loadMoreData(nextPage, 20, messageType)}
+        next={() => {
+          setQueryParams((prev) => ({
+            ...prev,
+            paginator: { ...prev.paginator, page: prev.paginator.page + 1 },
+          }))
+        }}
         hasMore={hasMore}
         loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
         endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}

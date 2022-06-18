@@ -9,13 +9,14 @@ export interface ListResponse {
 export function useDataListLoad<I, D extends ListResponse, K>(
   requestApi: (params: I) => Promise<Response<D>>,
   sourceKey: keyof D,
-  isAppend = true
+  isAppend = true,
+  queries: any = {}
 ) {
   const [data, setData] = useState<K[]>([])
 
   const [queryParams, setQueryParams] = useState({
     paginator: { page: 1, limit: 20 },
-    queries: {},
+    queries,
   })
   const [hasMore, setHasMore] = useState<boolean>(true)
 

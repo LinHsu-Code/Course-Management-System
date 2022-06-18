@@ -23,14 +23,14 @@ export default function StudentModal({
         : await editStudent(formData)
 
     if (res.data) {
-      setData((prev) => {
-        const index = prev.findIndex((item) => item.id === formData.id)
-        if (index !== -1) {
-          prev[index] = res.data
-        }
-        return [...prev]
-      })
-      // fetchStudents(queryParams)
+      Object.keys(editContent).length !== 0 &&
+        setData((prev) => {
+          const index = prev.findIndex((item) => item.id === formData.id)
+          if (index !== -1) {
+            prev[index] = res.data
+          }
+          return [...prev]
+        })
       handleClose()
     }
   }
