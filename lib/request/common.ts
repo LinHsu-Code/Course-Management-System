@@ -1,6 +1,9 @@
 import axios from 'axios'
 import { message } from 'antd'
 import { isEmpty } from 'lodash'
+import { getUserInfo } from '../util'
+
+const userInfo = getUserInfo()
 
 const axiosInstance = axios.create({
   baseURL: process.env.BASE_URL,
@@ -17,9 +20,7 @@ axiosInstance.interceptors.request.use((config) => {
       ...config,
       headers: {
         ...config.headers,
-        Authorization: localStorage.getItem('token')
-          ? `Bearer ${localStorage.getItem('token')}`
-          : '',
+        Authorization: userInfo.token ? `Bearer ${userInfo.token}` : '',
       },
     }
   }

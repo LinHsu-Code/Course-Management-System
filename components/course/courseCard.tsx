@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { Course } from '../../lib/model'
 import styles from './courseCard.module.scss'
 import { HeartFilled, UserOutlined } from '@ant-design/icons'
-import { useUserInfo } from '../../hooks/user'
+import { getUserInfo } from '../../lib/util'
 
 export default function CourseCard({
   course,
@@ -13,7 +13,7 @@ export default function CourseCard({
   course: Course
   children: React.ReactNode
 }) {
-  const userInfo = useUserInfo()
+  const userInfo = getUserInfo()
 
   return (
     <Card

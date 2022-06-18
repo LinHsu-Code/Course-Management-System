@@ -10,3 +10,13 @@ export const toPascalCase = (string: string) => {
 export const disabledDate: RangePickerProps['disabledDate'] = (current) => {
   return current && current < moment().endOf('day')
 }
+
+export const getUserInfo = () => {
+  if (typeof window !== 'undefined') {
+    const userId = Number(localStorage.getItem('userId'))
+    const role = localStorage.getItem('role')
+    const token = localStorage.getItem('token')
+    return { userId, role, token }
+  }
+  return {}
+}

@@ -13,7 +13,7 @@ import {
 import DetailInfoCard from '../../../../components/common/detailInfoCard'
 import DetailAboutInfo from '../../../../components/common/detailAboutInfo'
 import { PROGRAM_LANGUAGE_COLORS } from '../../../../lib/constants'
-import { useUserInfo } from '../../../../hooks/user'
+import { getUserInfo } from '../../../../lib/util'
 
 const { TabPane } = Tabs
 
@@ -33,7 +33,7 @@ export default function Page({ id }: { id: string }) {
   )
   const [student, setStudent] = useState<StudentDetail | null>(null)
 
-  const userInfo = useUserInfo()
+  const userInfo = getUserInfo()
 
   const columns: ColumnType<StudentDetailCourse>[] = [
     {

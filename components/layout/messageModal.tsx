@@ -2,10 +2,10 @@ import { Row, Col, Modal, Button, Tabs, notification } from 'antd'
 import Link from 'next/link'
 import { useContext, useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { useUserInfo } from '../../hooks/user'
 import { MessageTypes } from '../../lib/constants'
 import { MessageType, MessageCount, Message } from '../../lib/model'
 import { getMessageStatics, subscribeMessage } from '../../lib/request'
+import { getUserInfo } from '../../lib/util'
 import MessageContext from '../../providers/messageContext'
 import { ActionType } from '../../providers/messageReducer'
 import MessageList from '../message/messageList'
@@ -44,7 +44,7 @@ export default function MessageModal({
     dispatch,
   } = useContext(MessageContext)
 
-  const userInfo = useUserInfo()
+  const userInfo = getUserInfo()
 
   useEffect(() => {
     getMessageStatics({}).then((res) => {

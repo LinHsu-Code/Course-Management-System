@@ -7,8 +7,8 @@ import CourseCard from '../../../../components/course/courseCard'
 import { Course, GetCoursesRequest, Courses } from '../../../../lib/model'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import BackTop from '../../../../components/common/backTop'
-import { useUserInfo } from '../../../../hooks/user'
 import { useDataListLoad } from '../../../../hooks/dataListLoad'
+import { getUserInfo } from '../../../../lib/util'
 
 export default function Page() {
   const {
@@ -17,7 +17,7 @@ export default function Page() {
     data: courses,
   } = useDataListLoad<GetCoursesRequest, Courses, Course>(getCourses, 'courses')
 
-  const userInfo = useUserInfo()
+  const userInfo = getUserInfo()
 
   return (
     <>

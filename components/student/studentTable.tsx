@@ -5,8 +5,8 @@ import { Student, CourseType, StudentType } from '../../lib/model'
 import { ColumnType } from 'antd/lib/table'
 import { deleteStudent } from '../../lib/request'
 import { COUNTRY_LIST, STUDENT_TYPE } from '../../lib/constants'
-import { useUserInfo } from '../../hooks/user'
 import { Dispatch, SetStateAction } from 'react'
+import { getUserInfo } from '../../lib/util'
 
 export default function StudentTable({
   data,
@@ -27,7 +27,7 @@ export default function StudentTable({
   setEditContent: Dispatch<SetStateAction<{}>>
   setIsModalVisible: (param: boolean) => void
 }) {
-  const userInfo = useUserInfo()
+  const userInfo = getUserInfo()
 
   const handleEditClick = async (record: Student) => {
     setEditContent({

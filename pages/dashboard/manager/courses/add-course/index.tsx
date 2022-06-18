@@ -5,7 +5,7 @@ import { Course } from '../../../../../lib/model'
 import CourseDetailForm from '../../../../../components/course/courseDetailForm'
 import CourseScheduleForm from '../../../../../components/course/courseScheduleForm'
 import { useRouter } from 'next/router'
-import { useUserInfo } from '../../../../../hooks/user'
+import { getUserInfo } from '../../../../../lib/util'
 
 const { Step } = Steps
 
@@ -14,7 +14,7 @@ export default function Page() {
   const [minAvailableStep, setMinAvailableStep] = useState(0)
   const [course, setCourse] = useState<Course | null>(null)
 
-  const userInfo = useUserInfo()
+  const userInfo = getUserInfo()
 
   const router = useRouter()
 

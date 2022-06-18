@@ -9,6 +9,7 @@ import {
   messageReducer,
   initialMessageState,
 } from '../providers/messageReducer'
+import { getUserInfo } from '../lib/util'
 
 export const siteTitle = 'Course Management System'
 
@@ -17,6 +18,8 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [state, dispatch] = useReducer(messageReducer, initialMessageState)
   const router = useRouter()
   const path = router.pathname
+
+  const userInfo = getUserInfo()
 
   const content = (
     <>
@@ -39,31 +42,55 @@ function MyApp({ Component, pageProps }: AppProps) {
     </>
   )
 
+  // useEffect(() => {
+  //   ;(async () => {
+  //     const path = router.pathname
+  //     const role = localStorage.getItem('role')
+  //     const token = localStorage.getItem('token')
+  //     let flag = true
+  //     if (/dashboard/.test(path)) {
+  //       if (!token) {
+  //         flag = false
+  //         await router.replace('/login', undefined, { shallow: true }) //!token or !checkedToken api
+  //       } else if (role && /dashboard$/.test(path)) {
+  //         flag = false
+  //         await router.replace(`/dashboard/${role}`, undefined, {
+  //           shallow: true,
+  //         })
+  //       }
+  //     } else if (/login/.test(path) && role && token) {
+  //       flag = false
+  //       await router.replace(`/dashboard/${role}`, undefined, {
+  //         shallow: true,
+  //       }) //role and checkedToken api
+  //     }
+  //     flag && setLoading(false)
+  //   })()
+  // }, [router])
+
   useEffect(() => {
     ;(async () => {
       const path = router.pathname
-      const role = localStorage.getItem('role')
-      const token = localStorage.getItem('token')
       let flag = true
       if (/dashboard/.test(path)) {
-        if (!token) {
+        if (!userInfo.token) {
           flag = false
           await router.replace('/login', undefined, { shallow: true }) //!token or !checkedToken api
-        } else if (role && /dashboard$/.test(path)) {
+        } else if (userInfo.role && /dashboard$/.test(path)) {
           flag = false
-          await router.replace(`/dashboard/${role}`, undefined, {
+          await router.replace(`/dashboard/${userInfo.role}`, undefined, {
             shallow: true,
           })
         }
-      } else if (/login/.test(path) && role && token) {
+      } else if (/login/.test(path) && userInfo.role && userInfo.token) {
         flag = false
-        await router.replace(`/dashboard/${role}`, undefined, {
+        await router.replace(`/dashboard/${userInfo.role}`, undefined, {
           shallow: true,
         }) //role and checkedToken api
       }
       flag && setLoading(false)
     })()
-  }, [router])
+  }, [router, userInfo.role, userInfo.token])
 
   return loading ? (
     <div>loading...</div>

@@ -21,7 +21,7 @@ import {
 import { ClockCircleOutlined, NotificationFilled } from '@ant-design/icons'
 import { PROGRAM_LANGUAGE_COLORS } from '../../../../lib/constants'
 import { postMessage } from '../../../../lib/request'
-import { useUserInfo } from '../../../../hooks/user'
+import { getUserInfo } from '../../../../lib/util'
 
 const addFns = [addYears, addMonths, addDays, addWeeks, addHours]
 
@@ -90,7 +90,7 @@ export default function Page() {
     isFutureClass: boolean
   } | null>(null)
 
-  const userInfo = useUserInfo()
+  const userInfo = getUserInfo()
 
   useEffect(() => {
     getClassSchedule({ userId: userInfo.userId }).then((res) => {
