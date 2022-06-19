@@ -28,11 +28,11 @@ const CustomModal = styled(Modal)`
 `
 
 export default function MessageModal({
-  modal1Visible,
-  setModal1Visible,
+  modalVisible,
+  setModalVisible,
 }: {
-  modal1Visible: boolean
-  setModal1Visible: (modal1Visible: boolean) => void
+  modalVisible: boolean
+  setModalVisible: (modalVisible: boolean) => void
 }) {
   const [activeMarkAsRead, setActiveMarkAsRead] = useState<MessageCount>({
     notification: 0,
@@ -66,35 +66,40 @@ export default function MessageModal({
       }
     })
 
-    const sse = subscribeMessage(userInfo.userId)
+    let sse: EventSource | null = null
 
-    sse.onmessage = (event) => {
-      const data = JSON.parse(event.data)
-      if (data.type !== 'heartbeat') {
-        const message = data.content as Message
-        notification.info({
-          message: `You have a ${message.type} from ${message.from.nickname}`,
-          description: message.content,
-        })
+    if (userInfo.userId) {
+      sse = subscribeMessage(userInfo.userId)
 
-        dispatch({
-          type: ActionType.ReceiveNewMessage,
-          payload: {
-            message,
-          },
-        })
+      sse.onmessage = (event) => {
+        const data = JSON.parse(event.data)
+        if (data.type !== 'heartbeat') {
+          const message = data.content as Message
+          notification.info({
+            message: `You have a ${message.type} from ${message.from.nickname}`,
+            description: message.content,
+          })
 
-        dispatch({
-          type: ActionType.IncreaseUnreadCount,
-          payload: {
-            messageType: message.type,
-            count: 1,
-          },
-        })
+          dispatch({
+            type: ActionType.ReceiveNewMessage,
+            payload: {
+              message,
+            },
+          })
+
+          dispatch({
+            type: ActionType.IncreaseUnreadCount,
+            payload: {
+              messageType: message.type,
+              count: 1,
+            },
+          })
+        }
       }
     }
+
     return () => {
-      sse.close()
+      sse && sse.close()
     }
   }, [dispatch, userInfo.userId])
 
@@ -102,9 +107,9 @@ export default function MessageModal({
     <CustomModal
       closable={false}
       style={{ top: 68, marginRight: 56, marginLeft: 'auto' }}
-      visible={modal1Visible}
-      onOk={() => setModal1Visible(false)}
-      onCancel={() => setModal1Visible(false)}
+      visible={modalVisible}
+      onOk={() => setModalVisible(false)}
+      onCancel={() => setModalVisible(false)}
       width={400}
       footer={[
         <Row key="footer" style={{ textAlign: 'center' }}>
@@ -128,7 +133,7 @@ export default function MessageModal({
           <Col span={12} style={{ padding: '10px 0' }}>
             <Button
               style={{ border: 'none' }}
-              onClick={() => setModal1Visible(false)}
+              onClick={() => setModalVisible(false)}
             >
               <Link href={`/dashboard/${userInfo.role}/message`}>
                 View history

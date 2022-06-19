@@ -1,4 +1,4 @@
-import { getInstance, putInstance, postInstance, showMessage } from './common'
+import { getInstance, putInstance, postInstance } from './common'
 import {
   GetMessageRequest,
   GetMessageResponse,

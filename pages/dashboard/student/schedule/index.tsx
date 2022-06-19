@@ -93,11 +93,12 @@ export default function Page() {
   const userInfo = getUserInfo()
 
   useEffect(() => {
-    getClassSchedule({ userId: userInfo.userId }).then((res) => {
-      if (res.data) {
-        setClassSchedule(res.data)
-      }
-    })
+    userInfo.userId &&
+      getClassSchedule({ userId: userInfo.userId }).then((res) => {
+        if (res.data) {
+          setClassSchedule(res.data)
+        }
+      })
   }, [userInfo.userId])
 
   const monthCellRender = (currentCellDate: Moment) => {
@@ -254,12 +255,13 @@ export default function Page() {
                       cursor: 'pointer',
                     }}
                     onClick={() => {
-                      postMessage({
-                        from: userInfo.userId,
-                        to: userInfo.userId,
-                        content: `You have a ${classInfo?.course.name} course at ${classInfo?.time} ${classInfo?.day}`,
-                        alertAt: '',
-                      })
+                      userInfo.userId &&
+                        postMessage({
+                          from: userInfo.userId,
+                          to: userInfo.userId,
+                          content: `You have a ${classInfo?.course.name} course at ${classInfo?.time} ${classInfo?.day}`,
+                          alertAt: '',
+                        })
                       setClassInfo(null)
                     }}
                   />

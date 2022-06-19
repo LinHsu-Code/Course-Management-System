@@ -42,7 +42,7 @@ export default function DashboardLayout({
   const [collapsed, setCollapsed] = useState(false)
   const [logoutMenu, setLogoutMenu] = useState(false)
   const [openKeys, setOpenKeys] = useState<string[]>([])
-  const [modal1Visible, setModal1Visible] = useState(false)
+  const [modalVisible, setModalVisible] = useState(false)
 
   const {
     state: { unread },
@@ -53,14 +53,6 @@ export default function DashboardLayout({
       ? bfsOne(nav, detailForWhat)?.concat([{ path: '[id]', label: 'Detail' }])
       : bfsOne(nav, page)
     : null
-
-  const userLogout = async () => {
-    const res = await logout()
-    if (res.data) {
-      localStorage.clear()
-      router.replace('/login', undefined, { shallow: true })
-    }
-  }
 
   useEffect(() => {
     setOpenKeys([router.pathname.split('/').slice(2, 4).toString()])
@@ -103,7 +95,7 @@ export default function DashboardLayout({
               {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             </Col>
 
-            <Col onClick={() => setModal1Visible(true)}>
+            <Col onClick={() => setModalVisible(true)}>
               <Badge
                 count={unread.notification + unread.message}
                 offset={[-30, 18]}
@@ -120,7 +112,17 @@ export default function DashboardLayout({
               <Avatar icon={<UserOutlined />} className={styles.avatar} />
               {logoutMenu && (
                 <Menu className={styles.logoutMenu} theme="dark">
-                  <Menu.Item key="55" onClick={userLogout}>
+                  <Menu.Item
+                    key="55"
+                    onClick={() => {
+                      logout().then((res) => {
+                        if (res.data) {
+                          localStorage.clear()
+                          router.replace('/login', undefined, { shallow: true })
+                        }
+                      })
+                    }}
+                  >
                     <LogoutOutlined />
                     <span>Logout</span>
                   </Menu.Item>
@@ -130,8 +132,8 @@ export default function DashboardLayout({
           </Row>
 
           <MessageModal
-            modal1Visible={modal1Visible}
-            setModal1Visible={setModal1Visible}
+            modalVisible={modalVisible}
+            setModalVisible={setModalVisible}
           />
         </Header>
 
