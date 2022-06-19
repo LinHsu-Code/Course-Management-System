@@ -4,6 +4,7 @@ import styles from '../styles/auth.module.scss'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { login } from '../lib/request'
 import { useRouter } from 'next/router'
+import Header from '../components/home/header'
 
 export default function Page() {
   const router = useRouter()
@@ -24,6 +25,8 @@ export default function Page() {
       <Head>
         <title>{'Course Management Assistant: Sign In'}</title>
       </Head>
+
+      <Header />
 
       <div className={styles.container}>
         <h1 className={styles.FormHeading}>COURSE MANAGEMENT ASSISTANT</h1>

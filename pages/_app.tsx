@@ -42,32 +42,6 @@ function MyApp({ Component, pageProps }: AppProps) {
     </>
   )
 
-  // useEffect(() => {
-  //   ;(async () => {
-  //     const path = router.pathname
-  //     const role = localStorage.getItem('role')
-  //     const token = localStorage.getItem('token')
-  //     let flag = true
-  //     if (/dashboard/.test(path)) {
-  //       if (!token) {
-  //         flag = false
-  //         await router.replace('/login', undefined, { shallow: true }) //!token or !checkedToken api
-  //       } else if (role && /dashboard$/.test(path)) {
-  //         flag = false
-  //         await router.replace(`/dashboard/${role}`, undefined, {
-  //           shallow: true,
-  //         })
-  //       }
-  //     } else if (/login/.test(path) && role && token) {
-  //       flag = false
-  //       await router.replace(`/dashboard/${role}`, undefined, {
-  //         shallow: true,
-  //       }) //role and checkedToken api
-  //     }
-  //     flag && setLoading(false)
-  //   })()
-  // }, [router])
-
   useEffect(() => {
     ;(async () => {
       const path = router.pathname
