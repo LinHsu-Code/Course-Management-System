@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-sync-scripts */
 /* eslint-disable @next/next/no-img-element */
 import Carousel from 'antd/lib/carousel'
 import Head from 'next/head'
@@ -14,17 +13,12 @@ export default function Page() {
   return (
     <>
       <Head>
-        <title>HarrisonHighSchool</title>
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"
-        />
-        <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-        <script src="/js/jquery-1.11.1.min.js" key="jq"></script>
-        <script src="/js/main.js" key="main"></script>
+        <title>Course Management Assistant: Gallery</title>
+        {/* <script src="/js/jquery-1.11.1.min.js" defer></script>
+        <script src="/js/main.js" defer></script> */}
       </Head>
 
-      <Header></Header>
+      <Header />
 
       <div className="divider"></div>
 
@@ -44,7 +38,7 @@ export default function Page() {
               {styles.map((item, index) => (
                 <span key={index} style={item}>
                   <img
-                    src={`images/5${index === 0 ? '' : '_' + (index + 1)}.png`}
+                    src={`/images/5${index === 0 ? '' : '_' + (index + 1)}.png`}
                     alt=""
                   />
                 </span>
@@ -236,137 +230,7 @@ export default function Page() {
                             <Image
                               height={153}
                               width={153}
-                              src="/images/5.png"
-                              alt=""
-                            />
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#">
-                            <Image
-                              height={153}
-                              width={153}
-                              src="/images/5_2.png"
-                              alt=""
-                            />
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#">
-                            <Image
-                              height={153}
-                              width={153}
-                              src="/images/5_3.png"
-                              alt=""
-                            />
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#">
-                            <Image
-                              height={153}
-                              width={153}
-                              src="/images/5_4.png"
-                              alt=""
-                            />
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#">
-                            <Image
-                              height={153}
-                              width={153}
-                              src="/images/5_5.png"
-                              alt=""
-                            />
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#">
-                            <Image
-                              height={153}
-                              width={153}
-                              src="/images/5_6.png"
-                              alt=""
-                            />
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#">
-                            <Image
-                              height={153}
-                              width={153}
-                              src="/images/5_7.png"
-                              alt=""
-                            />
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#">
-                            <Image
-                              height={153}
-                              width={153}
-                              src="/images/5_8.png"
-                              alt=""
-                            />
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#">
-                            <Image
-                              height={153}
-                              width={153}
-                              src="/images/5_9.png"
-                              alt=""
-                            />
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#">
-                            <Image
-                              height={153}
-                              width={153}
-                              src="/images/5_10.png"
-                              alt=""
-                            />
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#">
-                            <Image
-                              height={153}
-                              width={153}
-                              src="/images/5_11.png"
-                              alt=""
-                            />
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#">
-                            <Image
-                              height={153}
-                              width={153}
-                              src="/images/5_12.png"
-                              alt=""
-                            />
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#">
-                            <Image
-                              height={153}
-                              width={153}
-                              src="/images/5_13.png"
-                              alt=""
-                            />
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#">
-                            <Image
-                              height={153}
-                              width={153}
-                              src="/images/5_14.png"
+                              src="/images/5_16.png"
                               alt=""
                             />
                           </a>
@@ -386,7 +250,137 @@ export default function Page() {
                             <Image
                               height={153}
                               width={153}
-                              src="/images/5_16.png"
+                              src="/images/5_14.png"
+                              alt=""
+                            />
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#">
+                            <Image
+                              height={153}
+                              width={153}
+                              src="/images/5_13.png"
+                              alt=""
+                            />
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#">
+                            <Image
+                              height={153}
+                              width={153}
+                              src="/images/5_12.png"
+                              alt=""
+                            />
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#">
+                            <Image
+                              height={153}
+                              width={153}
+                              src="/images/5_11.png"
+                              alt=""
+                            />
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#">
+                            <Image
+                              height={153}
+                              width={153}
+                              src="/images/5_10.png"
+                              alt=""
+                            />
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#">
+                            <Image
+                              height={153}
+                              width={153}
+                              src="/images/5_9.png"
+                              alt=""
+                            />
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#">
+                            <Image
+                              height={153}
+                              width={153}
+                              src="/images/5_8.png"
+                              alt=""
+                            />
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#">
+                            <Image
+                              height={153}
+                              width={153}
+                              src="/images/5_7.png"
+                              alt=""
+                            />
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#">
+                            <Image
+                              height={153}
+                              width={153}
+                              src="/images/5_6.png"
+                              alt=""
+                            />
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#">
+                            <Image
+                              height={153}
+                              width={153}
+                              src="/images/5_5.png"
+                              alt=""
+                            />
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#">
+                            <Image
+                              height={153}
+                              width={153}
+                              src="/images/5_4.png"
+                              alt=""
+                            />
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#">
+                            <Image
+                              height={153}
+                              width={153}
+                              src="/images/5_3.png"
+                              alt=""
+                            />
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#">
+                            <Image
+                              height={153}
+                              width={153}
+                              src="/images/5_2.png"
+                              alt=""
+                            />
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#">
+                            <Image
+                              height={153}
+                              width={153}
+                              src="/images/5.png"
                               alt=""
                             />
                           </a>
@@ -537,7 +531,7 @@ export default function Page() {
         </div>
       </footer>
 
-      <div id="fancy">
+      {/* <div id="fancy">
         <h2>Request information</h2>
         <form action="#">
           <div className="left">
@@ -566,7 +560,7 @@ export default function Page() {
             </button>
           </div>
         </form>
-      </div>
+      </div> */}
     </>
   )
 }

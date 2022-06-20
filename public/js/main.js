@@ -1,14 +1,14 @@
 $(document).ready(function () {
-  // $('.bxslider').bxSlider();
+  // $('.bxslider').bxSlider()
 
-  // $(".menu-trigger").click(function() {
-  // 	$("#menu").fadeToggle(300);
-  // 	$(this).toggleClass("active")
-  // });
+  $('.menu-trigger').click(function () {
+    $('#menu').fadeToggle(300)
+    $(this).toggleClass('active')
+  })
 
-  // $('.info-request, .get-contact').fancybox();
+  // $('.info-request, .get-contact').fancybox()
 
-  // $("select").crfs();
+  // $('select').crfs()
 
   $('.table td').mouseenter(function () {
     $(this).find('.holder').stop(true, true).fadeIn(600)

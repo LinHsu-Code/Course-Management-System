@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-sync-scripts */
 import Head from 'next/head'
 import Header from '../components/home/header'
 import Image from 'next/image'
@@ -7,17 +6,14 @@ export default function Page() {
   return (
     <>
       <Head>
-        <title>HarrisonHighSchool</title>
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"
-        />
-        <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-        <script src="/js/jquery-1.11.1.min.js" key="jq"></script>
-        <script src="/js/main.js" key="main"></script>
+        <title>Course Management Assistant: Events</title>
+        {/* <script src="/js/jquery-1.11.1.min.js" defer></script>
+        <script src="/js/main.js" defer></script> */}
+        <script src="/js/jquery-3.6.0.js" defer></script>
+        <script src="/js/main-jquery.js" defer></script>
       </Head>
 
-      <Header></Header>
+      <Header />
 
       <div className="divider"></div>
 
@@ -483,7 +479,7 @@ export default function Page() {
         </div>
       </footer>
 
-      <div id="fancy">
+      {/* <div id="fancy">
         <h2>Request information</h2>
         <form action="#">
           <div className="left">
@@ -512,7 +508,7 @@ export default function Page() {
             </button>
           </div>
         </form>
-      </div>
+      </div> */}
     </>
   )
 }

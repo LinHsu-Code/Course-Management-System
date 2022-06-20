@@ -1,23 +1,49 @@
 /* eslint-disable @next/next/no-sync-scripts */
+
 import Head from 'next/head'
 import { Carousel, Layout } from 'antd'
-import styles from '../styles/home.module.scss'
 import Header from '../components/home/header'
 import Image from 'next/image'
+import Script from 'next/script'
 
 export default function Page() {
   return (
     <>
       <Head>
         <title>{'Course Management Assistant: Home'}</title>
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-        <script src="/js/jquery-1.11.1.min.js" key="jq"></script>
-        <script src="/js/main.js" key="main"></script>
+
+        {/* <script
+          src="http://code.jquery.com/jquery-1.11.1.min.js"
+          defer
+        ></script>
+        <script src="/js/main.js" defer></script> */}
+
+        {/* <script src="/js/jquery-3.6.0.js"></script>
+        <script src="/js/main-jquery.js"></script> */}
+
+        {/* <script src="/js/jquery-1.11.1.min.js"></script>
+        <script src="/js/main.js"></script> */}
       </Head>
 
       <Header />
 
       <div className="slider">
+        <Script src="/js/jquery-1.11.1.min.js"></Script>
+        <Script src="/js/main.js"></Script>
+        {/* <Script src="/js/jquery-1.11.1.min.js"></Script>
+        <Script src="/js/main.js"></Script> */}
+        {/* <Script
+          src="/js/jquery-3.6.0.js"
+          strategy="beforeInteractive"
+          onLoad={() => console.log(`---------------`)}
+        ></Script>
+        <Script
+          src="/js/main-jquery.js"
+          strategy="beforeInteractive"
+          onLoad={() =>
+            console.log(`script loaded correctly, window.FB has been populated`)
+          }
+        ></Script> */}
         <ul className="bxslider">
           <Carousel autoplay>
             <li>
@@ -96,7 +122,7 @@ export default function Page() {
           <h2>Latest news</h2>
           <article>
             <div className="pic">
-              <Image layout="fill" src="/images/1.png" alt="" />
+              <Image width={80} height={80} src="/images/1.png" alt="" />
             </div>
             <div className="info">
               <h4>Omnis iste natus error sit voluptatem accusantium </h4>
@@ -112,7 +138,7 @@ export default function Page() {
           </article>
           <article>
             <div className="pic">
-              <Image layout="fill" src="/images/1_1.png" alt="" />
+              <Image width={80} height={80} src="/images/1_1.png" alt="" />
             </div>
             <div className="info">
               <h4>Omnis iste natus error sit voluptatem accusantium </h4>
@@ -314,7 +340,7 @@ export default function Page() {
         </div>
       </footer>
 
-      <div id="fancy">
+      {/* <div id="fancy">
         <h2>Request information</h2>
         <form action="#">
           <div className="left">
@@ -343,7 +369,7 @@ export default function Page() {
             </button>
           </div>
         </form>
-      </div>
+      </div> */}
     </>
   )
 }
