@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-sync-scripts */
 /* eslint-disable @next/next/no-css-tags */
 import { Affix, Dropdown, Menu } from 'antd'
 import Head from 'next/head'
@@ -6,7 +5,6 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import styled from 'styled-components'
 import { getUserInfo } from '../../lib/util'
-import Script from 'next/script'
 
 const SignIn = styled.li`
   @media screen and (min-width: 700px) {
@@ -38,18 +36,6 @@ export default function Header() {
       </Head>
 
       <div id="header-wrapper" className={foreDark ? dark : light}>
-        {/* <Script
-          src="/js/jquery-3.6.0.js"
-          strategy="beforeInteractive"
-          onLoad={() => console.log(`---------------`)}
-        ></Script>
-        <Script
-          src="/js/main-jquery.js"
-          strategy="beforeInteractive"
-          onLoad={() =>
-            console.log(`script loaded correctly, window.FB has been populated`)
-          }
-        ></Script> */}
         <Affix
           offsetTop={0}
           onChange={(fixed) => {
@@ -85,9 +71,18 @@ export default function Header() {
                     <Menu.Item key="gallery">
                       <Link href="/gallery">Gallery</Link>
                     </Menu.Item>
-                    <Menu.Item key="login">
-                      <Link href="/login">Sign in</Link>
-                    </Menu.Item>
+
+                    {userInfo.role ? (
+                      <Menu.Item key="dashboard">
+                        <Link href={`/dashboard/${userInfo.role}`}>
+                          Dashboard
+                        </Link>
+                      </Menu.Item>
+                    ) : (
+                      <Menu.Item key="login">
+                        <Link href="/login">Sign in</Link>
+                      </Menu.Item>
+                    )}
                   </Menu>
                 }
               >

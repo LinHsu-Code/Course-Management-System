@@ -1,49 +1,18 @@
-/* eslint-disable @next/next/no-sync-scripts */
-
 import Head from 'next/head'
-import { Carousel, Layout } from 'antd'
+import { Carousel } from 'antd'
 import Header from '../components/home/header'
 import Image from 'next/image'
-import Script from 'next/script'
 
 export default function Page() {
   return (
     <>
       <Head>
         <title>{'Course Management Assistant: Home'}</title>
-
-        {/* <script
-          src="http://code.jquery.com/jquery-1.11.1.min.js"
-          defer
-        ></script>
-        <script src="/js/main.js" defer></script> */}
-
-        {/* <script src="/js/jquery-3.6.0.js"></script>
-        <script src="/js/main-jquery.js"></script> */}
-
-        {/* <script src="/js/jquery-1.11.1.min.js"></script>
-        <script src="/js/main.js"></script> */}
       </Head>
 
       <Header />
 
       <div className="slider">
-        <Script src="/js/jquery-1.11.1.min.js"></Script>
-        <Script src="/js/main.js"></Script>
-        {/* <Script src="/js/jquery-1.11.1.min.js"></Script>
-        <Script src="/js/main.js"></Script> */}
-        {/* <Script
-          src="/js/jquery-3.6.0.js"
-          strategy="beforeInteractive"
-          onLoad={() => console.log(`---------------`)}
-        ></Script>
-        <Script
-          src="/js/main-jquery.js"
-          strategy="beforeInteractive"
-          onLoad={() =>
-            console.log(`script loaded correctly, window.FB has been populated`)
-          }
-        ></Script> */}
         <ul className="bxslider">
           <Carousel autoplay>
             <li>
@@ -339,37 +308,6 @@ export default function Page() {
           </p>
         </div>
       </footer>
-
-      {/* <div id="fancy">
-        <h2>Request information</h2>
-        <form action="#">
-          <div className="left">
-            <fieldset className="mail">
-              <input placeholder="Email address..." type="text" />
-            </fieldset>
-            <fieldset className="name">
-              <input placeholder="Name..." type="text" />
-            </fieldset>
-            <fieldset className="subject">
-              <select>
-                <option>Choose subject...</option>
-                <option>Choose subject...</option>
-                <option>Choose subject...</option>
-              </select>
-            </fieldset>
-          </div>
-          <div className="right">
-            <fieldset className="question">
-              <textarea placeholder="Question..."></textarea>
-            </fieldset>
-          </div>
-          <div className="btn-holder">
-            <button className="btn blue" type="submit">
-              Send request
-            </button>
-          </div>
-        </form>
-      </div> */}
     </>
   )
 }

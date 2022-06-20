@@ -14,8 +14,6 @@ export default function Page() {
     <>
       <Head>
         <title>Course Management Assistant: Gallery</title>
-        {/* <script src="/js/jquery-1.11.1.min.js" defer></script>
-        <script src="/js/main.js" defer></script> */}
       </Head>
 
       <Header />
@@ -530,37 +528,6 @@ export default function Page() {
           </p>
         </div>
       </footer>
-
-      {/* <div id="fancy">
-        <h2>Request information</h2>
-        <form action="#">
-          <div className="left">
-            <fieldset className="mail">
-              <input placeholder="Email address..." type="text" />
-            </fieldset>
-            <fieldset className="name">
-              <input placeholder="Name..." type="text" />
-            </fieldset>
-            <fieldset className="subject">
-              <select>
-                <option>Choose subject...</option>
-                <option>Choose subject...</option>
-                <option>Choose subject...</option>
-              </select>
-            </fieldset>
-          </div>
-          <div className="right">
-            <fieldset className="question">
-              <textarea placeholder="Question..."></textarea>
-            </fieldset>
-          </div>
-          <div className="btn-holder">
-            <button className="btn blue" type="submit">
-              Send request
-            </button>
-          </div>
-        </form>
-      </div> */}
     </>
   )
 }

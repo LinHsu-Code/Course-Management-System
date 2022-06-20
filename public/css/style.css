@@ -602,9 +602,6 @@ h1.single {
   width: 100%;
 }
 
-#sidebar .calendar table tr {
-}
-
 #sidebar .calendar th {
   font-family: 'BebasNeue';
   font-size: 18px;
@@ -658,6 +655,10 @@ h1.single {
 #sidebar .calendar .tooltip {
   position: relative;
   z-index: 2;
+}
+
+#sidebar .calendar .upcoming:hover .holder {
+  display: block;
 }
 
 #sidebar .calendar .tooltip .holder {
@@ -1805,11 +1806,11 @@ a.btn.blue,
   }
 }
 
-@media screen and (min-width: 701px) {
+/* @media screen and (min-width: 701px) {
   #menu {
     display: block !important;
   }
-}
+} */
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   #logo {
@@ -2013,7 +2014,7 @@ a.btn.blue,
   }
 
   #menu {
-    display: none;
+    display: none !important;
     clear: both;
     margin: 0;
     padding-bottom: 35px;

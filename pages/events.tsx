@@ -7,10 +7,6 @@ export default function Page() {
     <>
       <Head>
         <title>Course Management Assistant: Events</title>
-        {/* <script src="/js/jquery-1.11.1.min.js" defer></script>
-        <script src="/js/main.js" defer></script> */}
-        <script src="/js/jquery-3.6.0.js" defer></script>
-        <script src="/js/main-jquery.js" defer></script>
       </Head>
 
       <Header />
@@ -138,202 +134,222 @@ export default function Page() {
               </div>
               <div className="table">
                 <table>
-                  <tr>
-                    <th className="col-1">Mon</th>
-                    <th className="col-2">Tue</th>
-                    <th className="col-3">Wed</th>
-                    <th className="col-4">Thu</th>
-                    <th className="col-5">Fri</th>
-                    <th className="col-6">Sat</th>
-                    <th className="col-7">Sun</th>
-                  </tr>
-                  <tr>
-                    <td className="col-1 disable">
-                      <div>31</div>
-                    </td>
-                    <td className="col-2">
-                      <div>1</div>
-                    </td>
-                    <td className="col-3">
-                      <div>2</div>
-                    </td>
-                    <td className="col-4">
-                      <div>3</div>
-                    </td>
-                    <td className="col-5 archival">
-                      <div>4</div>
-                    </td>
-                    <td className="col-6">
-                      <div>5</div>
-                    </td>
-                    <td className="col-7">
-                      <div>6</div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="col-1">
-                      <div>7</div>
-                    </td>
-                    <td className="col-2">
-                      <div>8</div>
-                    </td>
-                    <td className="col-3 archival">
-                      <div>9</div>
-                    </td>
-                    <td className="col-4">
-                      <div>10</div>
-                    </td>
-                    <td className="col-5">
-                      <div>11</div>
-                    </td>
-                    <td className="col-6">
-                      <div>12</div>
-                    </td>
-                    <td className="col-7">
-                      <div>13</div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="col-1">
-                      <div>14</div>
-                    </td>
-                    <td className="col-2 upcoming">
-                      <div>
-                        <div className="tooltip">
-                          <div className="holder">
-                            <h4>Omnis iste natus error sit voluptatem dolor</h4>
-                            <p className="info-line">
-                              <span className="time">10:30 AM</span>
-                              <span className="place">Lincoln High School</span>
-                            </p>
-                            <p>
-                              At vero eos et accusamus et iusto odio dignissimos
-                              ducimus qui blanditiis praesentium voluptatum
-                              atque corrupti quos dolores et quas molestias
-                              excepturi sint occaecati cupiditate non provident
-                              similique.
-                            </p>
+                  <thead>
+                    <tr>
+                      <th className="col-1">Mon</th>
+                      <th className="col-2">Tue</th>
+                      <th className="col-3">Wed</th>
+                      <th className="col-4">Thu</th>
+                      <th className="col-5">Fri</th>
+                      <th className="col-6">Sat</th>
+                      <th className="col-7">Sun</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className="col-1 disable">
+                        <div>31</div>
+                      </td>
+                      <td className="col-2">
+                        <div>1</div>
+                      </td>
+                      <td className="col-3">
+                        <div>2</div>
+                      </td>
+                      <td className="col-4">
+                        <div>3</div>
+                      </td>
+                      <td className="col-5 archival">
+                        <div>4</div>
+                      </td>
+                      <td className="col-6">
+                        <div>5</div>
+                      </td>
+                      <td className="col-7">
+                        <div>6</div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="col-1">
+                        <div>7</div>
+                      </td>
+                      <td className="col-2">
+                        <div>8</div>
+                      </td>
+                      <td className="col-3 archival">
+                        <div>9</div>
+                      </td>
+                      <td className="col-4">
+                        <div>10</div>
+                      </td>
+                      <td className="col-5">
+                        <div>11</div>
+                      </td>
+                      <td className="col-6">
+                        <div>12</div>
+                      </td>
+                      <td className="col-7">
+                        <div>13</div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="col-1">
+                        <div>14</div>
+                      </td>
+                      <td className="col-2 upcoming">
+                        <div>
+                          <div className="tooltip">
+                            <div className="holder">
+                              <h4>
+                                Omnis iste natus error sit voluptatem dolor
+                              </h4>
+                              <p className="info-line">
+                                <span className="time">10:30 AM</span>
+                                <span className="place">
+                                  Lincoln High School
+                                </span>
+                              </p>
+                              <p>
+                                At vero eos et accusamus et iusto odio
+                                dignissimos ducimus qui blanditiis praesentium
+                                voluptatum atque corrupti quos dolores et quas
+                                molestias excepturi sint occaecati cupiditate
+                                non provident similique.
+                              </p>
+                            </div>
                           </div>
+                          15
                         </div>
-                        15
-                      </div>
-                    </td>
-                    <td className="col-3">
-                      <div>16</div>
-                    </td>
-                    <td className="col-4 upcoming">
-                      <div>
-                        <div className="tooltip">
-                          <div className="holder">
-                            <h4>Omnis iste natus error sit voluptatem dolor</h4>
-                            <p className="info-line">
-                              <span className="time">10:30 AM</span>
-                              <span className="place">Lincoln High School</span>
-                            </p>
-                            <p>
-                              At vero eos et accusamus et iusto odio dignissimos
-                              ducimus qui blanditiis praesentium voluptatum
-                              atque corrupti quos dolores et quas molestias
-                              excepturi sint occaecati cupiditate non provident
-                              similique.
-                            </p>
+                      </td>
+                      <td className="col-3">
+                        <div>16</div>
+                      </td>
+                      <td className="col-4 upcoming">
+                        <div>
+                          <div className="tooltip">
+                            <div className="holder">
+                              <h4>
+                                Omnis iste natus error sit voluptatem dolor
+                              </h4>
+                              <p className="info-line">
+                                <span className="time">10:30 AM</span>
+                                <span className="place">
+                                  Lincoln High School
+                                </span>
+                              </p>
+                              <p>
+                                At vero eos et accusamus et iusto odio
+                                dignissimos ducimus qui blanditiis praesentium
+                                voluptatum atque corrupti quos dolores et quas
+                                molestias excepturi sint occaecati cupiditate
+                                non provident similique.
+                              </p>
+                            </div>
                           </div>
+                          16
                         </div>
-                        16
-                      </div>
-                    </td>
-                    <td className="col-5">
-                      <div>18</div>
-                    </td>
-                    <td className="col-6">
-                      <div>19</div>
-                    </td>
-                    <td className="col-7">
-                      <div>20</div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="col-1">
-                      <div>21</div>
-                    </td>
-                    <td className="col-2">
-                      <div>22</div>
-                    </td>
-                    <td className="col-3">
-                      <div>23</div>
-                    </td>
-                    <td className="col-4">
-                      <div>24</div>
-                    </td>
-                    <td className="col-5 upcoming">
-                      <div>
-                        <div className="tooltip">
-                          <div className="holder">
-                            <h4>Omnis iste natus error sit voluptatem dolor</h4>
-                            <p className="info-line">
-                              <span className="time">10:30 AM</span>
-                              <span className="place">Lincoln High School</span>
-                            </p>
-                            <p>
-                              At vero eos et accusamus et iusto odio dignissimos
-                              ducimus qui blanditiis praesentium voluptatum
-                              atque corrupti quos dolores et quas molestias
-                              excepturi sint occaecati cupiditate non provident
-                              similique.
-                            </p>
+                      </td>
+                      <td className="col-5">
+                        <div>18</div>
+                      </td>
+                      <td className="col-6">
+                        <div>19</div>
+                      </td>
+                      <td className="col-7">
+                        <div>20</div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="col-1">
+                        <div>21</div>
+                      </td>
+                      <td className="col-2">
+                        <div>22</div>
+                      </td>
+                      <td className="col-3">
+                        <div>23</div>
+                      </td>
+                      <td className="col-4">
+                        <div>24</div>
+                      </td>
+                      <td className="col-5 upcoming">
+                        <div>
+                          <div className="tooltip">
+                            <div className="holder">
+                              <h4>
+                                Omnis iste natus error sit voluptatem dolor
+                              </h4>
+                              <p className="info-line">
+                                <span className="time">10:30 AM</span>
+                                <span className="place">
+                                  Lincoln High School
+                                </span>
+                              </p>
+                              <p>
+                                At vero eos et accusamus et iusto odio
+                                dignissimos ducimus qui blanditiis praesentium
+                                voluptatum atque corrupti quos dolores et quas
+                                molestias excepturi sint occaecati cupiditate
+                                non provident similique.
+                              </p>
+                            </div>
                           </div>
+                          25
                         </div>
-                        25
-                      </div>
-                    </td>
-                    <td className="col-6">
-                      <div>26</div>
-                    </td>
-                    <td className="col-7">
-                      <div>27</div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="col-1">
-                      <div>28</div>
-                    </td>
-                    <td className="col-2 upcoming">
-                      <div>
-                        <div className="tooltip">
-                          <div className="holder">
-                            <h4>Omnis iste natus error sit voluptatem dolor</h4>
-                            <p className="info-line">
-                              <span className="time">10:30 AM</span>
-                              <span className="place">Lincoln High School</span>
-                            </p>
-                            <p>
-                              At vero eos et accusamus et iusto odio dignissimos
-                              ducimus qui blanditiis praesentium voluptatum
-                              atque corrupti quos dolores et quas molestias
-                              excepturi sint occaecati cupiditate non provident
-                              similique.
-                            </p>
+                      </td>
+                      <td className="col-6">
+                        <div>26</div>
+                      </td>
+                      <td className="col-7">
+                        <div>27</div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="col-1">
+                        <div>28</div>
+                      </td>
+                      <td className="col-2 upcoming">
+                        <div>
+                          <div className="tooltip">
+                            <div className="holder">
+                              <h4>
+                                Omnis iste natus error sit voluptatem dolor
+                              </h4>
+                              <p className="info-line">
+                                <span className="time">10:30 AM</span>
+                                <span className="place">
+                                  Lincoln High School
+                                </span>
+                              </p>
+                              <p>
+                                At vero eos et accusamus et iusto odio
+                                dignissimos ducimus qui blanditiis praesentium
+                                voluptatum atque corrupti quos dolores et quas
+                                molestias excepturi sint occaecati cupiditate
+                                non provident similique.
+                              </p>
+                            </div>
                           </div>
+                          29
                         </div>
-                        29
-                      </div>
-                    </td>
-                    <td className="col-3">
-                      <div>30</div>
-                    </td>
-                    <td className="col-4 disable">
-                      <div>1</div>
-                    </td>
-                    <td className="col-5 disable">
-                      <div>2</div>
-                    </td>
-                    <td className="col-6 disable">
-                      <div>3</div>
-                    </td>
-                    <td className="col-7 disable">
-                      <div>4</div>
-                    </td>
-                  </tr>
+                      </td>
+                      <td className="col-3">
+                        <div>30</div>
+                      </td>
+                      <td className="col-4 disable">
+                        <div>1</div>
+                      </td>
+                      <td className="col-5 disable">
+                        <div>2</div>
+                      </td>
+                      <td className="col-6 disable">
+                        <div>3</div>
+                      </td>
+                      <td className="col-7 disable">
+                        <div>4</div>
+                      </td>
+                    </tr>
+                  </tbody>
                 </table>
               </div>
               <div className="note">
@@ -346,32 +362,62 @@ export default function Page() {
               <ul>
                 <li>
                   <a href="#">
-                    <Image layout="fill" src="/images/4.png" alt="" />
+                    <Image
+                      height={111}
+                      width={111}
+                      src="/images/4.png"
+                      alt=""
+                    />
                   </a>
                 </li>
                 <li>
                   <a href="#">
-                    <Image layout="fill" src="/images/4_2.png" alt="" />
+                    <Image
+                      height={111}
+                      width={111}
+                      src="/images/4_2.png"
+                      alt=""
+                    />
                   </a>
                 </li>
                 <li>
                   <a href="#">
-                    <Image layout="fill" src="/images/4_3.png" alt="" />
+                    <Image
+                      height={111}
+                      width={111}
+                      src="/images/4_3.png"
+                      alt=""
+                    />
                   </a>
                 </li>
                 <li>
                   <a href="#">
-                    <Image layout="fill" src="/images/4_4.png" alt="" />
+                    <Image
+                      height={111}
+                      width={111}
+                      src="/images/4_4.png"
+                      alt=""
+                    />
                   </a>
                 </li>
                 <li>
                   <a href="#">
-                    <Image layout="fill" src="/images/4_5.png" alt="" />
+                    <Image
+                      height={111}
+                      width={111}
+                      src="/images/4_5.png"
+                      alt=""
+                    />
                   </a>
                 </li>
                 <li>
                   <a href="#">
-                    <Image layout="fill" src="/images/4_6.png" alt="" />
+                    <Image
+                      height={111}
+                      width={111}
+                      src="/images/4_6.png"
+                      alt=""
+                    />
                   </a>
                 </li>
               </ul>
@@ -478,37 +524,6 @@ export default function Page() {
           </p>
         </div>
       </footer>
-
-      {/* <div id="fancy">
-        <h2>Request information</h2>
-        <form action="#">
-          <div className="left">
-            <fieldset className="mail">
-              <input placeholder="Email address..." type="text" />
-            </fieldset>
-            <fieldset className="name">
-              <input placeholder="Name..." type="text" />
-            </fieldset>
-            <fieldset className="subject">
-              <select>
-                <option>Choose subject...</option>
-                <option>Choose subject...</option>
-                <option>Choose subject...</option>
-              </select>
-            </fieldset>
-          </div>
-          <div className="right">
-            <fieldset className="question">
-              <textarea placeholder="Question..."></textarea>
-            </fieldset>
-          </div>
-          <div className="btn-holder">
-            <button className="btn blue" type="submit">
-              Send request
-            </button>
-          </div>
-        </form>
-      </div> */}
     </>
   )
 }
