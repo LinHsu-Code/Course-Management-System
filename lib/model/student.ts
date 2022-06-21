@@ -49,7 +49,8 @@ export type DeleteStudentRequest = number
 
 export type DeleteStudentResponse = Response<boolean>
 
-export type GetStudentRequest = string
+// export type GetStudentRequest = string
+export type GetStudentRequest = number
 
 export interface StudentDetail extends Student {
   address: string | null

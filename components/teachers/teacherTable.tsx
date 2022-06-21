@@ -1,14 +1,13 @@
 import Link from 'next/link'
 import { Table, Space, Popconfirm } from 'antd'
-import { formatDistanceToNow } from 'date-fns'
-import { Student, CourseType, StudentType } from '../../lib/model'
+import { Teacher, Skill } from '../../lib/model'
 import { ColumnType } from 'antd/lib/table'
-import { deleteStudent } from '../../lib/request'
-import { COUNTRY_LIST, STUDENT_TYPE } from '../../lib/constants'
+import { deleteTeacher } from '../../lib/request'
+import { COUNTRY_LIST } from '../../lib/constants'
 import { Dispatch, SetStateAction } from 'react'
 import { getUserInfo } from '../../lib/util'
 
-export default function StudentTable({
+export default function TeacherTable({
   data,
   total,
   queryParams,
@@ -17,30 +16,19 @@ export default function StudentTable({
   setEditContent,
   setIsModalVisible,
 }: {
-  data: Student[]
+  data: Teacher[]
   total: number
   queryParams: any
-  setData: Dispatch<SetStateAction<Student[]>>
+  setData: Dispatch<SetStateAction<Teacher[]>>
   setQueryParams: Dispatch<
     SetStateAction<{ paginator: { page: number; limit: number }; queries: {} }>
   >
-  setEditContent: Dispatch<SetStateAction<{}>>
+  setEditContent: Dispatch<SetStateAction<Teacher | null>>
   setIsModalVisible: (param: boolean) => void
 }) {
   const userInfo = getUserInfo()
 
-  const handleEditClick = (record: Student) => {
-    setEditContent({
-      name: record.name,
-      email: record.email,
-      country: record.country,
-      type: record.type?.id,
-      id: record.id,
-    })
-    setIsModalVisible(true)
-  }
-
-  const columns: ColumnType<Student>[] = [
+  const columns: ColumnType<Teacher>[] = [
     {
       title: 'No.',
       key: 'index',
@@ -53,10 +41,11 @@ export default function StudentTable({
       dataIndex: 'name',
       width: 150,
       fixed: 'left',
-      sorter: (a: Student, b: Student) =>
+      // sortDirections: ['ascend', 'descend'],
+      sorter: (a: Teacher, b: Teacher) =>
         a.name.charCodeAt(0) - b.name.charCodeAt(0),
       render: (_value, record) => (
-        <Link href={`/dashboard/${userInfo.role}/students/${record.id}`}>
+        <Link href={`/dashboard/${userInfo.role}/teachers/${record.id}`}>
           <a>{record.name}</a>
         </Link>
       ),
@@ -73,30 +62,22 @@ export default function StudentTable({
       dataIndex: 'email',
       width: 220,
     },
+
     {
-      title: 'Selected Curriculum',
-      dataIndex: 'courses',
+      title: 'Skill',
+      dataIndex: 'skills',
       width: 200,
-      render: (courses: CourseType[]) =>
-        courses?.map((course) => course.name).join(', '),
+      render: (skills: Skill[]) => skills?.map((item) => item.name).join(','),
     },
     {
-      title: 'Student Type',
-      dataIndex: 'type',
+      title: 'Course Amount',
+      dataIndex: 'courseAmount',
       width: 100,
-      filters: STUDENT_TYPE.map((item) => ({
-        text: item,
-        value: item.toLowerCase(),
-      })),
-      onFilter: (value, record) => value === record.type?.name,
-      render: (type: StudentType) => type?.name,
     },
     {
-      title: 'Join Time',
-      dataIndex: 'createdAt',
+      title: 'Phone',
+      dataIndex: 'phone',
       width: 100,
-      render: (date: Date) =>
-        formatDistanceToNow(new Date(date), { addSuffix: true }),
     },
     {
       title: 'Action',
@@ -104,11 +85,18 @@ export default function StudentTable({
       width: 100,
       render: (_value, record) => (
         <Space size="small">
-          <a onClick={() => handleEditClick(record)}>Edit</a>
+          <a
+            onClick={() => {
+              setEditContent(record)
+              setIsModalVisible(true)
+            }}
+          >
+            Edit
+          </a>
           <Popconfirm
             title="Are you sure to delete?"
             onConfirm={() => {
-              deleteStudent(record.id).then((res) => {
+              deleteTeacher(record.id).then((res) => {
                 if (res.data) {
                   setData(data.filter((item) => item.id !== record.id))
                 }
