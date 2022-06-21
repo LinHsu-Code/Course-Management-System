@@ -1,14 +1,11 @@
 import Head from 'next/head'
-import Link from 'next/link'
 import { getTeacher } from '../../../../lib/request'
 import { useState, useEffect } from 'react'
-import { Row, Col, Card, Tabs, Tag, Table, Rate } from 'antd'
-import { ColumnType } from 'antd/lib/table'
+import { Row, Col, Card, Tabs, Rate } from 'antd'
 import { GetServerSideProps } from 'next/types'
 import { TeacherWithProfile } from '../../../../lib/model'
 import DetailInfoCard from '../../../../components/common/detailInfoCard'
 import DetailAboutInfo from '../../../../components/common/detailAboutInfo'
-import { PROGRAM_LANGUAGE_COLORS } from '../../../../lib/constants'
 import { getUserInfo } from '../../../../lib/util'
 
 const { TabPane } = Tabs
@@ -31,32 +28,6 @@ export default function Page({ id }: { id: number }) {
   const [teacher, setTeacher] = useState<TeacherWithProfile | null>(null)
 
   const userInfo = getUserInfo()
-
-  // const columns: ColumnType<StudentDetailCourse>[] = [
-  //   {
-  //     title: 'No.',
-  //     key: 'index',
-  //     render: (_value, _record, index) => index + 1,
-  //   },
-  //   {
-  //     title: 'Course Name',
-  //     dataIndex: 'name',
-  //     render: (value, record) => (
-  //       <Link href={`/dashboard/${userInfo.role}/courses/${record.id}`}>
-  //         {value}
-  //       </Link>
-  //     ),
-  //   },
-  //   {
-  //     title: 'Course Type',
-  //     dataIndex: 'type',
-  //     render: (type: CourseType[]) => type.map((item) => item.name).join(','),
-  //   },
-  //   {
-  //     title: 'Register Time',
-  //     dataIndex: 'createdAt',
-  //   },
-  // ]
 
   useEffect(() => {
     ;(async () => {
@@ -130,13 +101,6 @@ export default function Page({ id }: { id: number }) {
                   </Row>
                 </div>
               </TabPane>
-              {/* <TabPane tab="Courses" key="2">
-                <Table
-                  dataSource={student?.courses}
-                  columns={columns}
-                  rowKey="id"
-                ></Table>
-              </TabPane> */}
             </Tabs>
           </Card>
         </Col>
