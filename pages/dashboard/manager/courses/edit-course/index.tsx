@@ -1,19 +1,22 @@
 import Head from 'next/head'
 import { Col, Input, Row, Select, Tabs } from 'antd'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Course, CourseSearchBy, OptionValue } from '../../../../../lib/model'
 import CourseDetailForm from '../../../../../components/course/courseDetailForm'
 import CourseScheduleForm from '../../../../../components/course/courseScheduleForm'
 import { CourseSearchBySelect } from '../../../../../lib/constants'
 import DebouncedSearchSelect from '../../../../../components/common/debouncedSearchSelect'
 import { getCourses } from '../../../../../lib/request'
+import { useRouter } from 'next/router'
 
 const { Option } = Select
 
-export default function Page() {
+export default function Page({ uid }: { uid?: string }) {
   const [searchBy, setSearchBy] = useState<CourseSearchBy>('uid')
   const [searchResult, setSearchResult] = useState<Course[]>([])
   const [course, setCourse] = useState<Course | null>(null)
+
+  const router = useRouter()
 
   async function fetchList(searchByValue: string): Promise<OptionValue[]> {
     return getCourses({ [searchBy]: searchByValue }).then((res) => {
@@ -24,6 +27,15 @@ export default function Page() {
       }))
     })
   }
+
+  useEffect(() => {
+    const { uid } = router.query
+    if (uid) {
+      getCourses({ uid: uid as string }).then((res) => {
+        setCourse(res.data.courses[0])
+      })
+    }
+  }, [router.query])
 
   return (
     <>

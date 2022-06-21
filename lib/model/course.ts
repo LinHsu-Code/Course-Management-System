@@ -164,3 +164,7 @@ export interface GetCourseScheduleRequest {
   scheduleId?: number
 }
 export type GetCourseScheduleResponse = Response<Schedule>
+
+export type DeleteCourseRequest = number
+
+export type DeleteCourseResponse = Response<boolean>

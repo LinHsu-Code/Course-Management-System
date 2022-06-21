@@ -16,3 +16,5 @@ export const CourseSearchBySelect: { value: CourseSearchBy; label: string }[] =
     { value: 'name', label: 'Name' },
     { value: 'type', label: 'Category' },
   ]
+
+export const CourseDurationUnit = ['year', 'month', 'day', 'week', 'hour']

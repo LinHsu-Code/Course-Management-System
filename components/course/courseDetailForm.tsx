@@ -28,7 +28,7 @@ import {
   Course,
   AddCourseRequest,
 } from '../../lib/model'
-import { ValidateMessages } from '../../lib/constants'
+import { CourseDurationUnit, ValidateMessages } from '../../lib/constants'
 import DebouncedSearchSelect from '../common/debouncedSearchSelect'
 import moment from 'moment'
 import styled from 'styled-components'
@@ -204,11 +204,11 @@ export default function CourseDetailForm({
       className="select-after"
       onChange={(newUnit) => setUnit(newUnit)}
     >
-      <Select.Option value={1}>year</Select.Option>
-      <Select.Option value={2}>month</Select.Option>
-      <Select.Option value={3}>day</Select.Option>
-      <Select.Option value={4}>week</Select.Option>
-      <Select.Option value={5}>hour</Select.Option>
+      {CourseDurationUnit.map((item, index) => (
+        <Select.Option key={index} value={index + 1}>
+          {item}
+        </Select.Option>
+      ))}
     </Select>
   )
 
