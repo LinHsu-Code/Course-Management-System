@@ -1,15 +1,4 @@
 import { Response, Paginator } from './common'
-// export interface CourseTeacher {
-//   createdAt: Date
-//   updatedAt: Date
-//   id: number
-//   country: string
-//   courseAmount: number
-//   email: string
-//   name: string
-//   phone: string
-//   profileId: number
-// }
 
 export type CourseTeacher = Omit<Teacher, 'skills'>
 
@@ -25,9 +14,7 @@ export interface Teacher {
   courseAmount: number
   skills: Skill[]
 }
-// export interface Teacher extends CourseTeacher {
-//   skills: Skill[]
-// }
+
 export interface TeacherWithProfile extends Teacher {
   profile: Profile
 }
@@ -65,10 +52,10 @@ export type GetTeachersResponse = Response<Teachers>
 export interface AddTeacherRequest {
   name: string
   email: string
-  country: string
-  prefix: string
-  phone: string
-  skills: Skill[]
+  country?: string
+  // prefix: string
+  phone?: string
+  skills?: Skill[]
 }
 
 export type AddTeachersResponse = Response<Teacher>
@@ -82,7 +69,6 @@ export type DeleteTeacherRequest = number
 
 export type DeleteTeacherResponse = Response<boolean>
 
-// export type GetTeacherRequest = string
 export type GetTeacherRequest = number
 
 export type GetTeacherResponse = Response<TeacherWithProfile>

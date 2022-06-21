@@ -53,7 +53,7 @@ export type DeleteStudentResponse = Response<boolean>
 export type GetStudentRequest = number
 
 export interface StudentDetail extends Student {
-  address: string | null
+  address: string[] | null
   age: number
   avatar: string
   description: string

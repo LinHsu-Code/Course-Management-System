@@ -18,16 +18,17 @@ import { getUserInfo } from '../../../../lib/util'
 const { TabPane } = Tabs
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const id = context.query.id as string
+  const id = Number(context.query.id)
   return {
     props: { id },
   }
 }
 
-export default function Page({ id }: { id: string }) {
-  const [info, setInfo] = useState<
-    { label: string; value: string | number | null; span: number }[]
-  >([])
+export default function Page({ id }: { id: number }) {
+  const [info, setInfo] = useState<{
+    avatar: string
+    tableData: { label: string; value: string | number | null; span: number }[]
+  } | null>(null)
   const [about, setAbout] = useState<{ label: string; value: string | Date }[]>(
     []
   )
@@ -64,13 +65,20 @@ export default function Page({ id }: { id: string }) {
   useEffect(() => {
     ;(async () => {
       const { data: student } = await getStudent(id)
-      const info = [
-        { label: 'Name', value: student.name, span: 1 },
-        { label: 'Age', value: student.age, span: 1 },
-        { label: 'Email', value: student.email, span: 1 },
-        { label: 'Phone', value: student.phone, span: 1 },
-        { label: 'Address', value: student.address, span: 2 },
-      ]
+      const info = {
+        avatar: student.avatar,
+        tableData: [
+          { label: 'Name', value: student.name, span: 1 },
+          { label: 'Age', value: student.age, span: 1 },
+          { label: 'Email', value: student.email, span: 1 },
+          { label: 'Phone', value: student.phone, span: 1 },
+          {
+            label: 'Address',
+            value: student.address!.join(' '),
+            span: 2,
+          },
+        ],
+      }
       const about = [
         { label: 'Eduction', value: student.education },
         { label: 'Area', value: student.country },
@@ -96,9 +104,7 @@ export default function Page({ id }: { id: string }) {
         <title>{'CMS DashBoard: Student Detail'}</title>
       </Head>
       <Row gutter={[6, 16]}>
-        <Col flex="0 1 400px">
-          <DetailInfoCard info={info} />
-        </Col>
+        <Col flex="0 1 400px">{info && <DetailInfoCard info={info} />}</Col>
         <Col flex="1 1 500px">
           <Card>
             <Tabs defaultActiveKey="1">

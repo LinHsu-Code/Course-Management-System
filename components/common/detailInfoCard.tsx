@@ -5,15 +5,25 @@ import { Descriptions } from 'antd'
 export default function DetailInfoCard({
   info,
 }: {
-  info: { label: string; value: string | number | null; span: number }[]
+  info: {
+    avatar: string
+    tableData: { label: string; value: string | number | null; span: number }[]
+  }
 }) {
   return (
     <Card
       headStyle={{ textAlign: 'center' }}
-      title={<Avatar shape="circle" size={100} icon={<UserOutlined />} />}
+      title={
+        <Avatar
+          shape="circle"
+          size={100}
+          src={info.avatar}
+          icon={<UserOutlined />}
+        />
+      }
     >
       <Descriptions layout="vertical" column={2} colon={false}>
-        {info.map((item, index) => (
+        {info.tableData.map((item, index) => (
           <Descriptions.Item
             key={index}
             span={item.span}
