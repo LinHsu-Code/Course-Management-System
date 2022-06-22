@@ -34,9 +34,10 @@ const getCurrentChapterInfo = (course: CourseWithSchedule) => {
     index = course.schedule.chapters.findIndex(
       (item) => item.id === course.schedule.current
     )
+    index = index === -1 ? 0 : index
   }
 
-  return course.schedule.chapters
+  return course.schedule.chapters && course.schedule.chapters.length !== 0
     ? {
         chapterNO: index + 1,
         chapterName: course.schedule.chapters[index].name,
@@ -164,10 +165,11 @@ export default function Page() {
       const theDayBeforeStart = subDays(startDay, 1)
       const theDayAfterEnd = addDays(endDay, 1)
 
-      const sameWeekdayTime =
-        course.schedule.classTime
-          .find((item) => item.startsWith(currentWeekday))
-          ?.split(' ')[1] || null
+      const sameWeekdayTime = course.schedule.classTime
+        ? course.schedule.classTime
+            .find((item) => item.startsWith(currentWeekday))
+            ?.split(' ')[1] || null
+        : null
 
       const hasCourse =
         course.durationUnit === 5

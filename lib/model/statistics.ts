@@ -46,7 +46,28 @@ export interface TeacherStatistics {
   workExperience: string[]
 }
 
-export type GetTeacherStatisticsResponse = Response<TeacherStatistics>
+export interface TeacherStatisticsGetByTeacher {
+  type: Statistics[]
+  createdAt: Statistics[]
+  classTime: ClassTime[]
+  status: Statistics[]
+}
+
+export interface ClassTime {
+  name: string
+  amount: number
+  courses: Course[]
+}
+
+export interface Course {
+  classTime: string[] | null
+  typeName: string
+  name: string
+}
+
+export type GetTeacherStatisticsResponse = Response<
+  TeacherStatistics | TeacherStatisticsGetByTeacher
+>
 
 export interface CourseWithClassTime {
   classTime: string[] | null
@@ -64,3 +85,11 @@ export interface CourseStatistics {
 }
 
 export type GetCourseStatisticsResponse = Response<CourseStatistics>
+
+export interface GetStudentStatisticsRequest {
+  userId: number
+}
+
+export interface GetTeacherStatisticsRequest {
+  userId: number
+}

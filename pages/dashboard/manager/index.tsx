@@ -25,6 +25,7 @@ import Pie from '../../../components/statistics/pie'
 import Line from '../../../components/statistics/line'
 import Bar from '../../../components/statistics/bar'
 import Heat from '../../../components/statistics/heat'
+import { getUserInfo } from '../../../lib/util'
 
 const overviewBackground = ['#1890ff', '#673bb7', '#ffaa16']
 
@@ -49,6 +50,8 @@ export default function Page() {
   const [distributionRole, setDistributionRole] = useState<string>('student')
   const [selectedType, setSelectedType] = useState<string>('student_type')
 
+  const userInfo = getUserInfo()
+
   // console.log('overview:', overview)
   // console.log('studentStatistics:', studentStatistics)
   // console.log('teacherStatistics:', teacherStatistics)
@@ -56,26 +59,28 @@ export default function Page() {
 
   useEffect(() => {
     getStatisticsOverview().then((res) => {
-      if (res) {
+      if (res.data) {
         setOverview(res.data)
       }
     })
-    getStudentStatistics().then((res) => {
-      if (res) {
-        setStudentStatistics(res.data)
-      }
-    })
-    getTeacherStatistics().then((res) => {
-      if (res) {
-        setTeacherStatistics(res.data)
-      }
-    })
+    userInfo.userId &&
+      getStudentStatistics({ userId: userInfo.userId }).then((res) => {
+        if (res.data) {
+          setStudentStatistics(res.data)
+        }
+      })
+    userInfo.userId &&
+      getTeacherStatistics({ userId: userInfo.userId }).then((res) => {
+        if (res.data) {
+          setTeacherStatistics(res.data as TeacherStatistics)
+        }
+      })
     getCourseStatistics().then((res) => {
-      if (res) {
+      if (res.data) {
         setCourseStatistics(res.data)
       }
     })
-  }, [])
+  }, [userInfo.userId])
 
   return (
     <>

@@ -4,17 +4,21 @@ import {
   GetStatisticsOverviewResponse,
   GetStudentStatisticsResponse,
   GetTeacherStatisticsResponse,
+  GetStudentStatisticsRequest,
+  GetTeacherStatisticsRequest,
 } from '../model'
 import axios from 'axios'
 
 const getStatisticsOverview = (): Promise<GetStatisticsOverviewResponse> =>
   getInstance('/statistics/overview')
 
-const getStudentStatistics = (): Promise<GetStudentStatisticsResponse> =>
-  getInstance('/statistics/student')
+const getStudentStatistics = (
+  params: GetStudentStatisticsRequest
+): Promise<GetStudentStatisticsResponse> => getInstance('/statistics/student')
 
-const getTeacherStatistics = (): Promise<GetTeacherStatisticsResponse> =>
-  getInstance('/statistics/teacher')
+const getTeacherStatistics = (
+  params: GetTeacherStatisticsRequest
+): Promise<GetTeacherStatisticsResponse> => getInstance('/statistics/teacher')
 
 const getCourseStatistics = (): Promise<GetCourseStatisticsResponse> =>
   getInstance('/statistics/course')

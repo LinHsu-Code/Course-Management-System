@@ -7,8 +7,8 @@ export default function Line({
   data,
 }: {
   data: {
-    student: Statistics[] | null
-    teacher: Statistics[] | null
+    student?: Statistics[] | null
+    teacher?: Statistics[] | null
     course: Statistics[] | null
   }
 }) {
