@@ -52,11 +52,6 @@ export default function Page() {
 
   const userInfo = getUserInfo()
 
-  // console.log('overview:', overview)
-  // console.log('studentStatistics:', studentStatistics)
-  // console.log('teacherStatistics:', teacherStatistics)
-  // console.log('courseStatistics:', courseStatistics)
-
   useEffect(() => {
     getStatisticsOverview().then((res) => {
       if (res.data) {

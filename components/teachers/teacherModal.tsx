@@ -123,7 +123,6 @@ export default function TeacherModal({
 
         <Form.List name="skills">
           {(fields, { add, remove }) => {
-            console.log('fields:', fields)
             return (
               <>
                 {fields.map((field) => (
