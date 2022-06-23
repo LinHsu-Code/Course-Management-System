@@ -21,7 +21,7 @@ import {
   addCourse,
   updateCourse,
 } from '../../lib/request'
-import { disabledDate } from '../../lib/util'
+import { beforeUploadAvatar, disabledDate, getBase64 } from '../../lib/util'
 import {
   CourseType,
   OptionValue,
@@ -71,14 +71,6 @@ const FullHeightFormItemUpload = styled(FullHeightFormItem)`
     display: none;
   }
 `
-
-const getBase64 = (file: RcFile): Promise<string> =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.readAsDataURL(file)
-    reader.onload = () => resolve(reader.result as string)
-    reader.onerror = (error) => reject(error)
-  })
 
 export default function CourseDetailForm({
   afterSuccess,
@@ -378,6 +370,7 @@ export default function CourseDetailForm({
                   fileList={fileList}
                   maxCount={1}
                   onPreview={handlePreview}
+                  beforeUpload={beforeUploadAvatar}
                 >
                   {fileList.length > 0 && !loading ? null : uploadButton}
                 </Upload>

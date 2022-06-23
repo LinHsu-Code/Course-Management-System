@@ -1,6 +1,15 @@
 import AES from 'crypto-js/aes'
-import { postInstance, showMessage } from './common'
-import { LoginRequest, LoginResponse, LogoutResponse } from '../model'
+import { postInstance, getInstance, putInstance, showMessage } from './common'
+import {
+  LoginRequest,
+  LoginResponse,
+  LogoutResponse,
+  GetProfileRequest,
+  GetProfileResponse,
+  EditProfileRequest,
+  EditProfileResponse,
+  GetCountriesResponse,
+} from '../model'
 
 const login = (formValues: LoginRequest): Promise<LoginResponse> => {
   let { role, email, password } = formValues
@@ -12,4 +21,16 @@ const login = (formValues: LoginRequest): Promise<LoginResponse> => {
 
 const logout = (): Promise<LogoutResponse> => postInstance('/logout')
 
-export { login, logout }
+const getProfile = (): Promise<GetProfileResponse> => getInstance('/profile')
+
+const editProfile = (
+  formValues: EditProfileRequest
+): Promise<EditProfileResponse> =>
+  putInstance(`/profile/teacher/${formValues.id}`, formValues).then((res) =>
+    showMessage(res)
+  )
+
+const getCountries = (): Promise<GetCountriesResponse> =>
+  getInstance('/countries')
+
+export { login, logout, getProfile, editProfile, getCountries }

@@ -56,10 +56,10 @@ export interface TeacherStatisticsGetByTeacher {
 export interface ClassTime {
   name: string
   amount: number
-  courses: Course[]
+  courses: ClassTimeCourseDetail[]
 }
 
-export interface Course {
+export interface ClassTimeCourseDetail {
   classTime: string[] | null
   typeName: string
   name: string

@@ -7,13 +7,14 @@ import {
   MenuFoldOutlined,
   UserOutlined,
   BellOutlined,
+  ProfileOutlined,
 } from '@ant-design/icons'
 import styles from './dashboard-layout.module.scss'
 import { useRouter } from 'next/router'
 import { logout } from '../../lib/request'
 import { ROUTES } from '../../lib/constants'
 import SideMenu from './sideMenu'
-import { bfsOne } from '../../lib/util'
+import { bfsOne, getUserInfo } from '../../lib/util'
 import Breadcrumb from './breadcrumb'
 import { Role } from '../../lib/model'
 import MessageModal from './messageModal'
@@ -43,6 +44,8 @@ export default function DashboardLayout({
   const [logoutMenu, setLogoutMenu] = useState(false)
   const [openKeys, setOpenKeys] = useState<string[]>([])
   const [modalVisible, setModalVisible] = useState(false)
+
+  const userInfo = getUserInfo()
 
   const {
     state: { unread },
@@ -112,6 +115,21 @@ export default function DashboardLayout({
               <Avatar icon={<UserOutlined />} className={styles.avatar} />
               {logoutMenu && (
                 <Menu className={styles.logoutMenu} theme="dark">
+                  {userInfo.role !== 'manager' && (
+                    <Menu.Item
+                      key="54"
+                      onClick={() => {
+                        router.replace(
+                          `/dashboard/${userInfo.role}/profile`,
+                          undefined,
+                          { shallow: true }
+                        )
+                      }}
+                    >
+                      <ProfileOutlined />
+                      <span>Profile</span>
+                    </Menu.Item>
+                  )}
                   <Menu.Item
                     key="55"
                     onClick={() => {

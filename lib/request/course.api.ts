@@ -5,6 +5,7 @@ import {
   putInstance,
   showMessage,
 } from './common'
+
 import {
   GetCoursesRequest,
   GetCoursesResponse,
@@ -22,6 +23,8 @@ import {
   GetCourseScheduleResponse,
   DeleteCourseRequest,
   DeleteCourseResponse,
+  GetClassScheduleRequest,
+  GetClassScheduleResponse,
 } from '../../lib/model'
 
 const getCourses = (params: GetCoursesRequest): Promise<GetCoursesResponse> =>
@@ -57,6 +60,10 @@ const getCourseSchedule = (
 const deleteCourse = (id: DeleteCourseRequest): Promise<DeleteCourseResponse> =>
   deleteInstance('/course', id).then((res) => showMessage(res))
 
+const getClassSchedule = (
+  params: GetClassScheduleRequest
+): Promise<GetClassScheduleResponse> => getInstance('/class/schedule')
+
 export {
   getCourses,
   getCourse,
@@ -67,4 +74,5 @@ export {
   updateCourse,
   getCourseSchedule,
   deleteCourse,
+  getClassSchedule,
 }

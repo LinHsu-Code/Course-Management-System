@@ -84,3 +84,8 @@ export const SkillLevels = [
 ]
 
 export const phone = /^1[3-9]\d{9}$/
+
+export enum Gender {
+  Male = 1,
+  Female,
+}
