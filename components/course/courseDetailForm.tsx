@@ -391,12 +391,14 @@ export default function CourseDetailForm({
         title={previewTitle}
         footer={null}
         onCancel={handleCancel}
+        width={300}
       >
         <Image
-          alt="Course Preview"
+          alt="Preview"
           style={{ width: '100%' }}
           src={previewImage}
-          layout="fill"
+          width={300}
+          height={300}
         />
       </Modal>
     </>

@@ -672,7 +672,7 @@ export default function Page() {
         width={300}
       >
         <Image
-          alt="Avatar Preview"
+          alt="Preview"
           style={{ width: '100%' }}
           src={previewImage}
           width={300}
