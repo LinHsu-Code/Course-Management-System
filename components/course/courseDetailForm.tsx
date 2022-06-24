@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import {
   Col,
   Form,
@@ -36,6 +35,7 @@ import { InboxOutlined, LoadingOutlined } from '@ant-design/icons'
 import type { UploadChangeParam } from 'antd/es/upload'
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface'
 import styles from './courseDetailForm.module.scss'
+import Image from 'next/image'
 
 const FullHeightFormItem = styled(Form.Item)`
   width: 100%;
@@ -392,7 +392,12 @@ export default function CourseDetailForm({
         footer={null}
         onCancel={handleCancel}
       >
-        <img alt="example" style={{ width: '100%' }} src={previewImage} />
+        <Image
+          alt="Course Preview"
+          style={{ width: '100%' }}
+          src={previewImage}
+          layout="fill"
+        />
       </Modal>
     </>
   )

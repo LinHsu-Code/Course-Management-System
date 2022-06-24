@@ -36,6 +36,7 @@ import {
   CourseStatus,
   OverviewBackground,
 } from '../../../lib/constants'
+import Image from 'next/image'
 
 interface StoreState {
   page: number
@@ -265,9 +266,11 @@ export default function Page() {
               >
                 <List.Item.Meta
                   avatar={
-                    <img
+                    <Image
+                      alt="student cover"
                       src={(item as StatisticsCourseDetail).cover}
                       width="200px"
+                      height="200px"
                     />
                   }
                   title={

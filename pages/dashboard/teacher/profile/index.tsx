@@ -669,11 +669,14 @@ export default function Page() {
         title={previewTitle}
         footer={null}
         onCancel={handleCancel}
+        width={300}
       >
         <Image
           alt="Avatar Preview"
           style={{ width: '100%' }}
           src={previewImage}
+          width={300}
+          height={300}
         />
       </Modal>
     </>

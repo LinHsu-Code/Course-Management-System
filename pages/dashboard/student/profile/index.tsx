@@ -40,6 +40,7 @@ import {
 import { getUserInfo } from '../../../../lib/util'
 import type { UploadFile } from 'antd/es/upload/interface'
 import { RcFile } from 'antd/lib/upload'
+import Image from 'next/image'
 
 export const OverviewIconCol = styled(Col)`
   display: flex;
@@ -383,8 +384,15 @@ export default function Page() {
         title={previewTitle}
         footer={null}
         onCancel={handleCancel}
+        width={300}
       >
-        <img alt="example" style={{ width: '100%' }} src={previewImage} />
+        <Image
+          alt="Avatar Preview"
+          style={{ width: '100%' }}
+          src={previewImage}
+          width={300}
+          height={300}
+        />
       </Modal>
     </>
   )

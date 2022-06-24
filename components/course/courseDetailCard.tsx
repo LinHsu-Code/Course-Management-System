@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import { Card, Row, Badge, Collapse, Steps, Tag } from 'antd'
 import { CourseDetail, Schedule } from '../../lib/model'
 import {

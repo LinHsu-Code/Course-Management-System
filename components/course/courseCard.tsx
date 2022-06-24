@@ -1,10 +1,10 @@
-/* eslint-disable @next/next/no-img-element */
 import { Card, Row, Col, Divider } from 'antd'
 import Link from 'next/link'
 import { Course } from '../../lib/model'
 import styles from './courseCard.module.scss'
 import { HeartFilled, UserOutlined } from '@ant-design/icons'
 import { getUserInfo } from '../../lib/util'
+import Image from 'next/image'
 
 export default function CourseCard({
   course,
@@ -18,15 +18,9 @@ export default function CourseCard({
   return (
     <Card
       cover={
-        <img
-          alt="Course Image"
-          src={course.cover}
-          // src="https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg"
-          className={styles.coverImage}
-          style={{
-            backgroundColor: '#eee',
-          }}
-        />
+        <div style={{ height: '250px', position: 'relative' }}>
+          <Image alt="Course Cover" layout="fill" src={course.cover} />
+        </div>
       }
     >
       <div>
