@@ -7,23 +7,18 @@ import { Col, Row, Card } from 'antd'
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import Overview from '../../../components/statistics/overview'
-import { Entries, TeacherStatisticsGetByTeacher } from '../../../lib/model'
+import { TeacherStatisticsGetByTeacher } from '../../../lib/model'
 import { getTeacherStatistics } from '../../../lib/request'
 import Pie from '../../../components/statistics/pie'
 import Line from '../../../components/statistics/line'
 import Heat from '../../../components/statistics/heat'
-import { getUserInfo } from '../../../lib/util'
-
-const overviewBackground = ['#1890ff', '#673bb7', '#ffaa16']
+import { getUserInfo, entries } from '../../../lib/util'
+import { OverviewBackground } from '../../../lib/constants'
 
 const overviewProps = {
   pending: { icon: <BulbOutlined /> },
   active: { icon: <DesktopOutlined /> },
   done: { icon: <SafetyOutlined /> },
-}
-
-function entries<T>(obj: T): Entries<T> {
-  return Object.entries(obj) as any
 }
 
 export default function Page() {
@@ -88,7 +83,7 @@ export default function Page() {
             return (
               <Col key={index} span={24} xl={{ span: 8 }}>
                 <Overview
-                  backgroundColor={overviewBackground[index]}
+                  backgroundColor={OverviewBackground[index]}
                   icon={overviewProps[key].icon}
                   title={`${item[0]}`.toUpperCase()}
                   data={value}

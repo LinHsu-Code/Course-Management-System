@@ -1,4 +1,5 @@
 import { Response } from './common'
+import { Course } from './course'
 export interface StatisticsOverview {
   course: OverviewDetail
   student: OverviewDetailWithGender
@@ -93,3 +94,36 @@ export interface GetStudentStatisticsRequest {
 export interface GetTeacherStatisticsRequest {
   userId: number
 }
+
+export interface StudentStatisticsByStudent {
+  own: Own
+  recommend: Recommend
+}
+
+export interface Own {
+  name: string
+  amount: number
+  courses: OwnCourse[]
+}
+
+export interface Recommend {
+  name: string
+  amount: number
+  courses: StatisticsCourseDetail[]
+}
+
+export interface OwnCourse {
+  createdAt: Date
+  updatedAt: Date
+  id: number
+  courseDate: Date
+  studentId: number
+  course: StatisticsCourseDetail
+}
+
+export type StatisticsCourseDetail = Omit<Course, 'teacherName'> & {
+  teacherName?: string
+}
+
+export type GetStudentStatisticsByStudentResponse =
+  Response<StudentStatisticsByStudent>

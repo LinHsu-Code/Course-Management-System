@@ -2,6 +2,7 @@ import { message } from 'antd'
 import type { RangePickerProps } from 'antd/es/date-picker'
 import { RcFile } from 'antd/lib/upload'
 import moment from 'moment'
+import { Entries } from '../model'
 
 export const toPascalCase = (string: string) => {
   return string.replace(/\w+/g, function (w) {
@@ -43,3 +44,7 @@ export const getBase64 = (file: RcFile): Promise<string> =>
     reader.onload = () => resolve(reader.result as string)
     reader.onerror = (error) => reject(error)
   })
+
+export function entries<T>(obj: T): Entries<T> {
+  return Object.entries(obj) as any
+}

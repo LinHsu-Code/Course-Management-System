@@ -346,7 +346,6 @@ export default function Page() {
                               <Form.Item
                                 {...field}
                                 name={[field.name, 'name']}
-                                // fieldKey={[field.fieldKey, 'name']}
                                 rules={[{ required: true }]}
                               >
                                 <Input placeholder="Skill Name" />
@@ -357,7 +356,6 @@ export default function Page() {
                               <Form.Item
                                 {...field}
                                 name={[field.name, 'level']}
-                                // fieldKey={[field.fieldKey, 'level']}
                                 rules={[{ required: true }]}
                               >
                                 <Rate tooltips={SkillLevels} count={5} />
@@ -420,8 +418,24 @@ export default function Page() {
             </Descriptions>
 
             <Divider />
+            <Descriptions title="Education" layout="vertical" column={3}>
+              <Descriptions.Item span={3}>
+                {data?.education.map((item, index) => (
+                  <Row
+                    gutter={[16, 24]}
+                    key={index}
+                    style={{ marginBottom: 8 }}
+                  >
+                    <Col span={5}>{item.startAt}</Col>
+                    <Col span={5}>{item.endAt}</Col>
+                    <Col span={5}>{item.degree}</Col>
+                    <Col span={5}>{item.level}</Col>
+                  </Row>
+                ))}
+              </Descriptions.Item>
+            </Descriptions>
 
-            <Descriptions title="Education" layout="vertical">
+            {/* <Descriptions title="Education" layout="vertical">
               <Descriptions.Item>
                 <EditableItem
                   textContainerStyles={{ width: '100%' }}
@@ -524,11 +538,27 @@ export default function Page() {
                   </Form.List>
                 </EditableItem>
               </Descriptions.Item>
-            </Descriptions>
+            </Descriptions> */}
 
             <Divider />
-
             <Descriptions title="Work Experience" layout="vertical">
+              <Descriptions.Item>
+                {data?.workExperience.map((item, index) => (
+                  <Row
+                    gutter={[16, 24]}
+                    key={index}
+                    style={{ marginBottom: 8 }}
+                  >
+                    <Col span={5}>{item.startAt}</Col>
+                    <Col span={5}>{item.endAt}</Col>
+                    <Col span={5}>{item.company}</Col>
+                    <Col span={5}>{item.post}</Col>
+                  </Row>
+                ))}
+              </Descriptions.Item>
+            </Descriptions>
+
+            {/* <Descriptions title="Work Experience" layout="vertical">
               <Descriptions.Item>
                 <EditableItem
                   textContainerStyles={{ width: '100%' }}
@@ -631,7 +661,7 @@ export default function Page() {
                   </Form.List>
                 </EditableItem>
               </Descriptions.Item>
-            </Descriptions>
+            </Descriptions> */}
           </>
         )}
       </Card>

@@ -39,6 +39,8 @@ export default function Page() {
     { userId: userInfo.userId }
   )
 
+  // console.log('courses:', courses)
+
   useEffect(() => {
     if (query) {
       setQueryParams({
@@ -69,13 +71,13 @@ export default function Page() {
         </Link>
       ),
     },
-    {
-      title: 'Category',
-      dataIndex: 'type',
-      width: 130,
-      render: (value: CourseType[]) =>
-        value!.map((item) => item.name).join(', '),
-    },
+    // {
+    //   title: 'Category',
+    //   dataIndex: 'type',
+    //   width: 130,
+    //   render: (value: CourseType[]) =>
+    //     value!.map((item) => item.name).join(', '),
+    // },
     {
       title: 'Status',
       dataIndex: 'status',

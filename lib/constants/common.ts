@@ -89,3 +89,5 @@ export enum Gender {
   Male = 1,
   Female,
 }
+
+export const OverviewBackground = ['#1890ff', '#673bb7', '#ffaa16']

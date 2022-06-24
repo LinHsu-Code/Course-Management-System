@@ -18,3 +18,9 @@ export const CourseSearchBySelect: { value: CourseSearchBy; label: string }[] =
   ]
 
 export const CourseDurationUnit = ['year', 'month', 'day', 'week', 'hour']
+
+export enum CourseStatus {
+  pending = 0,
+  active,
+  done,
+}

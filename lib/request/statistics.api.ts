@@ -12,13 +12,19 @@ import axios from 'axios'
 const getStatisticsOverview = (): Promise<GetStatisticsOverviewResponse> =>
   getInstance('/statistics/overview')
 
-const getStudentStatistics = (
+// const getStudentStatistics = (
+//   params: GetStudentStatisticsRequest
+// ): Promise<GetStudentStatisticsResponse> =>
+//   getInstance('/statistics/student', params)
+
+const getStudentStatistics = <T>(
   params: GetStudentStatisticsRequest
-): Promise<GetStudentStatisticsResponse> => getInstance('/statistics/student')
+): Promise<T> => getInstance('/statistics/student', params)
 
 const getTeacherStatistics = (
   params: GetTeacherStatisticsRequest
-): Promise<GetTeacherStatisticsResponse> => getInstance('/statistics/teacher')
+): Promise<GetTeacherStatisticsResponse> =>
+  getInstance('/statistics/teacher', params)
 
 const getCourseStatistics = (): Promise<GetCourseStatisticsResponse> =>
   getInstance('/statistics/course')

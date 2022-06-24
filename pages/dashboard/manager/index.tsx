@@ -9,10 +9,10 @@ import { useEffect, useState } from 'react'
 import Overview from '../../../components/statistics/overview'
 import {
   StatisticsOverview,
-  Entries,
   StudentStatistics,
   TeacherStatistics,
   CourseStatistics,
+  GetStudentStatisticsResponse,
 } from '../../../lib/model'
 import {
   getStatisticsOverview,
@@ -25,18 +25,13 @@ import Pie from '../../../components/statistics/pie'
 import Line from '../../../components/statistics/line'
 import Bar from '../../../components/statistics/bar'
 import Heat from '../../../components/statistics/heat'
-import { getUserInfo } from '../../../lib/util'
-
-const overviewBackground = ['#1890ff', '#673bb7', '#ffaa16']
+import { getUserInfo, entries } from '../../../lib/util'
+import { OverviewBackground } from '../../../lib/constants'
 
 const overviewProps = {
   student: { icon: <SolutionOutlined /> },
   teacher: { icon: <DeploymentUnitOutlined /> },
   course: { icon: <ReadOutlined /> },
-}
-
-function entries<T>(obj: T): Entries<T> {
-  return Object.entries(obj) as any
 }
 
 export default function Page() {
@@ -59,7 +54,9 @@ export default function Page() {
       }
     })
     userInfo.userId &&
-      getStudentStatistics({ userId: userInfo.userId }).then((res) => {
+      getStudentStatistics<GetStudentStatisticsResponse>({
+        userId: userInfo.userId,
+      }).then((res) => {
         if (res.data) {
           setStudentStatistics(res.data)
         }
@@ -92,7 +89,7 @@ export default function Page() {
             return (
               <Col key={index} span={24} xl={{ span: 8 }}>
                 <Overview
-                  backgroundColor={overviewBackground[index]}
+                  backgroundColor={OverviewBackground[index]}
                   icon={overviewProps[key].icon}
                   title={`total ${item[0]}s`.toUpperCase()}
                   data={value.total}
