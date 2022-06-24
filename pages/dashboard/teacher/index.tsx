@@ -13,7 +13,7 @@ import Pie from '../../../components/statistics/pie'
 import Line from '../../../components/statistics/line'
 import Heat from '../../../components/statistics/heat'
 import { getUserInfo, entries } from '../../../lib/util'
-import { OverviewBackground } from '../../../lib/constants'
+import { CourseStatus, OverviewBackground } from '../../../lib/constants'
 
 const overviewProps = {
   pending: { icon: <BulbOutlined /> },
@@ -28,7 +28,11 @@ export default function Page() {
     pending: number
     active: number
     done: number
-  } | null>(null)
+  }>({
+    pending: 0,
+    active: 0,
+    done: 0,
+  })
   const [total, setTotal] = useState(0)
 
   const userInfo = getUserInfo()
@@ -39,33 +43,18 @@ export default function Page() {
         if (res.data) {
           const data = res.data as TeacherStatisticsGetByTeacher
           setTeacherStatistics(data)
+
           setTotal(data.status.reduce((acc, cur) => acc + cur.amount, 0))
 
-          setOverview(
-            data.status.reduce(
-              (acc, curr) => {
-                switch (curr.name) {
-                  case '0':
-                    acc.pending = acc.pending + curr.amount
-                    break
-                  case '1':
-                    acc.active = acc.active + curr.amount
-                    break
-                  case '2':
-                    acc.done = acc.done + curr.amount
-                    break
-                  default:
-                    break
-                }
-                return acc
-              },
-              {
-                pending: 0,
-                active: 0,
-                done: 0,
-              }
+          setOverview((pre) => {
+            return data.status.reduce(
+              (acc, { name, amount }) => ({
+                ...acc,
+                [CourseStatus[Number(name)]]: amount,
+              }),
+              pre
             )
-          )
+          })
         }
       })
   }, [userInfo.userId])
