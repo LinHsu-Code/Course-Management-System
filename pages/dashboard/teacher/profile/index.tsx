@@ -76,9 +76,6 @@ export const Indicator = styled.div`
   transform: translateX(50%);
 `
 
-// type Profile = TeacherProfile &
-//   Pick<Teacher, 'country' | 'email' | 'name' | 'phone' | 'skills'>
-
 export default function Page() {
   const [data, setData] = useState<TeacherProfile | null>(null)
   const [countries, setCountries] = useState<Country[]>([])
@@ -97,11 +94,13 @@ export default function Page() {
     console.log('value:', value)
 
     data &&
-      editProfile({ id: data.id, ...value }).then((res) => {
-        if (res.data) {
-          setData(res.data)
+      editProfile<TeacherProfile>({ id: data.id, ...value }, 'teacher').then(
+        (res) => {
+          if (res.data) {
+            setData(res.data)
+          }
         }
-      })
+      )
   }
 
   const handleCancel = () => setPreviewVisible(false)
@@ -120,7 +119,7 @@ export default function Page() {
 
   useEffect(() => {
     userInfo.userId &&
-      getProfile().then((res) => {
+      getProfile<TeacherProfile>().then((res) => {
         if (res.data) {
           setData(res.data)
           const avatar = res.data.avatar

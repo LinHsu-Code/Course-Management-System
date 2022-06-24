@@ -21,6 +21,25 @@ export interface GetProfileRequest {
   userId: number
 }
 
+export interface StudentProfile {
+  createdAt: Date
+  updatedAt: Date
+  id: number
+  email: string
+  address: string[]
+  age: number
+  country: string
+  avatar: string
+  description: string
+  education: string
+  gender: number
+  memberEndAt: Date
+  memberStartAt: Date
+  name: string
+  phone: string
+  interest: string[]
+}
+
 export interface TeacherProfile {
   createdAt: Date
   updatedAt: Date
@@ -64,11 +83,11 @@ export interface WorkExperience {
   startEnd: string
 }
 
-export type GetProfileResponse = Response<TeacherProfile>
+export type GetProfileResponse<T> = Response<T>
 
-export type EditProfileRequest = Partial<TeacherProfile> & { id: number }
+export type EditProfileRequest<T> = Partial<T> & { id: number }
 
-export type EditProfileResponse = Response<TeacherProfile>
+export type EditProfileResponse<T> = Response<T>
 
 export interface Country {
   id: number
@@ -78,3 +97,12 @@ export interface Country {
 }
 
 export type GetCountriesResponse = Response<Country[]>
+
+export interface Degree {
+  id: number
+  short: string
+  name: string
+  group: string
+}
+
+export type GetDegreesResponse = Response<Degree[]>
