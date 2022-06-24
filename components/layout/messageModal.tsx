@@ -4,7 +4,7 @@ import { useContext, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { MessageTypes } from '../../lib/constants'
 import { MessageType, MessageCount, Message } from '../../lib/model'
-import { getMessageStatics, subscribeMessage } from '../../lib/request'
+import { getMessageStatistics, subscribeMessage } from '../../lib/request'
 import { getUserInfo } from '../../lib/util'
 import MessageContext from '../../providers/messageContext'
 import { ActionType } from '../../providers/messageReducer'
@@ -47,28 +47,27 @@ export default function MessageModal({
   const userInfo = getUserInfo()
 
   useEffect(() => {
-    getMessageStatics({}).then((res) => {
-      if (res.data) {
-        dispatch({
-          type: ActionType.IncreaseUnreadCount,
-          payload: {
-            messageType: 'notification',
-            count: res.data.receive.notification.unread,
-          },
-        })
-        dispatch({
-          type: ActionType.IncreaseUnreadCount,
-          payload: {
-            messageType: 'message',
-            count: res.data.receive.message.unread,
-          },
-        })
-      }
-    })
-
     let sse: EventSource | null = null
-
     if (userInfo.userId) {
+      getMessageStatistics().then((res) => {
+        if (res.data) {
+          dispatch({
+            type: ActionType.IncreaseUnreadCount,
+            payload: {
+              messageType: 'notification',
+              count: res.data.receive.notification.unread,
+            },
+          })
+          dispatch({
+            type: ActionType.IncreaseUnreadCount,
+            payload: {
+              messageType: 'message',
+              count: res.data.receive.message.unread,
+            },
+          })
+        }
+      })
+
       sse = subscribeMessage(userInfo.userId)
 
       sse.onmessage = (event) => {

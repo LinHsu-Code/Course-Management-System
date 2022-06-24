@@ -43,6 +43,7 @@ import { getUserInfo } from '../../../../lib/util'
 import moment from 'moment'
 import type { UploadFile } from 'antd/es/upload/interface'
 import { RcFile } from 'antd/lib/upload'
+import Image from 'next/image'
 
 export const OverviewIconCol = styled(Col)`
   display: flex;
@@ -90,8 +91,6 @@ export default function Page() {
     if (value.birthday) {
       value.birthday = moment(value.birthday).format('YYYY-MM-DD')
     }
-
-    console.log('value:', value)
 
     data &&
       editProfile<TeacherProfile>({ id: data.id, ...value }, 'teacher').then(
@@ -417,7 +416,7 @@ export default function Page() {
             </Descriptions>
 
             <Divider />
-            <Descriptions title="Education" layout="vertical" column={3}>
+            {/* <Descriptions title="Education" layout="vertical" column={3}>
               <Descriptions.Item span={3}>
                 {data?.education.map((item, index) => (
                   <Row
@@ -432,9 +431,9 @@ export default function Page() {
                   </Row>
                 ))}
               </Descriptions.Item>
-            </Descriptions>
+            </Descriptions> */}
 
-            {/* <Descriptions title="Education" layout="vertical">
+            <Descriptions title="Education" layout="vertical">
               <Descriptions.Item>
                 <EditableItem
                   textContainerStyles={{ width: '100%' }}
@@ -537,10 +536,11 @@ export default function Page() {
                   </Form.List>
                 </EditableItem>
               </Descriptions.Item>
-            </Descriptions> */}
+            </Descriptions>
 
             <Divider />
-            <Descriptions title="Work Experience" layout="vertical">
+
+            {/* <Descriptions title="Work Experience" layout="vertical">
               <Descriptions.Item>
                 {data?.workExperience.map((item, index) => (
                   <Row
@@ -555,9 +555,9 @@ export default function Page() {
                   </Row>
                 ))}
               </Descriptions.Item>
-            </Descriptions>
+            </Descriptions> */}
 
-            {/* <Descriptions title="Work Experience" layout="vertical">
+            <Descriptions title="Work Experience" layout="vertical">
               <Descriptions.Item>
                 <EditableItem
                   textContainerStyles={{ width: '100%' }}
@@ -660,7 +660,7 @@ export default function Page() {
                   </Form.List>
                 </EditableItem>
               </Descriptions.Item>
-            </Descriptions> */}
+            </Descriptions>
           </>
         )}
       </Card>
@@ -670,7 +670,11 @@ export default function Page() {
         footer={null}
         onCancel={handleCancel}
       >
-        <img alt="example" style={{ width: '100%' }} src={previewImage} />
+        <Image
+          alt="Avatar Preview"
+          style={{ width: '100%' }}
+          src={previewImage}
+        />
       </Modal>
     </>
   )

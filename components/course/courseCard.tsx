@@ -20,8 +20,8 @@ export default function CourseCard({
       cover={
         <img
           alt="Course Image"
-          // src={course.cover}
-          src="https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg"
+          src={course.cover}
+          // src="https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg"
           className={styles.coverImage}
           style={{
             backgroundColor: '#eee',

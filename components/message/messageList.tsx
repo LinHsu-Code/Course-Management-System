@@ -10,7 +10,7 @@ import { UserOutlined } from '@ant-design/icons'
 import { useCallback, useContext, useEffect, useState } from 'react'
 import {
   getMessages,
-  getMessageStatics,
+  getMessageStatistics,
   markMessageAsRead,
 } from '../../lib/request'
 import { formatDistanceToNow } from 'date-fns'
@@ -71,7 +71,7 @@ export default function MessageList({
   }, [dispatch, markedIdsFromPage, messageType, setData])
 
   const handleMarkMessageAsRead = useCallback(() => {
-    getMessageStatics({}).then((res) => {
+    getMessageStatistics().then((res) => {
       if (res.data) {
         getMessages({
           status: 0,

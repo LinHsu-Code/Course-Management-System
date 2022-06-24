@@ -91,10 +91,6 @@ export interface GetStudentStatisticsRequest {
   userId: number
 }
 
-export interface GetTeacherStatisticsRequest {
-  userId: number
-}
-
 export interface StudentStatisticsByStudent {
   own: Own
   recommend: Recommend

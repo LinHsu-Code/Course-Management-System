@@ -11,12 +11,17 @@ import {
 } from '@ant-design/icons'
 import styles from './dashboard-layout.module.scss'
 import { useRouter } from 'next/router'
-import { logout } from '../../lib/request'
+import { getProfile, logout } from '../../lib/request'
 import { ROUTES } from '../../lib/constants'
 import SideMenu from './sideMenu'
 import { bfsOne, getUserInfo } from '../../lib/util'
 import Breadcrumb from './breadcrumb'
-import { Role } from '../../lib/model'
+import {
+  GetTeacherStatisticsResponse,
+  Role,
+  StudentProfile,
+  TeacherProfile,
+} from '../../lib/model'
 import MessageModal from './messageModal'
 import MessageContext from '../../providers/messageContext'
 
@@ -44,6 +49,7 @@ export default function DashboardLayout({
   const [logoutMenu, setLogoutMenu] = useState(false)
   const [openKeys, setOpenKeys] = useState<string[]>([])
   const [modalVisible, setModalVisible] = useState(false)
+  const [avatar, setAvatar] = useState('')
 
   const userInfo = getUserInfo()
 
@@ -60,6 +66,16 @@ export default function DashboardLayout({
   useEffect(() => {
     setOpenKeys([router.pathname.split('/').slice(2, 4).toString()])
   }, [router.pathname])
+
+  useEffect(() => {
+    if (userInfo.role === 'student' || userInfo.role === 'teacher') {
+      getProfile<StudentProfile | TeacherProfile>().then((res) => {
+        if (res.data) {
+          setAvatar(res.data.avatar)
+        }
+      })
+    }
+  }, [userInfo.role])
 
   return (
     <Layout className={styles.layout}>
@@ -112,7 +128,11 @@ export default function DashboardLayout({
               onMouseEnter={() => setLogoutMenu(true)}
               onMouseLeave={() => setLogoutMenu(false)}
             >
-              <Avatar icon={<UserOutlined />} className={styles.avatar} />
+              <Avatar
+                src={avatar}
+                icon={<UserOutlined />}
+                className={styles.avatar}
+              />
               {logoutMenu && (
                 <Menu className={styles.logoutMenu} theme="dark">
                   {userInfo.role !== 'manager' && (

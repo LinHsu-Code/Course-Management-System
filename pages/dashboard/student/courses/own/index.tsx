@@ -39,8 +39,6 @@ export default function Page() {
     { userId: userInfo.userId }
   )
 
-  // console.log('courses:', courses)
-
   useEffect(() => {
     if (query) {
       setQueryParams({

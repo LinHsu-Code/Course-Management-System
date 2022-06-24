@@ -4,8 +4,7 @@ import {
   GetMessageResponse,
   MarkMessageAsReadRequest,
   MarkMessageAsReadResponse,
-  GetMessageStaticsRequest,
-  GetMessageStaticsResponse,
+  GetMessageStatisticsResponse,
   PostMessageRequest,
   PostMessageResponse,
 } from '../model'
@@ -17,10 +16,8 @@ const markMessageAsRead = (
   params: MarkMessageAsReadRequest
 ): Promise<MarkMessageAsReadResponse> => putInstance('/message', params)
 
-const getMessageStatics = (
-  params: GetMessageStaticsRequest
-): Promise<GetMessageStaticsResponse> =>
-  getInstance('/message/statistics', params)
+const getMessageStatistics = (): Promise<GetMessageStatisticsResponse> =>
+  getInstance('/message/statistics')
 
 const subscribeMessage = (userId: number): EventSource => {
   return new EventSource(
@@ -36,7 +33,7 @@ const postMessage = (
 export {
   getMessages,
   markMessageAsRead,
-  getMessageStatics,
+  getMessageStatistics,
   subscribeMessage,
   postMessage,
 }

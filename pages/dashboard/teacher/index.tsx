@@ -38,26 +38,25 @@ export default function Page() {
   const userInfo = getUserInfo()
 
   useEffect(() => {
-    userInfo.userId &&
-      getTeacherStatistics({ userId: userInfo.userId }).then((res) => {
-        if (res.data) {
-          const data = res.data as TeacherStatisticsGetByTeacher
-          setTeacherStatistics(data)
+    getTeacherStatistics().then((res) => {
+      if (res.data) {
+        const data = res.data as TeacherStatisticsGetByTeacher
+        setTeacherStatistics(data)
 
-          setTotal(data.status.reduce((acc, cur) => acc + cur.amount, 0))
+        setTotal(data.status.reduce((acc, cur) => acc + cur.amount, 0))
 
-          setOverview((pre) => {
-            return data.status.reduce(
-              (acc, { name, amount }) => ({
-                ...acc,
-                [CourseStatus[Number(name)]]: amount,
-              }),
-              pre
-            )
-          })
-        }
-      })
-  }, [userInfo.userId])
+        setOverview((pre) => {
+          return data.status.reduce(
+            (acc, { name, amount }) => ({
+              ...acc,
+              [CourseStatus[Number(name)]]: amount,
+            }),
+            pre
+          )
+        })
+      }
+    })
+  }, [])
 
   return (
     <>

@@ -41,20 +41,17 @@ export interface MarkMessageAsReadRequest {
 
 export type MarkMessageAsReadResponse = Response<boolean>
 
-export type GetMessageStaticsRequest = {
-  userId?: number
+export interface MessageStatisticsData {
+  sent: { [key in MessageType]: MessageStatistics }
+  receive: { [key in MessageType]: MessageStatistics }
 }
-export interface MessageStaticsData {
-  sent: { [key in MessageType]: MessageStatics }
-  receive: { [key in MessageType]: MessageStatics }
-}
-export interface MessageStatics {
+export interface MessageStatistics {
   total: number
   unread: number
   read: number
 }
 
-export type GetMessageStaticsResponse = Response<MessageStaticsData>
+export type GetMessageStatisticsResponse = Response<MessageStatisticsData>
 
 export type MessageCount = {
   [key in MessageType]: number

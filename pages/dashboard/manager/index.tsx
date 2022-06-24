@@ -61,12 +61,13 @@ export default function Page() {
           setStudentStatistics(res.data)
         }
       })
-    userInfo.userId &&
-      getTeacherStatistics({ userId: userInfo.userId }).then((res) => {
-        if (res.data) {
-          setTeacherStatistics(res.data as TeacherStatistics)
-        }
-      })
+
+    getTeacherStatistics().then((res) => {
+      if (res.data) {
+        setTeacherStatistics(res.data as TeacherStatistics)
+      }
+    })
+
     getCourseStatistics().then((res) => {
       if (res.data) {
         setCourseStatistics(res.data)
