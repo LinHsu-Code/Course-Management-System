@@ -35,8 +35,8 @@ export default function Page() {
   } = useDataListLoad<GetCoursesRequest, Courses, Course>(
     getCourses,
     'courses',
-    false,
-    { userId: userInfo.userId }
+    false
+    // { userId: userInfo.userId }
   )
 
   useEffect(() => {
